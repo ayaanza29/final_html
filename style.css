@@ -7,14 +7,16 @@
     width: 100%;
     height: 100vh;
     /*background-image: url(images/rocket\ launch.jpg);*/
-    background-color: rgb(248, 245, 245);
+    background-color: rgb(236, 246, 255);
     background-size: cover;
     background-position: center;
     position: relative;
     overflow: hidden;
+    --hover_color: rgb(206, 232, 255);
+    --outline_color: rgb(120, 167, 255);
 }
 .logo{
-    width: 60px;
+    width: 400px;
     cursor: pointer;
 }
 .navbar{
@@ -24,6 +26,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 5px solid var(--outline_color);
 }
 .navbar2{
     padding: 20px 5px;
@@ -38,13 +41,13 @@ button{
     color: rgb(0, 0, 0);
     padding: 10px 25px;
     background: transparent;
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid var(--outline_color);
     border-radius: 20px;
     outline: none;
     cursor: pointer;
 }
 button:hover{
-    background:rgb(228, 228, 228);
+    background:var(--hover_color);
 }
 button:active{
     transform: scale(0.95);
@@ -55,30 +58,30 @@ button.navButton{
     color: rgb(0, 0, 0);
     padding: 10px 25px;
     background: transparent;
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid var(--outline_color);
     border-radius: 0px;
     outline: none;
     cursor: pointer;
 }
 button.navButton:hover{
-    background:rgb(228, 228, 228);
+    background:var(--hover_color);
 }
 button.navButton:not(:last-child){
     border-right:none;
 }
 
 button.navButton2{
-    float: block;
+    display: block;
     color: rgb(0, 0, 0);
     padding: 10px 25px;
     background: transparent;
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid var(--outline_color);
     border-radius: 0px;
     outline: none;
     cursor: pointer;
 }
 button.navButton2:hover{
-    background:rgb(228, 228, 228);
+    background:var(--hover_color);
 }
 button.navButton2:not(:last-child){
     border-right:none;
@@ -111,3 +114,39 @@ h2{
     margin: 10px 0 30px;
     line-height: 40px;
 }
+
+
+/**********************************************************************/
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: transparent;
+    border: 1px solid var(--outline_color);
+  }
+  
+  li a {
+    display: block;
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    text-align: center;
+    border-bottom: 1px solid black;
+  }
+
+  li a:last-child {
+    border-bottom: none;
+  }
+  
+  li a.active {
+    text-decoration: underline;
+    background-color: var(--hover_color);
+    color: black;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: var(--hover_color);
+    color: black;
+  }
