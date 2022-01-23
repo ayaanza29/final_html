@@ -204,13 +204,23 @@ ul {
     position: relative;
     overflow: hidden;
     --other_hover_color: rgb(206, 232, 255);
-    --other_outline_color: rgb(120, 167, 255);
+    --other_outline_color: rgb(102, 102, 102);
+    z-index: -1;
+}
+
+.vertical {
+    border-left: 6px solid #333;
+    height: 1000;
+    position:absolute;
+    left: 10%;
+    z-index: -1;
 }
 
 /* Add a black background color to the top navigation */
 .other_topnav {
     background-color: #333;
     overflow: hidden;
+    z-index: -1;
 }
   
   /* Style the links inside the navigation bar */
@@ -218,21 +228,90 @@ ul {
     float: left;
     color: #f2f2f2;
     text-align: center;
-    padding: 14px 16px;
+    padding: 8px 16px;
     text-decoration: none;
     font-size: 17px;
+    z-index: -1;
+}
+
+.other_topnav b {
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    z-index: -1;
 }
   
 /* Change the color of links on hover */
 .other_topnav a:hover {
     background-color: #ddd;
     color: black;
+    z-index: -1;
+}
+
+/* Change the color of links on hover */
+.other_topnav b:hover {
+    background-color: #ddd;
+    color: black;
+    z-index: -1;
 }
   
-/* Add a color to the active/current link */
+/* Add a color to the active/current link 
 .other_topnav a.active {
     background-color: #04AA6D;
     color: white;
+}*/
+
+h5 {
+    float: left;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    margin: 8px 16px;
+    line-height: 20px;
+    z-index: -1;
 }
 
+
+h6 {
+    float: center;
+    color: rgb(0, 0, 0);
+    font-size: 40px;
+    /*margin: 8px 16px;*/
+    line-height: 40px;
+    z-index: -1;
+}
+
+.center_content {
+    color: rgb(0, 0, 0);
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translateY(-50%);
+    z-index: 2;
+    text-align: center;
+}
+
+/* Add a black background color to the top navigation */
+.other_topnav2 {
+    background-color: rgb(196, 196, 196);
+    overflow: hidden;
+    width: 10%;
+}
+  
+  /* Style the links inside the navigation bar */
+.other_topnav2 a {
+    display: block;
+    color: #000000;
+    text-align: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.other_topnav2 a:hover {
+    background-color: rgb(255, 255, 255);
+}
 
