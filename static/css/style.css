@@ -17,9 +17,10 @@
     --color3: rgb(212, 212, 212);
     --color4: rgb(158, 105, 238);
     min-width: 2000px;
+    min-height: 800px;
 }
 .general-horizontalbar{
-    border-bottom: 60px solid var(--color2);
+    border-bottom: 70px solid var(--color2);
     width: 100%;
     position: absolute;
     z-index: 1;
@@ -27,10 +28,53 @@
 .general-title{
     color: var(--color1);
     left: 45%;
-    top: 0%;
+    top: 1%;
     position: relative;
     z-index: 2;
     font-size: 40px;
+}
+.general-account_icon-dropdown{
+    cursor: pointer;
+}
+.general-account_icon-dropdown-button{
+    top: 1%;
+    left: 90%;
+    padding: 10px 30px;
+    position: absolute;
+    border-style: solid;
+    background-color: var(--color4);
+    border-radius: 30px;
+    border-color: var(--color4);
+    color: var(--color1);
+    z-index: 3;
+    font-size: 20px;
+    cursor: pointer;
+}
+.general-account_icon-dropdown-options{
+    display: none;
+    position: absolute;
+    left: 91.5%;
+    top: 5%;
+}
+.general-account_icon-dropdown:hover .general-account_icon-dropdown-options{
+    display: block;
+}
+.general-account_icon-dropdown-options-login_logout{
+    position: relative;
+    display: block;
+    border-style: solid;
+    padding: 10px 30px;
+    background-color: var(--color1);
+    border-color: var(--color2);
+    border-width: 2px;
+    color: var(--color2);
+    z-index: 3;
+    font-size: 20px;
+    cursor: pointer;
+}
+.general-account_icon-dropdown-options-login_logout:hover{
+    border-color: var(--color4);
+    color: var(--color4);
 }
 .general-sidebar{
     left: 5%;
@@ -55,13 +99,15 @@
     position: relative;
     text-align: center;
 }
-.general-sidebar-buttons:focus{
+.general-sidebar-buttons:hover{
     border-color: var(--color4);
     color: var(--color4);
 }
+
 /********** about us **********/
 /********** account **********/
 /********** dashboard **********/
+
 .general-dashboard-content{
     top: 15%;
     left: 20%;
@@ -81,19 +127,20 @@
 }
 .general-dashboard-content-joblist{
     width: 100%;
-    padding: 20px 30px;
-    border-color: var(--color2);
-    border-radius: 10px;
-    min-height: 30px;
-    position: relative;
-    border-width: 5px;
 }
 .general-dashboard-content-joblist-addnew{
-    width: 80%;
-    /* top: 15%; */
-    border-color: var(--color2);
+    width: 100%;
+    top: 20px;
+    padding: 10px 0px;
+    border-color: rgb(0 0 0);
     border-radius: 10px;
+    position: relative;
+    border-width: 3px;
+    z-index: 2;
+    border-style: solid;
+    cursor: pointer;
 }
+
 /********** help **********/
 /********** settings **********/
 
