@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="job_specific">
+
+            <div class="job_specific-horizontalbar"></div>
+
+            <div class="job_specific-title"> GoFlow </div>
+
+            <button class="job_specific-backbutton"> Back </button>
+
+            <div class="job_specific-name"> Job Name </div>
+
+            <div class="job_specific-navbar">
+                <form action="\upload_data">
+                    <input type="submit" id="upload_data" class="job_specific-navbar-buttons" value="Upload Data"/>
+                </form>
+                <form action="\automated_qc">
+                    <input type="submit" id="automated_qc" class="job_specific-navbar-buttons" value="Automated QC"/>
+                </form>
+                <form action="\gating">
+                    <input type="submit" id="gating" class="job_specific-navbar-buttons active" value="Preliminary Gating"/>
+                </form>
+                <form action="\normalization">
+                    <input type="normalization" id="normalization" class="job_specific-navbar-buttons" value="Normalization"/>
+                </form>
+                <form action="\downsampling">
+                    <input type="submit" id="downsampling" class="job_specific-navbar-buttons" value="Downsampling"/>
+                </form>
+                <form action="\dr_clustering">
+                    <input type="submit" id="dr_clustering" class="job_specific-navbar-buttons" value="Dimensionality Reduction and Clustering"/>
+                </form>
+            </div>
+
+            <script>
+                document.getElementById("upload_data").style.borderColor = "var(--color4)"
+                document.getElementById("upload_data").style.color = "var(--color4)"
+            </script>
+
+            <!--------------------------- Content Section -------------------------------->
+
+            <div class="job_specific-upload_data-content">
+                <div class="job_specific-upload_data-content-description"> 
+                    Here is where you can upload your FCS files, for more information on file format please visit the documentation.
+                </div>
+                <div class="job_specific-upload_data-content-fileholder">
+
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>

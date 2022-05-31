@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
     </head>
     <body>
         <div class="general">
@@ -24,7 +25,7 @@
                     <input type="submit" id="account" class="general-sidebar-buttons" value="Account"/>
                 </form>
                 <form action="\dashboard">
-                    <input type="submit" id="dashboard" class="general-sidebar-buttons active" value="Dashboard"/>
+                    <input type="submit" id="dashboard" class="general-sidebar-buttons" value="Dashboard"/>
                 </form>
                 <form action="\help">
                     <input type="submit" id="help" class="general-sidebar-buttons" value="Help"/>
@@ -51,10 +52,12 @@
                 <div class="general-dashboard-content-horizontalbar"></div>
 
                 <div class="general-dashboard-content-joblist">
-                    <div class="general-dashboard-content-joblist-addnew" onclick="add_job()"> + Click Here to Add New Job </div>
+                    <button class="general-dashboard-content-joblist-addnew" onclick="add_job()"> + Click Here to Add New Job </button>
 
                     <script>
+                        
                         function add_job(){
+                            console.log("whhhhhaaaaaaaaattttttt")
                             // jQuery.ajax({
                             // type: "GET",
                             // url: "/static/peaqo.py",
@@ -62,6 +65,10 @@
                             // }).done(function() {
                             // alert('finished python script');;
                             // });
+                            jQuery.ajax({
+                                type: "GET",
+                                url: "/upload_data",                       
+                            })
                         }
                     </script>
 

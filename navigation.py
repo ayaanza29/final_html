@@ -13,11 +13,11 @@ def initial():
 
 @app.route("/about_us")
 def about_us():
-    return render_template("general_about_us.html")
+    return render_template("general/about_us.html")
 
 @app.route("/account")
 def account():
-    return render_template("general_account.html")
+    return render_template("general/account.html")
 
 @app.route("/dashboard")
 def dashboard():
@@ -25,11 +25,11 @@ def dashboard():
 
 @app.route("/help")
 def help():
-    return render_template("general_help.html")
+    return render_template("general/help.html")
 
 @app.route("/settings")
 def settings():
-    return render_template("general_settings.html")
+    return render_template("general/settings.html")
 
 ############################ job_specific ############################
 
@@ -41,4 +41,4 @@ def upload_data():
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
     app.run(port = 5000, debug = True)
-    
+
