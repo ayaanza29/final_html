@@ -38,6 +38,32 @@ def settings():
 def upload_data():
     return render_template("job_specific/upload_data.html")
 
+@app.route("/automated_qc")
+def automated_qc():
+    return render_template("job_specific/automated_qc.html")
+
+@app.route("/gating")
+def gating():
+    return render_template("job_specific/gating.html")
+
+@app.route("/normalization")
+def normalization():
+    return render_template("job_specific/normalization.html")
+
+@app.route("/downsampling")
+def downsampling():
+    return render_template("job_specific/downsampling.html")
+
+@app.route("/dr_clustering")
+def dr_clustering():
+    return render_template("job_specific/dr_clustering.html")
+
+@app.route("/download_results")
+def download_results():
+    return render_template("job_specific/download_results.html")
+
+
+
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
     app.run(port = 5000, debug = True)

@@ -22,7 +22,7 @@
                     <input type="submit" id="automated_qc" class="job_specific-navbar-buttons" value="Automated QC"/>
                 </form>
                 <form action="\gating">
-                    <input type="submit" id="gating" class="job_specific-navbar-buttons active" value="Preliminary Gating"/>
+                    <input type="submit" id="gating" class="job_specific-navbar-buttons" value="Preliminary Gating"/>
                 </form>
                 <form action="\normalization">
                     <input type="submit" id="normalization" class="job_specific-navbar-buttons" value="Normalization"/>
@@ -39,8 +39,8 @@
             </div>
 
             <script>
-                document.getElementById("upload_data").style.borderColor = "var(--color4)"
-                document.getElementById("upload_data").style.color = "var(--color4)"
+                document.getElementById("automated_qc").style.borderColor = "var(--color4)"
+                document.getElementById("automated_qc").style.color = "var(--color4)"
 
                 function back_to_general() {
                     console.log("baaackkkkkk")
@@ -52,24 +52,26 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="job_specific-upload_data-content">
-                <div class="job_specific-upload_data-content-description"> 
-                    Here is where you can upload your FCS files, for more information on file format please visit the documentation.
+            <div class="job_specific-automated_qc-content">
+
+                <div class="job_specific-automated_qc-content-description"> 
+                    Quality control can be automatically run with the aid of the PeaqoQC package, all you have to do is press Run QC below.
                 </div>
-                <div class="job_specific-upload_data-content-fileholder">
-                    <div class="job_specific-upload_data-content-fileholder-title"> Files </div>
-                    <button class="job_specific-upload_data-content-fileholder-addfile" onclick="add_file()"> + Add File </button>
-                </div>
+                
+                <button class="job_specific-automated_qc-content-run_qc" onclick="run_qc()"> Run QC </button>
 
                 <script>
-                    function add_file() {
-                        console.log("adddd filllleeee")
+                    function run_qc() {
+                        console.log("ruuunnnn qqqqqccccc")
                         // jQuery.ajax({
                         //     url: "/dashboard",
                         // })
                         //somehow add file
                     }
                 </script>
+
+                <!-- stuff that happens when click button probably modal
+                <div class="job_specific-automated_qc-content-qc_result"> Results of QC </div> -->
 
             </div>
 
