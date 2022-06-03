@@ -59,16 +59,54 @@
 
                 <div class="job_specific-gating-content-gates_created">
                     <div class="job_specific-gating-content-gates_created-title"> Gates </div>
-                    <button class="job_specific-gating-content-gates_created-addgate" onclick="add_gate()"> + Add Gate </button>
+                    <button class="job_specific-gating-content-gates_created-addgate" id="add_gate"> + Add Gate </button>
+                </div>
+
+                <div id="popup" class="job_specific-gating-content-gate_popup">
+                    <div class="job_specific-gating-content-gate_popup-content">
+                        <span class="job_specific-gating-content-gate_popup-content-close">&times;</span>
+                        <div class="job_specific-gating-content-gate_popup-content-title"> Choose New Gate Parameters </div>
+                        <div class="job_specific-gating-content-gate_popup-content-label"> 
+                            Choose X Axis: <select name="x_axis" id="x_axis">
+                                <option value="" selected="selected">Select x-axis</option>
+                            </select>
+                            Choose Y Axis: <select name="y_axis" id="y_axis">
+                                <option value="" selected="selected">Select y-axis</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <script>
-                    function add_gate() {
-                        console.log("adddd filllleeee")
-                        // jQuery.ajax({
-                        //     url: "/dashboard",
-                        // })
-                        //somehow add file
+                    var modal = document.getElementById("popup");
+                    var btn = document.getElementById("add_gate");
+                    var span = document.getElementsByClassName("job_specific-gating-content-gate_popup-content-close")[0];
+
+                    btn.onclick = function() {
+                    modal.style.display = "block";
+                    }
+                    span.onclick = function() {
+                        modal.style.display = "none";
+                    }
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                </script>
+                <script>
+                    var axis_options = ["FSC-A", "FSC-H", "FSC-W"]
+                
+                    window.onload = function() {
+                        var x_axis = document.getElementById("x_axis");
+                        var y_axis = document.getElementById("y_axis");
+
+                        for (var x in axis_options) {
+                            x_axis.options[x_axis.options.length] = new Option(axis_options[x], x);
+                        }
+                        for (var y in axis_options) {
+                            y_axis.options[y_axis.options.length] = new Option(axis_options[y], y);
+                        }
                     }
                 </script>
 

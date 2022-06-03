@@ -156,6 +156,7 @@
     --color2: rgb(0, 0, 0);
     --color3: rgb(212, 212, 212);
     --color4: rgb(158, 105, 238);
+    --color5: rgb(199 198 198);
     min-width: 1500px;
     min-height: 800px;
 }
@@ -348,12 +349,52 @@
     width: 94%;
     padding: 10px;
 }
+.job_specific-gating-content-gate_popup {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.job_specific-gating-content-gate_popup-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%; /* Could be more or less, depending on screen size */
+    height: 30%;
+}
+.job_specific-gating-content-gate_popup-content-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.job_specific-gating-content-gate_popup-content-close:hover,
+.job_specific-gating-content-gate_popup-content-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.job_specific-gating-content-gate_popup-content-title{
+    font-size: 40px;
+    padding-bottom: 5%;
+}
+.job_specific-gating-content-gate_popup-content-label{
+    font-size: 30px;
+    padding-bottom: 5%;
+}
 
 /********** normalization **********/
 
 .job_specific-normalization-content{
     top: 35%;
-    left: 25%;
+    left: 20%;
     width: 60%;
     position: absolute;
 }
@@ -362,6 +403,58 @@
     font-size: 20px;
     position: relative;
     padding-bottom: 30px;
+}
+.job_specific-normalization-content-channels{
+    border-style: solid;
+    border-width: 4px;
+    border-color: var(--color4);
+    border-radius: 10px;
+    position: relative;
+}
+.job_specific-normalization-content-channels-title{
+    border-style: solid;
+    border-width: 5px;
+    border-color: var(--color4);
+    background: var(--color4);
+    position: relative;
+    align-items: center;
+    color: var(--color1);
+    font-size: 30px;
+}
+.job_specific-normalization-content-channels-button{
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--color5);
+    border-radius: 20px;
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--color2);
+    background-color: rgb(219 217 217);
+    padding: 10px 10px;
+    margin: 10px;
+}
+.job_specific-normalization-content-channels-button:focus{
+    border-color: var(--color4);
+    background-color: var(--color4);
+    color: var(--color1);
+}
+.job_specific-normalization-content-run_normalization{
+    color: var(--color1);
+    font-size: 30px;
+    border-color: var(--color4);
+    background: var(--color4);
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    padding: 15px 80px;
+    left: 30%;
+    margin-top: 30px;
+}
+.job_specific-normalization-content-run_normalization:active{
+    transform: 90%;
 }
 
 /********** downsampling **********/
@@ -377,6 +470,51 @@
     font-size: 20px;
     position: relative;
     padding-bottom: 30px;
+}
+.job_specific-downsampling-content-choice{
+    position: relative;
+}
+.job_specific-downsampling-content-choice-button{
+    color: var(--color1);
+    font-size: 30px;
+    border-color: var(--color4);
+    background: var(--color4);
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    padding: 15px 80px;
+    margin-top: 30px;
+}
+.job_specific-downsampling-content-choice-button:active{
+    transform: 90%;
+}
+.job_specific-downsampling-content-popup {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 15%;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto;
+}
+.job_specific-downsampling-content-popup-content {
+    background-color: var(--color1);
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 4px solid var(--color4);
+    width: 60%; /* Could be more or less, depending on screen size */
+    height: 30%;
+    border-radius: 20px;
+}
+.job_specific-downsampling-content-popup-content-title{
+    font-size: 40px;
+    padding-bottom: 5%;
+}
+.job_specific-downsampling-content-popup-content-label{
+    font-size: 30px;
+    padding-bottom: 5%;
 }
 
 /********** dr and clustering **********/

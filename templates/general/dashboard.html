@@ -58,15 +58,8 @@
                         
                         function add_job(){
                             console.log("whhhhhaaaaaaaaattttttt")
-                            // jQuery.ajax({
-                            // type: "GET",
-                            // url: "/static/peaqo.py",
-                            // // data: {}
-                            // }).done(function() {
-                            // alert('finished python script');;
-                            // });
-                            jQuery.ajax({
-                                type: "GET",
+                            $.ajax({
+                                type: "POST",
                                 url: "/upload_data",                       
                             })
                         }

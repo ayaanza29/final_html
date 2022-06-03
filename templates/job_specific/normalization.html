@@ -52,22 +52,36 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="job_specific-upload_data-content">
-                <div class="job_specific-upload_data-content-description"> 
-                    Here is where you can upload your FCS files, for more information on file format please visit the documentation.
-                </div>
-                <div class="job_specific-upload_data-content-fileholder">
-                    <div class="job_specific-upload_data-content-fileholder-title"> Files </div>
-                    <button class="job_specific-upload_data-content-fileholder-addfile" onclick="add_file()"> + Add File </button>
+            <div class="job_specific-normalization-content">
+                <div class="job_specific-normalization-content-description"> 
+                    Here is where you can perform normalization on your files to correct for batch effect using gaussNorm. Selected channels are highlighted, unselected channels are not.
                 </div>
 
+                <div class="job_specific-normalization-content-channels" id="channel_body">
+                    <div class="job_specific-normalization-content-channels-title"> Channels </div>
+                    <!-- <button class="job_specific-normalization-content-channels-cha" onclick="add_file()"> + Add File </button> -->
+                </div>
+
+                <button class="job_specific-normalization-content-run_normalization" onclick="run_normalization()"> Run Normalization </button>
+
                 <script>
-                    function add_file() {
-                        console.log("adddd filllleeee")
-                        // jQuery.ajax({
-                        //     url: "/dashboard",
-                        // })
-                        //somehow add file
+                    var channels = ["FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W", "FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W"]
+                    var channel_body = document.getElementById("channel_body")
+                    for (var index in channels){
+                        var button = document.createElement("button");
+                        button.classList.add("job_specific-normalization-content-channels-button") 
+                        button.innerHTML = channels[index];
+                        channel_body.appendChild(button);
+
+                        button.addEventListener ("click", function() {
+                            button.focus()
+                        });
+                    }
+                </script>
+
+                <script>
+                    function run_normalization(){
+                        
                     }
                 </script>
 

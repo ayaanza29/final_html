@@ -45,6 +45,7 @@
                 function back_to_general() {
                     console.log("baaackkkkkk")
                     jQuery.ajax({
+                        type: "POST",
                         url: "/dashboard",
                     })
                 }
@@ -52,22 +53,44 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="job_specific-upload_data-content">
-                <div class="job_specific-upload_data-content-description"> 
-                    Here is where you can upload your FCS files, for more information on file format please visit the documentation.
+            <div class="job_specific-downsampling-content">
+                <div class="job_specific-downsampling-content-description"> 
+                    Downsampling is an optional means of reducing the amount of data fed into analysis in order to get quicker results. 
+                    Two types of downsampling are offered, simple random sampling (SRS), and density dependent downsampling with SPADE.
                 </div>
-                <div class="job_specific-upload_data-content-fileholder">
-                    <div class="job_specific-upload_data-content-fileholder-title"> Files </div>
-                    <button class="job_specific-upload_data-content-fileholder-addfile" onclick="add_file()"> + Add File </button>
+
+                <div class="job_specific-downsampling-content-choice">
+                    <button class="job_specific-downsampling-content-choice-button" id="srs" onclick="random_downsampling()"> Random Downsampling </button>
+                    <button class="job_specific-downsampling-content-choice-button" id="spade" onclick="density_dependent_downsampling()"> Density Dependent Downsampling </button>
+                </div>
+
+                <div id="popup1" class="job_specific-downsampling-content-popup">
+                    <div class="job_specific-downsampling-content-popup-content">
+                        <div class="job_specific-downsampling-content-popup-content-title"> Results of running simple random downsample: </div>
+                    </div>
+                </div>
+
+                <div id="popup2" class="job_specific-downsampling-content-popup">
+                    <div class="job_specific-downsampling-content-popup-content">
+                        <div class="job_specific-downsampling-content-popup-content-title"> Results of running density dependent downsample: </div>
+                    </div>
                 </div>
 
                 <script>
-                    function add_file() {
-                        console.log("adddd filllleeee")
-                        // jQuery.ajax({
-                        //     url: "/dashboard",
-                        // })
-                        //somehow add file
+                    var modal1 = document.getElementById("popup1");
+                    var modal2 = document.getElementById("popup2");
+                    var btn1 = document.getElementById("srs");
+                    var btn2 = document.getElementById("spade");
+
+                    btn1.onclick = function() {
+                        modal1.style.display = "block";
+                        btn1.style.display = "none";
+                        btn2.style.display = "none";
+                    }
+                    btn2.onclick = function() {
+                        modal2.style.display = "block";
+                        btn1.style.display = "none";
+                        btn2.style.display = "none";
                     }
                 </script>
 
