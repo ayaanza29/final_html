@@ -10,7 +10,9 @@
 
             <div class="job_specific-title"> GoFlow </div>
 
-            <button class="job_specific-backbutton" onclick="back_to_general()"> Back </button>
+            <form action="\dashboard">
+                <input type="submit" class="job_specific-backbutton" value="Back"/>
+            </form>
 
             <div class="job_specific-name"> Job Name </div>
 
@@ -41,13 +43,6 @@
             <script>
                 document.getElementById("normalization").style.borderColor = "var(--color4)"
                 document.getElementById("normalization").style.color = "var(--color4)"
-
-                function back_to_general() {
-                    console.log("baaackkkkkk")
-                    jQuery.ajax({
-                        url: "/dashboard",
-                    })
-                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->

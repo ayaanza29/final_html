@@ -27,9 +27,6 @@
                 <form action="\dashboard">
                     <input type="submit" id="dashboard" class="general-sidebar-buttons" value="Dashboard"/>
                 </form>
-                <form action="\help">
-                    <input type="submit" id="help" class="general-sidebar-buttons" value="Help"/>
-                </form>
                 <form action="\settings">
                     <input type="submit" id="settings" class="general-sidebar-buttons" value="Settings"/>
                 </form>
@@ -52,17 +49,19 @@
                 <div class="general-dashboard-content-horizontalbar"></div>
 
                 <div class="general-dashboard-content-joblist">
-                    <button class="general-dashboard-content-joblist-addnew" onclick="add_job()"> + Click Here to Add New Job </button>
+                    <form action="/upload_data">
+                        <input type="submit" class="general-dashboard-content-joblist-addnew" value="+ Click Here to Add New Job"/>
+                    </form>
 
                     <script>
                         
-                        function add_job(){
-                            console.log("whhhhhaaaaaaaaattttttt")
-                            $.ajax({
-                                type: "POST",
-                                url: "/upload_data",                       
-                            })
-                        }
+                        // function add_job(){
+                        //     console.log("whhhhhaaaaaaaaattttttt")
+                        //     $.ajax({
+                        //         type: "POST",
+                        //         url: "/upload_data",                       
+                        //     })
+                        // }
                     </script>
 
                 </div>

@@ -22,11 +22,7 @@ def account():
 @app.route("/dashboard")
 def dashboard():
     return render_template("general/dashboard.html")
-
-@app.route("/help")
-def help():
-    return render_template("general/help.html")
-
+    
 @app.route("/settings")
 def settings():
     return render_template("general/settings.html")
