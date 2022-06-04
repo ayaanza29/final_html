@@ -49,19 +49,39 @@
                 <div class="general-dashboard-content-horizontalbar"></div>
 
                 <div class="general-dashboard-content-joblist">
-                    <form action="/upload_data">
-                        <input type="submit" class="general-dashboard-content-joblist-addnew" value="+ Click Here to Add New Job"/>
-                    </form>
+                    
+                        <!-- <input type="submit" class="general-dashboard-content-joblist-addnew" value="+ Click Here to Add New Job"/> -->
+                        <button id="add_new_job" class="general-dashboard-content-joblist-addnew"> + Click Here to Add New Job </button>
+                    
 
+                    <div id="popup" class="general-dashboard-content-joblist-popup">
+                        <div class="general-dashboard-content-joblist-popup-content">
+                            <span class="general-dashboard-content-joblist-popup-content-close">&times;</span>
+                            <div class="general-dashboard-content-joblist-popup-content-title"> Choose New Job Parameters </div>
+                            <form action="/upload_data">
+                                <label for="job_name">Job name:</label>
+                                <input type="text" id="job_name" name="job_name"><br><br>
+                                <input type="submit" class="general-dashboard-content-joblist-popup-content-create_button" value="Create Job">
+                            </form>
+                        </div>
+                    </div>
+                    
                     <script>
-                        
-                        // function add_job(){
-                        //     console.log("whhhhhaaaaaaaaattttttt")
-                        //     $.ajax({
-                        //         type: "POST",
-                        //         url: "/upload_data",                       
-                        //     })
-                        // }
+                        var modal = document.getElementById("popup");
+                        var btn = document.getElementById("add_new_job");
+                        var span = document.getElementsByClassName("general-dashboard-content-joblist-popup-content-close")[0];
+    
+                        btn.onclick = function() {
+                        modal.style.display = "block";
+                        }
+                        span.onclick = function() {
+                            modal.style.display = "none";
+                        }
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
                     </script>
 
                 </div>
