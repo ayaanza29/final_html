@@ -1,0 +1,133 @@
+<head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/main.css') }}">
+</head>
+
+<body>
+    <div class="scene">
+        <div class="wrap">
+            <div class="wall wall-right"></div>
+            <div class="wall wall-left"></div>   
+            <div class="wall wall-top"></div>
+            <div class="wall wall-bottom"></div> 
+            <div class="wall wall-back"></div>    
+        </div>
+        <div class="wrap">
+            <div class="wall wall-right"></div>
+            <div class="wall wall-left"></div>   
+            <div class="wall wall-top"></div>
+            <div class="wall wall-bottom"></div>   
+            <div class="wall wall-back"></div>    
+        </div>
+    </div>
+    <div class="opening_background"> 
+        <div class="opening_title"> FlowGo </div>
+        <div class="opening_content"> Easy to use software, all the latest packages, and all on the web make FlowGo ideal for all your flow cytometry analysis needs!  </div>
+        <div class = "opening_button_position">
+            <!-- <form action="\thing.html">
+                <input type="submit" value="Sign In" class="opening_button"/>
+            </form>
+            <form action="\thing.html">
+                <input type="submit" value="Create New Account" class="opening_button"/>
+            </form> -->
+            <!-- <button onclick="document.getElementById('id01')" class="opening_button">Sign In</button>
+            <button onclick="document.getElementById('id02')" class="opening_button">Create New Account</button> -->
+            
+            <button class="specfic_buttons" onclick="document.getElementById('id01').style.display='block'">Login</button>
+            <button class="specfic_buttons" onclick="document.getElementById('id02').style.display='block'">Create a New Account</button>
+
+        </div>
+
+        
+
+        <!-- The Modal -->
+        <div id="id01" class="modal">
+            <span onclick="document.getElementById('id01').style.display='none'"
+            class="close" title="Close Modal">&times;</span>
+
+            <!-- Modal Content -->
+            <form class="modal-content animate" action="/dashboard.html">
+                <div class="imgcontainer">
+                <img src="static\images\account_icon.png" alt="Avatar" class="avatar">
+                </div>
+
+                <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required>
+
+                <button type="submit">Login</button> 
+
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+                </div>
+
+                <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+                </div>
+            </form>
+            </div>
+
+            <!-- The Modal -->
+        <div id="id02" class="modal">
+            <span onclick="document.getElementById('id02').style.display='none'"
+            class="close" title="Close Modal">&times;</span>
+
+            <!-- Modal Content -->
+            <!-- <form class="modal-content animate" action="/action_page.php"> -->
+            <form class="modal-content animate" action="/welcome.html">
+                <div class="imgcontainer">
+                    <img src="static\images\account_icon.png" alt="Avatar" class="avatar">
+                </div>
+                <div class="container">
+                    <!-- <h8>Sign Up</h8> -->
+                    <p>Please fill in this form to create an account.</p>
+                    <hr>
+                    <label for="email"><b>Email</b></label>
+                    <input type="text" placeholder="Enter Email" name="email" required>
+    
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required>
+    
+                    <label for="psw-repeat"><b>Repeat Password</b></label>
+                    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+    
+                    <label>
+                        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+                    </label>
+    
+                    <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+    
+                    <!-- <div class="clearfix">
+                        <button1 type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn1">Cancel</button1>
+                        <button1 type="submit" class="signup">Sign Up</button1>
+                    </div> -->
+                    <script>
+                        function goPython(){
+                            console.log("hi")
+                            var email = document.getElementById("email").value;
+                            var password = document.getElementById("psw").value;
+                            
+                            jQuery.ajax({
+                                type: "GET",
+                                url: "/create_user",
+                                data: {email, password}
+                            }).done(function() {
+                                alert('finished python script');;
+                            });
+                        }
+                        document.getElementById("register").addEventListener("click", goPython);
+                    </script>
+                    <div class="container" style="background-color:white">
+                        <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
+                        <button type="submit" class="signup" id="register">Sign Up</button>
+                    </div>
+                </form>
+            
+        </div>
+    
+    </div>
+<body>
