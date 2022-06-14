@@ -57,6 +57,19 @@
                     <button class="job_specific-gating-content-gates_created-addgate" id="add_gate"> + Add Gate </button>
                 </div>
 
+
+                <!-- <div id="container" class="job_specific-gating-content-gates_created">
+                    <div class="job_specific-gating-content-gates_created-title"> Gates </div>
+                    <form id="form" method=post enctype=multipart/form-data>
+                        <div class="job_specific-gating-content-gates_created-addgate">
+                            <div class="job_specific-gating-content-gates_created-addgate-label"> + Add New File </div>
+                            <input id="file" class="job_specific-upload_data-content-fileholder-addfile-hide" type="file" id="file_upload" name="file_upload" accept="image/png, image/jpeg"/>
+                        </div>
+                    </form>
+                </div> -->
+
+
+
                 <div id="popup" class="job_specific-gating-content-gate_popup">
                     <div class="job_specific-gating-content-gate_popup-content">
                         <span class="job_specific-gating-content-gate_popup-content-close">&times;</span>
@@ -71,6 +84,63 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="overall_graph">
+                    <div>
+                      <canvas
+                        id="canvas"
+                        width="430"
+                        height="385"
+                        style="position: relative; left: 150px;" 
+                      ></canvas>
+                    </div>
+                    <div style="margin-top:5px">
+                      <span>X Axis: </span>
+                      <input type="radio" name="x-axis" value="FSC-A" checked />
+                      <label for="FSC-A">FSC-A</label>
+                      <input type="radio" name="x-axis" value="FSC-H" />
+                      <label for="FSC-H">FSC-H</label>
+                      <input type="radio" name="x-axis" value="FSC-W" />
+                      <label for="FSC-W">FSC-W</label>
+                      <input type="radio" name="x-axis" value="SSC-A" />
+                      <label for="SSC-A">SSC-A</label>
+                      <input type="radio" name="x-axis" value="SSC-H" />
+                      <label for="SSC-H">SSC-H</label>
+                      <input type="radio" name="x-axis" value="SSC-W" />
+                      <label for="SSC-W">SSC-W</label>
+                    </div>
+                    <div style="margin-top:5px">
+                      <span>Y Axis: </span>
+                      <input type="radio" name="y-axis" value="FSC-A" />
+                      <label for="FSC-A">FSC-A</label>
+                      <input type="radio" name="y-axis" value="FSC-H" checked />
+                      <label for="FSC-H">FSC-H</label>
+                      <input type="radio" name="y-axis" value="FSC-W" />
+                      <label for="FSC-W">FSC-W</label>
+                      <input type="radio" name="y-axis" value="SSC-A" />
+                      <label for="SSC-A">SSC-A</label>
+                      <input type="radio" name="y-axis" value="SSC-H" />
+                      <label for="SSC-H">SSC-H</label>
+                      <input type="radio" name="y-axis" value="SSC-W" />
+                      <label for="SSC-W">SSC-W</label>
+                    </div>
+                    <div class="drawing_options">
+                        <span>Shape: </span>
+                        <input type="radio" name="chooseShape" value="rectangle" checked />
+                        <label for="rectangle">rectangle</label>
+                        <input type="radio" name="chooseShape" value="polygon"/>
+                        <label for="polygon">polygon</label>
+                      </div>
+                    <div class="drawing_options">
+                      <button id="clear" >Clear</button>
+                      <button id="next" >Next Graph</button>
+                    </div>
+                    <br />
+                    <script src="..\static\new_graph.js"></script>
+                </div>
+
+
+
 
                 <script>
                     var modal = document.getElementById("popup");

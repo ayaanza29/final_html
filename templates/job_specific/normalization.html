@@ -58,20 +58,49 @@
                 </div>
 
                 <button class="job_specific-normalization-content-run_normalization" onclick="run_normalization()"> Run Normalization </button>
-
+                <button id="select_all" class="job_specific-normalization-content-run_normalization"> Select All </button>
                 <script>
                     var channels = ["FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W", "FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W"]
+                    var selected_channels = [];
                     var channel_body = document.getElementById("channel_body")
                     for (var index in channels){
-                        var button = document.createElement("button");
-                        button.classList.add("job_specific-normalization-content-channels-button") 
+                        const button = document.createElement("button");
+                        button.classList.add("job_specific-normalization-content-channels-button_unfocus");
+                        button.id =  index + "_" + channels[index];
                         button.innerHTML = channels[index];
-                        channel_body.appendChild(button);
+                        
 
                         button.addEventListener ("click", function() {
-                            button.focus()
+                            if(selected_channels.includes(button.id)){
+                                console.log("Blur: " + button.id)
+                                selected_channels.splice(selected_channels.indexOf(button.id));
+                                button.classList.remove(...button.classList);
+                                button.classList.add("job_specific-normalization-content-channels-button_unfocus");
+                            } else{
+                                console.log("Focus: " + button.id)
+                                
+                                selected_channels.push(button.id);
+                                button.classList.remove(...button.classList);
+                                button.classList.add("job_specific-normalization-content-channels-button_focus");
+                            }
+                            
                         });
+
+                        channel_body.appendChild(button);
                     }
+                    const select_all_button = document.getElementById("select_all");
+                    select_all_button.addEventListener ("click", function() {
+                        for (var index in channels){
+                            const button =  document.getElementById( index + "_" + channels[index]);
+                            if(!selected_channels.includes(button.id)){
+                                console.log("Focus: " + button.id)
+                                
+                                selected_channels.push(button.id);
+                                button.classList.remove(...button.classList);
+                                button.classList.add("job_specific-normalization-content-channels-button_focus");
+                            }
+                        }
+                        });
                 </script>
 
                 <script>

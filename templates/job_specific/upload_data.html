@@ -58,7 +58,7 @@
                         <!-- <input type=file name=file> -->
                         <div class="job_specific-upload_data-content-fileholder-addfile">
                             <div class="job_specific-upload_data-content-fileholder-addfile-label"> + Add New File </div>
-                            <input id="file" class="job_specific-upload_data-content-fileholder-addfile-hide" type="file" id="file_upload" name="file_upload" accept="image/png, image/jpeg"/>
+                            <input id="file" class="job_specific-upload_data-content-fileholder-addfile-hide" type="file" name="file_upload" accept="image/png, image/jpeg"/>
                         </div>
                         <!-- <input class="upload_button" type=submit value=Upload> -->
                     </form>
@@ -66,7 +66,10 @@
                 </div>
 
                 <script>
-                    var files = ["kitty"]
+                    // if (typeof files == "undefined"){
+                    //     var files = ["stuff"]
+                    // }
+                    var files = ["stuff"]
                     var file_body = document.getElementById("container")
 
                     for (var file in files){
@@ -76,11 +79,31 @@
                         file_body.appendChild(button);
                     }
 
-                    document.getElementById("file").onchange = function() {
+                    document.getElementById("file").addEventListener("change", function (e) {
                         files.push("thing")
                         console.log(files)
+
+                        // for (var file in files){
+                        //     var button = document.createElement("div");
+                        //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                        //     button.innerHTML = files[file];
+                        //     file_body.appendChild(button);
+                        // }
                         document.getElementById("form").submit();
-                    };
+                        }, false);
+
+                    // document.getElementById("file").onchange = function() {
+                    //     files.push("thing")
+                    //     console.log(files)
+
+                    //     // for (var file in files){
+                    //     //     var button = document.createElement("div");
+                    //     //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                    //     //     button.innerHTML = files[file];
+                    //     //     file_body.appendChild(button);
+                    //     // }
+                    //     document.getElementById("form").submit();
+                    // };
                     
                 </script>
 

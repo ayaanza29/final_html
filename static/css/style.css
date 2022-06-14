@@ -490,6 +490,9 @@
     font-size: 30px;
     padding-bottom: 5%;
 }
+.overall_graph{
+    position:relative;
+}
 
 /********** normalization **********/
 
@@ -522,7 +525,7 @@
     color: var(--color1);
     font-size: 30px;
 }
-.job_specific-normalization-content-channels-button{
+.job_specific-normalization-content-channels-button_unfocus{
     border-style: solid;
     border-width: 2px;
     border-color: var(--color5);
@@ -536,11 +539,25 @@
     padding: 10px 10px;
     margin: 10px;
 }
-.job_specific-normalization-content-channels-button:focus{
+.job_specific-normalization-content-channels-button_focus{
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 20px;
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px 10px;
+    margin: 10px;
     border-color: var(--color4);
     background-color: var(--color4);
     color: var(--color1);
 }
+/* .job_specific-normalization-content-channels-button:focus{
+    border-color: var(--color4);
+    background-color: var(--color4);
+    color: var(--color1);
+} */
 .job_specific-normalization-content-run_normalization{
     color: var(--color1);
     font-size: 30px;
