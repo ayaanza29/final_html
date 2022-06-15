@@ -11,6 +11,10 @@ from flask_login import (current_user, LoginManager,
 from flask_mongoengine import MongoEngine
 from mongoengine import *
 from matplotlib import collections
+from rpy2.robjects import pandas2ri as pr
+from rpy2 import robjects as ro
+import rpy2.robjects as robjects
+from rpy2.robjects.conversion import localconverter as lc
 
 ALLOWED_EXTENSIONS = {'fcs', "png", "jpg"}
 UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
@@ -19,9 +23,10 @@ app.config["Upload_Folder"] = UPLOAD_FOLDER
 
 app.config['MONGODB_SETTINGS'] = {
     'db': 'web_application_login',
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'port': 27017
 }
+#'bindip': "0.0.0.0"
 app.secret_key = 'some key'
 db = MongoEngine()
 login_manager = LoginManager()
@@ -78,8 +83,9 @@ class User(db.Document):
     name = db.StringField()
     password = db.StringField()
     email = db.StringField()
-    # def __init__(self):
-    #     self.job_list = []
+    def __init__(self):
+        self.job_list = []
+        self.current_job = ""
     def to_json(self):
         return {"name": self.name,
                 "email": self.email}
@@ -93,34 +99,41 @@ class User(db.Document):
         return str(self.id)
     def get_name(self):
         return str(self.name)
-    def create_new_job(self, name):
-        self.job_list.append(Job(name))
+    def create_new_job(self, job_name):
+        self.job_list.append(Job(self.name, job_name))
         return self.job_list
     def get_job_list(self):
+        path = "users/" + current_user.get_name()
+        self.job_list = os.listdir(path)
         return self.job_list
+        #######  might need changed
+    def set_current_job(self, name):
+        self.current_job = self.job_list[name]
+    def get_current_job(self):
+        return self.current_job
 
 class Job():
-    def __init__(self, name): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_files
+    def __init__(self, username, job_name): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_files
         #self.job_description = job_description
-        self.name = name
+        self.username = username
+        self.job_name = job_name
+        self.path = "user_data/" + username + "/" + job_name + "/"
     def add_fcs(self):
         self.fcs_files
         return 42
     def get_fcs_names(self):
         self.fcs_files
         return 42
+    def add_gates(self):
+        return 42
+    def add_normalized_fcs(self):
+        return 42
 
-
-# class UserData(db.Document):
-#     def __init__(self, username, email):
-#         self.username = username
-#         self.email = email
-#     def create_new_job():
-#         return True
-#     def get_jobList():
-#         return True
-#     def get_jobList():
-#         return True
+@app.route('/set_job')
+def set_job():
+    name = request.args("name")
+    current_user.set_current_job(name)
+    return 42
 
 @app.route('/')
 def opening_page():
@@ -226,35 +239,35 @@ def upload_data():
             file.save(os.path.join("C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data", filename))
             return redirect(url_for('upload_file', name=filename))
     #return render_template("upload_help.html")
-    return render_template("job_specific/upload_data.html")
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = current_user.get_current_job(), fcs_files = (current_user.get_current_job()).get_fcs_names())
 
 @app.route("/upload_helper")
 def upload_helper():
-    return render_template("job_specific/upload_helper.html")
+    return render_template("job_specific/upload_helper.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/automated_qc")
 def automated_qc():
-    return render_template("job_specific/automated_qc.html")
+    return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/gating")
 def gating():
-    return render_template("job_specific/gating.html")
+    return render_template("job_specific/gating.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/normalization")
 def normalization():
-    return render_template("job_specific/normalization.html")
+    return render_template("job_specific/normalization.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/downsampling")
 def downsampling():
-    return render_template("job_specific/downsampling.html")
+    return render_template("job_specific/downsampling.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/dr_clustering")
 def dr_clustering():
-    return render_template("job_specific/dr_clustering.html")
+    return render_template("job_specific/dr_clustering.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/download_results")
 def download_results():
-    return render_template("job_specific/download_results.html")
+    return render_template("job_specific/download_results.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 ############################ ajax requests ############################
 #######################################################################
@@ -273,6 +286,74 @@ def add_job():
 
     current_user.create_new_job(job_name)
     return 42
+
+############################ r files ############################
+
+# @app.route("/get_peaqo")
+# def get_peaqo():
+
+#     path = request.args.get("path")
+#     channels = request.args.get("channels")
+
+    # fileName = "peaqo.r"
+    # url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\peaqo.r"
+    # with lc(ro.default_converter + pr.converter):
+    #     fileName_c = ro.conversion.py2rpy(fileName)
+    #     url_c = ro.conversion.py2rpy(url)
+    # ro.globalenv['fileName'] = fileName_c
+    # ro.globalenv['url'] = url_c
+
+    # r = robjects.r
+    # r.source('R_files\\clustering_dr.r')
+
+    # densvis_umap = robjects.globalenv['densvis_umap']
+    # print("start qc cool")
+    # densvis_umap(path)
+
+    #return 42 (output_path)
+
+# @app.route("/get_peaqo")
+# def get_peaqo():
+
+#     path = request.args.get("path")
+#     channels = request.args.get("channels")
+
+#     fileName = "peaqo.r"
+#     url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\peaqo.r"
+#     with lc(ro.default_converter + pr.converter):
+#         fileName_c = ro.conversion.py2rpy(fileName)
+#         url_c = ro.conversion.py2rpy(url)
+#     ro.globalenv['fileName'] = fileName_c
+#     ro.globalenv['url'] = url_c
+
+#     r = robjects.r
+#     r.source('R_files\\clustering_dr.r')
+
+#     densvis_umap = robjects.globalenv['densvis_umap']
+#     print("start qc cool")
+#     densvis_umap(path)
+
+#     return 42 #(output_path)
+
+@app.route("/get_peaqo")
+def get_peaqo():
+    fileName = "peaqo.r"
+    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\peaqo.r"
+    with lc(ro.default_converter + pr.converter):
+        fileName_c = ro.conversion.py2rpy(fileName)
+        url_c = ro.conversion.py2rpy(url)
+    ro.globalenv['fileName'] = fileName_c
+    ro.globalenv['url'] = url_c
+
+    r = robjects.r
+    r.source('R_files\\peaqo.r')
+
+    run_QC = robjects.globalenv['run_QC']
+    run_QC('C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs', output = 'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\')
+    return 'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\'
+
+
+
 
 if __name__ == "__main__":
     app.secret_key = 'super secret key'

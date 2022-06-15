@@ -44,17 +44,17 @@
 
                 <div class="general-dashboard-content-horizontalbar"></div>
 
-                <div class="general-dashboard-content-joblist">
+                <div id="container" class="general-dashboard-content-joblist">
                     
-                        <!-- <input type="submit" class="general-dashboard-content-joblist-addnew" value="+ Click Here to Add New Job"/> -->
-                        <button id="add_new_job" class="general-dashboard-content-joblist-addnew"> + Click Here to Add New Job </button>
+                    <!-- <input type="submit" class="general-dashboard-content-joblist-addnew" value="+ Click Here to Add New Job"/> -->
+                    <button id="add_new_job" class="general-dashboard-content-joblist-addnew"> + Click Here to Add New Job </button>
                     
 
                     <div id="popup" class="general-dashboard-content-joblist-popup">
                         <div class="general-dashboard-content-joblist-popup-content">
                             <span class="general-dashboard-content-joblist-popup-content-close">&times;</span>
                             <div class="general-dashboard-content-joblist-popup-content-title"> Choose New Job Parameters </div>
-                            <form action="/upload_data" onsubmit="create_job()">
+                            <form action="/dashboard" onsubmit="create_job(), add_to_list()">
                                 <label for="job_name">Job name:</label>
                                 <input type="text" id="job_name" name="job_name"><br><br>
                                 <input type="submit" class="general-dashboard-content-joblist-popup-content-create_button" value="Create Job">
@@ -74,21 +74,27 @@
                     </script>
 
                     <script>
-                        // var jobs = job_list
-                        // var file_body = document.getElementById("container")
+                        var jobs = job_list
+                        var job_body = document.getElementById("container")
 
-                        // document.getElementById("file").onchange = function() {
-                        //     files.push("thing")
-                        //     console.log(files)
+                        for (var job in jobs){
+                            var button = document.createElement("button");
+                            button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                            job_name = jobs[job];
+                            button.innerHTML = job_name;
+                            job_body.appendChild(job);
+                        
+                            
+                            button.addEventListener ("click", function() {
+                                jQuery.ajax({
+                                    type: "GET",
+                                    url: "/set_job",
+                                    data: {job_name}
+                                })
+                            });
 
-                        //     for (var file in files){
-                        //         var button = document.createElement("div");
-                        //         button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                        //         button.innerHTML = files[file];
-                        //         file_body.appendChild(button);
-                        //     }
-                        //     document.getElementById("form").submit();
-                        // };
+                            console.log(job_name)
+                        }
                     </script>
                     
                     <script>

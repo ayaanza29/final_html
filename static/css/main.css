@@ -22,6 +22,7 @@
     --color3: rgb(212, 212, 212);
     --color4: rgb(158, 105, 238);
     min-width: 1500px;
+    min-height: 800px;
     z-index: 5;
 
 }
@@ -71,7 +72,7 @@
 }
 
 .opening_button_position{
-    top: 65%;
+    top: 70%;
     left: 64%;
     z-index: 3;
     position: absolute;
