@@ -39,7 +39,7 @@
 .general-account_icon-dropdown-button{
     top: 1%;
     left: 90%;
-    padding: 10px 30px;
+    padding: 10px 0px;
     position: absolute;
     border-style: solid;
     background-color: var(--color4);
@@ -49,6 +49,8 @@
     z-index: 3;
     font-size: 20px;
     cursor: pointer;
+    width: 180px;
+    text-align: center;
 }
 .general-account_icon-dropdown-options{
     display: none;

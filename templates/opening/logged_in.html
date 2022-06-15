@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>tutorial</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="hero">
+            <label id = "testing">Hello </label>
+            <script>
+                console.log("hiiii")
+                console.log(flask_login.current_user)
+                console.log("byyyy")
+                //function goPython(){}
+                jQuery.ajax({
+                    type: "POST",
+                    url: "/user_info",
+                    // dataType: "json",
+                    // info: FormData,
+                    // encode: true
+                }).done(function(info){
+                    console.log("hi");
+                    console.log(info);
+                    document.getElementById("testing").innerHTML="Hello " + (info["data"])["name"];
+                })
+                
+                // document.getElementById("testing")
+            </script>
+        </div>
+    </body>
+</html>

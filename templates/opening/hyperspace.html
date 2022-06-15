@@ -32,8 +32,8 @@
             <!-- <button onclick="document.getElementById('id01')" class="opening_button">Sign In</button>
             <button onclick="document.getElementById('id02')" class="opening_button">Create New Account</button> -->
             
-            <button class="specfic_buttons" onclick="document.getElementById('id01').style.display='block'">Login</button>
-            <button class="specfic_buttons" onclick="document.getElementById('id02').style.display='block'">Create a New Account</button>
+            <button class="specific_buttons" onclick="document.getElementById('id01').style.display='block'">Login</button>
+            <button class="specific_buttons" onclick="document.getElementById('id02').style.display='block'">Create a New Account</button>
 
         </div>
 
@@ -45,28 +45,28 @@
             class="close" title="Close Modal">&times;</span>
 
             <!-- Modal Content -->
-            <form class="modal-content animate" action="/dashboard.html">
+            <form class="modal-content animate" action="/login" method="post">
                 <div class="imgcontainer">
                 <img src="static\images\account_icon.png" alt="Avatar" class="avatar">
                 </div>
 
-                <div class="container">
-                <label for="uname"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" name="uname" required>
+                <div class="container-username">
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="name" required>
 
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" required>
-
-                <button type="submit">Login</button> 
-
-                <label>
-                    <input type="checkbox" checked="checked" name="remember"> Remember me
-                </label>
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="password" required>
+                </div>
+                <div class="container-login">
+                    <button class="login" type="submit">Login</button> 
+                    <label>
+                        <input type="checkbox" checked="checked" name="remember"> Remember me
+                    </label>
                 </div>
 
-                <div class="container" style="background-color:#f1f1f1">
-                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                <span class="psw">Forgot <a href="#">password?</a></span>
+                <div class="container-cancel" style="background-color:#f1f1f1">
+                    <button type="button" onclick="document.getElementById('id01').style.display='none'">Cancel</button> <!-- class="cancel" -->
+                    <span class="psw">Forgot <a href="#">password?</a></span>
                 </div>
             </form>
             </div>

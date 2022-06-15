@@ -11,7 +11,7 @@
             <div class="general-title"> GoFlow </div>
 
             <div class="general-account_icon-dropdown">
-                <div class="general-account_icon-dropdown-button" id="account_icon"> Hello Zuhayr! </div>
+                <div class="general-account_icon-dropdown-button" id="account_icon"> Hello {{name}} </div>
                 <div class="general-account_icon-dropdown-options">
                     <div id="logout" class="general-account_icon-dropdown-options-login_logout"> Logout </div>
                 </div>
@@ -31,10 +31,6 @@
                     <input type="submit" id="settings" class="general-sidebar-buttons" value="Settings"/>
                 </form>
             </div>
-
-            <!-- <script>
-                change hello user
-            </script> -->
 
             <script>
                 document.getElementById("dashboard").style.borderColor = "var(--color4)"
@@ -58,13 +54,42 @@
                         <div class="general-dashboard-content-joblist-popup-content">
                             <span class="general-dashboard-content-joblist-popup-content-close">&times;</span>
                             <div class="general-dashboard-content-joblist-popup-content-title"> Choose New Job Parameters </div>
-                            <form action="/upload_data">
+                            <form action="/upload_data" onsubmit="create_job()">
                                 <label for="job_name">Job name:</label>
                                 <input type="text" id="job_name" name="job_name"><br><br>
                                 <input type="submit" class="general-dashboard-content-joblist-popup-content-create_button" value="Create Job">
                             </form>
                         </div>
                     </div>
+
+                    <script>
+                        create_job = function(){
+                            var job_name = document.getElementById("job_name").value
+                            jQuery.ajax({
+                                type: "GET",
+                                url: "/create_job",
+                                data: {job_name}
+                            })
+                        }
+                    </script>
+
+                    <script>
+                        // var jobs = job_list
+                        // var file_body = document.getElementById("container")
+
+                        // document.getElementById("file").onchange = function() {
+                        //     files.push("thing")
+                        //     console.log(files)
+
+                        //     for (var file in files){
+                        //         var button = document.createElement("div");
+                        //         button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                        //         button.innerHTML = files[file];
+                        //         file_body.appendChild(button);
+                        //     }
+                        //     document.getElementById("form").submit();
+                        // };
+                    </script>
                     
                     <script>
                         var modal = document.getElementById("popup");

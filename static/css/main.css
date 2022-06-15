@@ -1,0 +1,291 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Arial";;
+}
+
+/* //////////////// Opening Page ///////////////////// */
+
+.opening_background {
+    /* width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative; */
+    --hover_color: rgb(221, 236, 253);
+    --outline_color: rgb(239, 239, 239);
+    --white: rgb(255, 255, 255);
+    --black: rgb(0,0,0);
+    --purple: #4717F6;;
+    --dark: #0E0B16;
+    --color1: rgb(255, 255, 255);
+    --color2: rgb(0, 0, 0);
+    --color3: rgb(212, 212, 212);
+    --color4: rgb(158, 105, 238);
+    min-width: 1500px;
+    z-index: 5;
+
+}
+
+.opening_sign_in{
+  color: rgb(0, 0, 0);
+  /* position: absolute; */
+  /* top: 30%;
+  left: 30%; */
+  /* margin-left: auto;
+  margin-right: auto; */
+  transform: translateY(300%);
+  z-index: 5;
+  text-align: center;
+}
+
+/* .opening_background::before {    
+    content: "";
+    background: var(--black);
+    background-size: cover;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+} */
+
+.opening_title{
+    font-size: 200px;
+    color: var(--white);
+    z-index: 2;
+    display: block;
+    position: absolute;
+    top: 40%;
+    left: 10%;
+}
+
+.opening_content{
+    font-size: 50px;
+    color: var(--white);
+    z-index: 2;
+    display: block;
+    position: absolute;
+    top: 35%;
+    left: 60%;
+    width: 30%;
+}
+
+.opening_button_position{
+    top: 65%;
+    left: 64%;
+    z-index: 3;
+    position: absolute;
+}
+
+button.specific_buttons{
+    background: var(--black);
+    color: var(--white);
+    border-width: 4px;
+    font-size: 20px;
+    position: relative;
+    display: inline;
+    float: left;
+    border-color: var(--purple);
+    padding: 20px 40px;
+    margin-left: 20px;
+}
+
+button:hover.specific_buttons{
+    background : var(--purple);
+    color: var(--white);
+}
+
+
+.wall{
+    /* background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/18515/PIA09959-1280x800_copy.jpg); */
+    background: url("bluredpurple.jpg");
+    background-size: cover;
+  }
+  
+  html, body{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  body{
+    background: #000;
+    text-align: center;
+  }
+  
+  body:before{
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+  
+  .scene{
+    display: inline-block;
+    vertical-align: middle;
+    perspective: 5px;
+    perspective-origin: 50% 50%;
+    position: relative;
+    opacity: 0.6;
+  }
+  
+  .wrap{
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    left: -500px;
+    top: -500px;
+    transform-style: preserve-3d;
+    animation: move 12s infinite linear;
+    animation-fill-mode: forwards;
+    
+  }
+  
+  .wrap:nth-child(2){
+    animation: move 12s infinite linear;
+    animation-delay: 6s;
+  }
+  
+  .wall {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    animation: fade 12s infinite linear;
+    animation-delay: 0;
+  }
+  
+  .wrap:nth-child(2) .wall {
+    animation-delay: 6s;
+  }
+  
+  .wall-right {
+    transform: rotateY(90deg) translateZ(500px);
+  }
+  
+  .wall-left {
+    transform: rotateY(-90deg) translateZ(500px);
+  }
+  
+  .wall-top {
+    transform: rotateX(90deg) translateZ(500px);
+  }
+  
+  .wall-bottom {
+    transform: rotateX(-90deg) translateZ(500px);
+  }
+  
+  .wall-back {
+    transform: rotateX(180deg) translateZ(500px);
+  }
+  
+  @keyframes move {
+    0%{
+      transform: translateZ(-500px) rotate(0deg);
+    }
+    100%{
+      transform: translateZ(500px) rotate(0deg);
+    }
+  }
+  
+  @keyframes fade {
+    0%{
+      opacity: 0;
+    }
+    25% {
+      opacity: 1;
+    }
+    75% {
+      opacity: 1;
+    }
+    100%{
+      opacity: 0;
+    }
+  }
+
+/* //////////////// Modal Account Pages ///////////////////// */
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 5; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: white;
+    padding-top: 60px;
+    align-items: center;
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-size: cover;
+    align-items: center;
+    text-align: center;
+    margin: 5px auto; /* 15% from the top and centered */
+    border: 1px solid rgb(231, 231, 231);
+    width: 50%; /* Could be more or less, depending on screen size */
+  }
+  
+  /* The Close Button */
+  .close {
+    /* Position it in the top right corner outside of the modal */
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+  }
+  
+  /* Close button on hover */
+  .close:hover,
+  .close:focus {
+    color: red;
+    cursor: pointer;
+  }
+  
+  /* Add Zoom Animation */
+  .animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+  }
+  
+  @-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+  }
+  
+  @keyframes animatezoom {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+  }
+
+.container-username{
+  position: relative;
+  padding: 40px 0px;
+}
+.container-login{
+  position: relative;
+  padding: 40px 0px;
+}
+.container-cancel{
+  position: relative;
+  padding: 30px 0px;
+}
+.login{
+  position: relative;
+  padding: 10px 41px;
+  font-size: 30px;
+  background-color: var(--color4);
+  color: var(--color1);
+  border-color: var(--color4);
+  border-radius: 10px;
+  margin-right: 20px;
+  cursor: pointer;
+}
