@@ -15,10 +15,12 @@ from rpy2.robjects import pandas2ri as pr
 from rpy2 import robjects as ro
 import rpy2.robjects as robjects
 from rpy2.robjects.conversion import localconverter as lc
+from flask_cors import CORS
 
 ALLOWED_EXTENSIONS = {'fcs', "png", "jpg"}
 UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
 app = Flask(__name__, static_url_path='/static')
+CORS(app)
 app.config["Upload_Folder"] = UPLOAD_FOLDER
 
 app.config['MONGODB_SETTINGS'] = {
@@ -83,9 +85,11 @@ class User(db.Document):
     name = db.StringField()
     password = db.StringField()
     email = db.StringField()
-    def __init__(self):
-        self.job_list = []
-        self.current_job = ""
+    job_list = []
+    current_job = ""
+    # def __init__(self, *args, **kwars):
+    #     self.job_list = []
+    #     self.current_job = ""
     def to_json(self):
         return {"name": self.name,
                 "email": self.email}
@@ -103,7 +107,7 @@ class User(db.Document):
         self.job_list.append(Job(self.name, job_name))
         return self.job_list
     def get_job_list(self):
-        path = "users/" + current_user.get_name()
+        path = "user_data/" + current_user.get_name()
         self.job_list = os.listdir(path)
         return self.job_list
         #######  might need changed
@@ -117,6 +121,7 @@ class Job():
         #self.job_description = job_description
         self.username = username
         self.job_name = job_name
+        self.current_step = ""
         self.path = "user_data/" + username + "/" + job_name + "/"
     def add_fcs(self):
         self.fcs_files
@@ -208,7 +213,7 @@ def account():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("general/dashboard.html", name = current_user.get_name(), job_list = current_user.get_job_list())
+    return render_template("general/dashboard.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list()))
     
 @app.route("/settings")
 def settings():
@@ -290,7 +295,7 @@ def add_job():
 ############################ r files ############################
 
 # @app.route("/get_peaqo")
-# def get_peaqo():
+# def get_peaqo():  
 
 #     path = request.args.get("path")
 #     channels = request.args.get("channels")
@@ -357,5 +362,5 @@ def get_peaqo():
 
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
-    app.run(port = 5000, debug = True)
+    app.run(host='0.0.0.0', port = 5000, debug = True)
 

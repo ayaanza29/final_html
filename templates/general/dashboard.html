@@ -11,7 +11,7 @@
             <div class="general-title"> GoFlow </div>
 
             <div class="general-account_icon-dropdown">
-                <div class="general-account_icon-dropdown-button" id="account_icon"> Hello {{name}} </div>
+                <div class="general-account_icon-dropdown-button" id="account_icon"> Hello {{name}}</div>
                 <div class="general-account_icon-dropdown-options">
                     <div id="logout" class="general-account_icon-dropdown-options-login_logout"> Logout </div>
                 </div>
@@ -74,7 +74,11 @@
                     </script>
 
                     <script>
-                        var jobs = job_list
+                        console.log('{{job_list}}')
+                        console.log(decodeURI('{{job_list}}'))
+                        console.log(['{{job_list}}'])
+                        var jobs = JSON.parse(decodeURI('{{job_list}}'));
+                        console.log(jobs);
                         var job_body = document.getElementById("container")
 
                         for (var job in jobs){
@@ -82,7 +86,7 @@
                             button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
                             job_name = jobs[job];
                             button.innerHTML = job_name;
-                            job_body.appendChild(job);
+                            job_body.appendChild(button);
                         
                             
                             button.addEventListener ("click", function() {
