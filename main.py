@@ -86,7 +86,7 @@ class User(db.Document):
     password = db.StringField()
     email = db.StringField()
     job_list = []
-    current_job = ""
+    current_job = None
     # def __init__(self, *args, **kwars):
     #     self.job_list = []
     #     self.current_job = ""
@@ -110,19 +110,24 @@ class User(db.Document):
         path = "user_data/" + current_user.get_name()
         self.job_list = os.listdir(path)
         return self.job_list
-        #######  might need changed
-    def set_current_job(self, name):
-        self.current_job = self.job_list[name]
+        #######  might need chang
+    def set_current_job(self, job_name):
+        for job in self.job_list:
+            if(job.get_name() == job_name):
+                self.current_job = self.job_list[job_name]
+        return self.current_job
     def get_current_job(self):
         return self.current_job
 
 class Job():
     def __init__(self, username, job_name): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_files
-        #self.job_description = job_description
+        #self.job_description = job_description 
         self.username = username
         self.job_name = job_name
         self.current_step = ""
         self.path = "user_data/" + username + "/" + job_name + "/"
+    def get_name(self):
+        return self.job_name
     def add_fcs(self):
         self.fcs_files
         return 42
@@ -134,11 +139,6 @@ class Job():
     def add_normalized_fcs(self):
         return 42
 
-@app.route('/set_job')
-def set_job():
-    name = request.args("name")
-    current_user.set_current_job(name)
-    return 42
 
 @app.route('/')
 def opening_page():
@@ -233,7 +233,7 @@ def upload_data():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # If the user does not select a file, the browser submits an
+        # If the user does not select a file, the browser submits ana
         # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
@@ -243,12 +243,14 @@ def upload_data():
             #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename))
             file.save(os.path.join("C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data", filename))
             return redirect(url_for('upload_file', name=filename))
-    #return render_template("upload_help.html")
-    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = current_user.get_current_job(), fcs_files = (current_user.get_current_job()).get_fcs_names())
+    #return render_template("upload_help.html") 
+    name = request.args.get('job_name')
+    current_user.set_current_job(name)
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps(current_user.get_current_job())) #job = json.dumps(current_user.get_current_job().get_name()), fcs_files = json.dumps(((current_user.get_current_job()).get_fcs_names())
 
 @app.route("/upload_helper")
 def upload_helper():
-    return render_template("job_specific/upload_helper.html", name = current_user.get_name(), job = current_user.get_current_job())
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps(current_user.get_current_job()))
 
 @app.route("/automated_qc")
 def automated_qc():
@@ -290,11 +292,18 @@ def add_job():
         f.write('')
 
     current_user.create_new_job(job_name)
-    return 42
+    return job_name + " was created"
+
+@app.route('/set_job')
+def set_job():
+    name = request.args.get('job_name')
+    print(name)
+    current_user.set_current_job(name)
+    return name + " was acessed"
 
 ############################ r files ############################
 
-# @app.route("/get_peaqo")
+# @app.route("/get_peaqo") 
 # def get_peaqo():  
 
 #     path = request.args.get("path")
@@ -363,4 +372,3 @@ def get_peaqo():
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
     app.run(host='0.0.0.0', port = 5000, debug = True)
-

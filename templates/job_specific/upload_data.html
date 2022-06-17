@@ -66,16 +66,20 @@
                 </div>
 
                 <script>
-                    var path = name + "/" + job_name + "/fcs_files/"
+                    console.log(name)
+                    var job = '{{job|safe}}';
+                    var job = JSON.parse(job);
+                    print(job.get_name())
+                    // var path = name + "/" + job_name + "/fcs_files/"
 
-                    var files = fcs_files
+                    // var files = fcs_files
 
-                    for (var file in files){
-                        var button = document.createElement("div");
-                        button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                        button.innerHTML = files[file];
-                        file_body.appendChild(button);
-                    }
+                    // for (var file in files){
+                    //     var button = document.createElement("div");
+                    //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                    //     button.innerHTML = files[file];
+                    //     file_body.appendChild(button);
+                    // }
 
                 </script>
 

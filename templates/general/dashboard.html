@@ -74,25 +74,29 @@
                     </script>
 
                     <script>
-                        console.log('{{job_list}}')
-                        console.log(decodeURI('{{job_list}}'))
-                        console.log(['{{job_list}}'])
-                        var jobs = JSON.parse(decodeURI('{{job_list}}'));
-                        console.log(jobs);
+                        var jobs = '{{job_list|safe}}';
                         var job_body = document.getElementById("container")
+                        var jobs = JSON.parse(jobs)
 
-                        for (var job in jobs){
+                        for (var job=0; job < jobs.length; job++){
+                            console.log(job)
                             var button = document.createElement("button");
-                            button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                            button.classList.add("general-dashboard-content-joblist-job_button") 
                             job_name = jobs[job];
                             button.innerHTML = job_name;
                             job_body.appendChild(button);
                         
                             
                             button.addEventListener ("click", function() {
+                                //mybe could combine both into one
+                                // jQuery.ajax({
+                                //     type: "GET",
+                                //     url: "/set_job",
+                                //     data: {job_name}
+                                // })
                                 jQuery.ajax({
                                     type: "GET",
-                                    url: "/set_job",
+                                    url: "/upload_data",
                                     data: {job_name}
                                 })
                             });
