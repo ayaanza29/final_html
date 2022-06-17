@@ -71,6 +71,14 @@
                 </div>
 
                 <script>
+                    var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
+                    var job = JSON.parse(job);
+                    document.getElementById("job_name").innerHTML = job.job_name;
+
+                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_file_list = job.fcs_files
+                    
                     var modal1 = document.getElementById("popup1");
                     var modal2 = document.getElementById("popup2");
                     var btn1 = document.getElementById("srs");

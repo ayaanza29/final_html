@@ -56,6 +56,14 @@
                 <button class="job_specific-automated_qc-content-run_qc" onclick="run_qc()"> Run QC </button>
 
                 <script>
+                    var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
+                    var job = JSON.parse(job);
+                    document.getElementById("job_name").innerHTML = job.job_name;
+
+                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_file_list = job.fcs_files
+                    
                     function run_qc() {
                         console.log("ruuunnnn qqqqqccccc")
                         // jQuery.ajax({

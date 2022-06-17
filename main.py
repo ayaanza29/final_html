@@ -108,13 +108,13 @@ class User(db.Document):
         return self.job_list
     def get_job_list(self):
         path = "user_data/" + current_user.get_name()
-        self.job_list = os.listdir(path)
-        return self.job_list
+        self.job_list_string = os.listdir(path)
+        return self.job_list_string
         #######  might need chang
     def set_current_job(self, job_name):
         for job in self.job_list:
             if(job.get_name() == job_name):
-                self.current_job = self.job_list[job_name]
+                self.current_job = job
         return self.current_job
     def get_current_job(self):
         return self.current_job
@@ -122,22 +122,25 @@ class User(db.Document):
 class Job():
     def __init__(self, username, job_name): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_files
         #self.job_description = job_description 
-        self.username = username
+        self.username = username 
         self.job_name = job_name
-        self.current_step = ""
+        self.current_step = "cool"
         self.path = "user_data/" + username + "/" + job_name + "/"
+        self.fcs_file_list = []
     def get_name(self):
         return self.job_name
     def add_fcs(self):
         self.fcs_files
         return 42
     def get_fcs_names(self):
-        self.fcs_files
-        return 42
+        self.fcs_files = os.listdir(self.path + "fcs_files/")
+        return self.fcs_file_list
     def add_gates(self):
         return 42
     def add_normalized_fcs(self):
         return 42
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 
 @app.route('/')
@@ -219,7 +222,7 @@ def dashboard():
 def settings():
     return render_template("general/settings.html")
 
-############################ job_specific ############################
+############################ job_specific ############################ 
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -227,34 +230,35 @@ def allowed_file(filename):
 
 @app.route("/upload_data", methods=['GET', 'POST'])
 def upload_data():
+    job_name = request.args.get('job_name') 
+    current_user.set_current_job(job_name)
+    path = current_user.get_current_job().path + "fcs_files"
     if request.method == 'POST':
+        print("entered post request upload data")
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
         # If the user does not select a file, the browser submits ana
-        # empty file without a filename.
+        # empty file without a filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename))
-            file.save(os.path.join("C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data", filename))
+            file.save(os.path.join(path, filename))
             return redirect(url_for('upload_file', name=filename))
-    #return render_template("upload_help.html") 
-    name = request.args.get('job_name')
-    current_user.set_current_job(name)
-    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps(current_user.get_current_job())) #job = json.dumps(current_user.get_current_job().get_name()), fcs_files = json.dumps(((current_user.get_current_job()).get_fcs_names())
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON())) #job = json.dumps(current_user.get_current_job().get_name()), fcs_files = json.dumps(((current_user.get_current_job()).get_fcs_names())
 
 @app.route("/upload_helper")
 def upload_helper():
-    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps(current_user.get_current_job()))
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
 
 @app.route("/automated_qc")
 def automated_qc():
-    return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = current_user.get_current_job())
+    return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
 
 @app.route("/gating")
 def gating():
@@ -282,7 +286,6 @@ def download_results():
 @app.route("/create_job")
 def add_job():
     job_name = request.args.get("job_name")
-    print(job_name)
     user_name = current_user.get_name()
     directory = "user_data/" + user_name + "/"
     os.makedirs(directory + job_name + "/")
@@ -290,16 +293,15 @@ def add_job():
     os.makedirs(directory + job_name + "/temporary_images/")
     with open(directory + job_name +'/job_description.txt', 'w') as f:
         f.write('')
-
     current_user.create_new_job(job_name)
     return job_name + " was created"
 
-@app.route('/set_job')
-def set_job():
-    name = request.args.get('job_name')
-    print(name)
-    current_user.set_current_job(name)
-    return name + " was acessed"
+# @app.route('/set_job')
+# def set_job():
+#     name = request.args.get('job_name')
+#     print(name)
+#     current_user.set_current_job(name)
+#     return name + " was acessed"
 
 ############################ r files ############################
 

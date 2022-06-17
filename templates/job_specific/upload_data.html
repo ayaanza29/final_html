@@ -14,7 +14,7 @@
                 <input type="submit" class="job_specific-backbutton" value="Back"/>
             </form>
 
-            <div class="job_specific-name"> Job Name </div>
+            <div id="job_name" class="job_specific-name"> Job Name </div>
 
             <div class="job_specific-navbar">
                 <form action="\upload_data">
@@ -66,20 +66,33 @@
                 </div>
 
                 <script>
-                    console.log(name)
                     var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
                     var job = JSON.parse(job);
-                    print(job.get_name())
-                    // var path = name + "/" + job_name + "/fcs_files/"
+                    document.getElementById("job_name").innerHTML = job.job_name;
 
-                    // var files = fcs_files
+                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_file_list = job.fcs_files
 
-                    // for (var file in files){
-                    //     var button = document.createElement("div");
-                    //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                    //     button.innerHTML = files[file];
-                    //     file_body.appendChild(button);
-                    // }
+                    for (var file in fcs_file_list){
+                        const button = document.createElement("button");
+                        button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                        button.innerHTML = files[file];
+                        file_body.appendChild(button);
+                    }
+
+                    document.getElementById("file").onchange = function() {
+                        // files.push("thing")
+                        // console.log(files)
+
+                        for (var file in fcs_file_list){
+                            const button = document.createElement("button");
+                            button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                            button.innerHTML = files[file];
+                            file_body.appendChild(button);
+                        }
+                        document.getElementById("form").submit();
+                    };
 
                 </script>
 

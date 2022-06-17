@@ -57,6 +57,14 @@
                 </div>
 
                 <script>
+                    var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
+                    var job = JSON.parse(job);
+                    document.getElementById("job_name").innerHTML = job.job_name;
+
+                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_file_list = job.fcs_files
+                    
                     function add_file() {
                         console.log("adddd filllleeee")
                         // jQuery.ajax({

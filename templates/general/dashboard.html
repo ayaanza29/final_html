@@ -54,7 +54,7 @@
                         <div class="general-dashboard-content-joblist-popup-content">
                             <span class="general-dashboard-content-joblist-popup-content-close">&times;</span>
                             <div class="general-dashboard-content-joblist-popup-content-title"> Choose New Job Parameters </div>
-                            <form action="/dashboard" onsubmit="create_job(), add_to_list()">
+                            <form action="/dashboard" onsubmit="create_job()"> <!--, add_to_list() -->
                                 <label for="job_name">Job name:</label>
                                 <input type="text" id="job_name" name="job_name"><br><br>
                                 <input type="submit" class="general-dashboard-content-joblist-popup-content-create_button" value="Create Job">
@@ -80,28 +80,24 @@
 
                         for (var job=0; job < jobs.length; job++){
                             console.log(job)
-                            var button = document.createElement("button");
+                            const button = document.createElement("button");
                             button.classList.add("general-dashboard-content-joblist-job_button") 
                             job_name = jobs[job];
                             button.innerHTML = job_name;
-                            job_body.appendChild(button);
+                            button.id =  job_name;
                         
                             
                             button.addEventListener ("click", function() {
-                                //mybe could combine both into one
-                                // jQuery.ajax({
-                                //     type: "GET",
-                                //     url: "/set_job",
-                                //     data: {job_name}
-                                // })
+                                id = button.id;
                                 jQuery.ajax({
                                     type: "GET",
                                     url: "/upload_data",
-                                    data: {job_name}
+                                    data: {"job_name": id},
+                                    success:function(response){ document.write(response); }
                                 })
                             });
 
-                            console.log(job_name)
+                            job_body.appendChild(button);
                         }
                     </script>
                     
