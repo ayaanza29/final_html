@@ -11,7 +11,7 @@
             <div class="general-title"> GoFlow </div>
 
             <div class="general-account_icon-dropdown">
-                <div class="general-account_icon-dropdown-button" id="account_icon"> Hello {{name}}</div>
+                <div class="general-account_icon-dropdown-button" id="account_icon">Hello {{name}}</div>
                 <div class="general-account_icon-dropdown-options">
                     <div id="logout" class="general-account_icon-dropdown-options-login_logout"> Logout </div>
                 </div>
@@ -27,9 +27,9 @@
                 <form action="\dashboard">
                     <input type="submit" id="dashboard" class="general-sidebar-buttons" value="Dashboard"/>
                 </form>
-                <form action="\settings">
+                <!-- <form action="\settings">
                     <input type="submit" id="settings" class="general-sidebar-buttons" value="Settings"/>
-                </form>
+                </form> -->
             </div>
 
             <script>
@@ -89,12 +89,14 @@
                             
                             button.addEventListener ("click", function() {
                                 id = button.id;
-                                jQuery.ajax({
-                                    type: "GET",
-                                    url: "/upload_data",
-                                    data: {"job_name": id},
-                                    success:function(response){ document.write(response); }
-                                })
+                                // jQuery.ajax({
+                                //     type: "GET",
+                                //     url: "/upload_data",
+                                //     data: {"job_name": id},
+                                //     //success:function(response){ document.write(response); }
+                                //     success:function(response){ window.location.href('/upload_data'); }
+                                // })
+                                window.location.href = '/upload_data/' +  id; 
                             });
 
                             job_body.appendChild(button);

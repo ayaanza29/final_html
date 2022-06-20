@@ -87,9 +87,7 @@ class User(db.Document):
     email = db.StringField()
     job_list = []
     current_job = None
-    # def __init__(self, *args, **kwars):
-    #     self.job_list = []
-    #     self.current_job = ""
+
     def to_json(self):
         return {"name": self.name,
                 "email": self.email}
@@ -106,27 +104,38 @@ class User(db.Document):
     def create_new_job(self, job_name):
         self.job_list.append(Job(self.name, job_name))
         return self.job_list
+    def recreate_job_objects_on_login(self):
+        self.get_job_list()
+        for i in range(len(self.job_list_string)):
+            job_name = self.job_list_string[i]
+            current_step = "cool"
+            path = "user_data/" + self.name + "/" + job_name + "/"
+            fcs_file_list = os.listdir(path + "fcs_files/")
+            self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
+        return self.job_list
     def get_job_list(self):
         path = "user_data/" + current_user.get_name()
         self.job_list_string = os.listdir(path)
         return self.job_list_string
-        #######  might need chang
     def set_current_job(self, job_name):
         for job in self.job_list:
             if(job.get_name() == job_name):
+                print("set current job to" + job_name)
                 self.current_job = job
         return self.current_job
     def get_current_job(self):
         return self.current_job
 
 class Job():
-    def __init__(self, username, job_name): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_files
-        #self.job_description = job_description 
+    def __init__(self, username, job_name, current_step = "cool", path = None, fcs_file_list = []): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_file
         self.username = username 
         self.job_name = job_name
-        self.current_step = "cool"
-        self.path = "user_data/" + username + "/" + job_name + "/"
-        self.fcs_file_list = []
+        self.current_step = current_step
+        if (path == None):
+            self.path = "user_data/" + username + "/" + job_name + "/"
+        else:
+            self.path = path
+        self.fcs_file_list = fcs_file_list
     def get_name(self):
         return self.job_name
     def add_fcs(self):
@@ -216,6 +225,7 @@ def account():
 
 @app.route("/dashboard")
 def dashboard():
+    current_user.recreate_job_objects_on_login()
     return render_template("general/dashboard.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list()))
     
 @app.route("/settings")
@@ -228,11 +238,14 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/upload_data", methods=['GET', 'POST'])
-def upload_data():
-    job_name = request.args.get('job_name') 
+@app.route("/upload_data/<job_passed_in>", methods=['GET', 'POST'])
+def upload_data(job_passed_in = ""):
+    if (job_passed_in != ""):
+        job_name = job_passed_in #request.args.get('job_name') 
     current_user.set_current_job(job_name)
-    path = current_user.get_current_job().path + "fcs_files"
+    current_job = current_user.get_current_job()
+    print(type(current_job))
+    path = current_job.path + "fcs_files"
     if request.method == 'POST':
         print("entered post request upload data")
         # check if the post request has the file part
@@ -240,7 +253,7 @@ def upload_data():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # If the user does not select a file, the browser submits ana
+        # If the user does not select a file, the browser submits a
         # empty file without a filename
         if file.filename == '':
             flash('No selected file')

@@ -11,7 +11,7 @@
             <div class="general-title"> GoFlow </div>
 
             <div class="general-account_icon-dropdown">
-                <div class="general-account_icon-dropdown-button" id="account_icon"> Hello Zuhayr! </div>
+                <div class="general-account_icon-dropdown-button" id="account_icon">Hello {{name}}</div>
                 <div class="general-account_icon-dropdown-options">
                     <div id="logout" class="general-account_icon-dropdown-options-login_logout"> Logout </div>
                 </div>
@@ -27,9 +27,9 @@
                 <form action="\dashboard">
                     <input type="submit" id="dashboard" class="general-sidebar-buttons active" value="Dashboard"/>
                 </form>
-                <form action="\settings">
+                <!-- <form action="\settings">
                     <input type="submit" id="settings" class="general-sidebar-buttons" value="Settings"/>
-                </form>
+                </form> -->
             </div>
 
             <!-- <script>
@@ -43,8 +43,13 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="general-dashboard-content">
-                
+            <div class="general-account-content">
+                <div class="general-account-content-position">
+                    <div class="general-account-content-position-info"> Name: {{name}}</div>
+                    <div class="general-account-content-position-info"> Email: {{email}}</div>
+                    <div class="general-account-content-position-info"> Account Creation Date: </div>
+                    <div class="general-account-content-position-info"> For password recovery or account services please contact us at _____ </div>
+                </div>
 
             </div>
 
