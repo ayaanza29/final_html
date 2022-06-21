@@ -88,13 +88,15 @@
                         
                             
                             button.addEventListener ("click", function() {
+                                
                                 id = button.id;
+                                sessionStorage.setItem('myJob', id);
                                 // jQuery.ajax({
-                                //     type: "GET",
-                                //     url: "/upload_data",
+                                //     type: "POST",
+                                //     url: "/set_job",
                                 //     data: {"job_name": id},
                                 //     //success:function(response){ document.write(response); }
-                                //     success:function(response){ window.location.href('/upload_data'); }
+                                //     //success:function(response){ window.location.href('/upload_data'); }
                                 // })
                                 window.location.href = '/upload_data/' +  id; 
                             });

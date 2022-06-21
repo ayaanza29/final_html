@@ -60,13 +60,13 @@
                 <button class="job_specific-normalization-content-run_normalization" onclick="run_normalization()"> Run Normalization </button>
                 <button id="select_all" class="job_specific-normalization-content-run_normalization"> Select All </button>
                 <script>
-                    var job = '{{job|safe}}';
-                    job = job.slice(1, -1)
-                    var job = JSON.parse(job);
-                    document.getElementById("job_name").innerHTML = job.job_name;
+                    // var job = '{{job|safe}}';
+                    // job = job.slice(1, -1)
+                    // var job = JSON.parse(job);
+                    // document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = job.path + "/fcs_files/"
-                    var fcs_file_list = job.fcs_files
+                    // var fcs_path = job.path + "/fcs_files/"
+                    // var fcs_file_list = job.fcs_files
                     
                     var channels = ["FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W", "FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W"]
                     var selected_channels = [];

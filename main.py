@@ -17,11 +17,11 @@ import rpy2.robjects as robjects
 from rpy2.robjects.conversion import localconverter as lc
 from flask_cors import CORS
 
-ALLOWED_EXTENSIONS = {'fcs', "png", "jpg"}
-UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
+ALLOWED_EXTENSIONS = {'fcs', "png", "jpg", "txt"}
+#UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
 app = Flask(__name__, static_url_path='/static')
 CORS(app)
-app.config["Upload_Folder"] = UPLOAD_FOLDER
+#app.config["Upload_Folder"] = UPLOAD_FOLDER
 
 app.config['MONGODB_SETTINGS'] = {
     'db': 'web_application_login',
@@ -55,6 +55,7 @@ def login():
     # password = info.get('password', '')
     user = User.objects(name=name,
                         password=password).first()
+
     if user:
         print()
         login_user(user)
@@ -81,12 +82,12 @@ def user_info():
     return jsonify(resp)
 
 class User(db.Document):
-    meta = {'collection': 'User'}
     name = db.StringField()
     password = db.StringField()
+    meta = {'collection': 'User'}
     email = db.StringField()
     job_list = []
-    current_job = None
+    current_job = db.StringField()
 
     def to_json(self):
         return {"name": self.name,
@@ -124,6 +125,8 @@ class User(db.Document):
                 self.current_job = job
         return self.current_job
     def get_current_job(self):
+        # if (self.current_job == None):
+        #     return 42
         return self.current_job
 
 class Job():
@@ -241,28 +244,32 @@ def allowed_file(filename):
 @app.route("/upload_data/<job_passed_in>", methods=['GET', 'POST'])
 def upload_data(job_passed_in = ""):
     if (job_passed_in != ""):
-        job_name = job_passed_in #request.args.get('job_name') 
+        job_name = job_passed_in #request.args.get('job_name')
     current_user.set_current_job(job_name)
     current_job = current_user.get_current_job()
+    user =  User.objects(id=current_user.id)
+    user.update(current_job=job_name)
     print(type(current_job))
     path = current_job.path + "fcs_files"
     if request.method == 'POST':
-        print("entered post request upload data")
         # check if the post request has the file part
-        if 'file' not in request.files:
+        print(request.files)
+        if 'file_upload' not in request.files:
             flash('No file part')
             return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits a
+        file = request.files['file_upload']
+        # If the user does not select a file, the browser submits 
         # empty file without a filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
+        print(path + " got there")
+        print(file.filename)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename))
+            #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename)) 
             file.save(os.path.join(path, filename))
-            return redirect(url_for('upload_file', name=filename))
+            return redirect(url_for('upload_helper', name=filename))
     return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON())) #job = json.dumps(current_user.get_current_job().get_name()), fcs_files = json.dumps(((current_user.get_current_job()).get_fcs_names())
 
 @app.route("/upload_helper")
@@ -275,6 +282,7 @@ def automated_qc():
 
 @app.route("/gating")
 def gating():
+    print(current_user.get_current_job())
     return render_template("job_specific/gating.html", name = current_user.get_name(), job = current_user.get_current_job())
 
 @app.route("/normalization")
