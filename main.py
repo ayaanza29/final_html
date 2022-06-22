@@ -81,13 +81,47 @@ def user_info():
                 "data": {"message": "user no login"}}
     return jsonify(resp)
 
+class Job(EmbeddedDocument):
+    username = StringField()
+    job_name = StringField()
+    current_step = StringField()
+        # if (path == None):
+        #     self.path = "user_data/" + username + "/" + job_name + "/"
+        # else:
+        #     self.path = path
+    fcs_file_list = StringField()
+    # def __init__(self, username, job_name, current_step = "cool", path = None, fcs_file_list = []): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_file
+    #     self.username = username 
+    #     self.job_name = job_name
+    #     self.current_step = current_step
+    #     # if (path == None):
+    #     #     self.path = "user_data/" + username + "/" + job_name + "/"
+    #     # else:
+    #     #     self.path = path
+    #     self.fcs_file_list = fcs_file_list
+    def get_name(self):
+        return self.job_name
+    def add_fcs(self):
+        self.fcs_files
+        return 42
+    def get_fcs_names(self):
+        self.fcs_files = os.listdir(self.path + "fcs_files/")
+        return self.fcs_file_list
+    def add_gates(self):
+        return 42
+    def add_normalized_fcs(self):
+        return 42
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
 class User(db.Document):
     name = db.StringField()
     password = db.StringField()
     meta = {'collection': 'User'}
     email = db.StringField()
-    job_list = []
+    #job_list = []
     current_job = db.StringField()
+    job_list = db.ListField(EmbeddedDocumentField(Job))
 
     def to_json(self):
         return {"name": self.name,
@@ -103,21 +137,23 @@ class User(db.Document):
     def get_name(self):
         return str(self.name)
     def create_new_job(self, job_name):
-        self.job_list.append(Job(self.name, job_name))
-        return self.job_list
+        #self.job_list.append(Job(self.name, job_name))
+        return 42 #self.job_list
     def recreate_job_objects_on_login(self):
-        self.get_job_list()
+        self.get_job_list_string()
         for i in range(len(self.job_list_string)):
             job_name = self.job_list_string[i]
             current_step = "cool"
             path = "user_data/" + self.name + "/" + job_name + "/"
             fcs_file_list = os.listdir(path + "fcs_files/")
-            self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
-        return self.job_list
-    def get_job_list(self):
+            #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
+        return 42 #self.job_list
+    def get_job_list_string(self):
         path = "user_data/" + current_user.get_name()
         self.job_list_string = os.listdir(path)
         return self.job_list_string
+    def get_job_list(self):
+        return self.job_list
     def set_current_job(self, job_name):
         for job in self.job_list:
             if(job.get_name() == job_name):
@@ -128,31 +164,10 @@ class User(db.Document):
         # if (self.current_job == None):
         #     return 42
         return self.current_job
+    def get_job_list(self):
+        return self.job_list
 
-class Job():
-    def __init__(self, username, job_name, current_step = "cool", path = None, fcs_file_list = []): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_file
-        self.username = username 
-        self.job_name = job_name
-        self.current_step = current_step
-        if (path == None):
-            self.path = "user_data/" + username + "/" + job_name + "/"
-        else:
-            self.path = path
-        self.fcs_file_list = fcs_file_list
-    def get_name(self):
-        return self.job_name
-    def add_fcs(self):
-        self.fcs_files
-        return 42
-    def get_fcs_names(self):
-        self.fcs_files = os.listdir(self.path + "fcs_files/")
-        return self.fcs_file_list
-    def add_gates(self):
-        return 42
-    def add_normalized_fcs(self):
-        return 42
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+
 
 
 @app.route('/')
@@ -207,6 +222,12 @@ def delete_record():
         user.delete()
     return jsonify(user.to_json())
 
+# @app.route("/set_current_job", methods=['POST'])
+# @login_required
+# def set_current_job():
+#     job_name = request.args.get("job_name")
+#     current_user.set_current_job(job_name)
+#     return job_name
 
 ############################ routes ############################
 ################################################################
@@ -229,7 +250,7 @@ def account():
 @app.route("/dashboard")
 def dashboard():
     current_user.recreate_job_objects_on_login()
-    return render_template("general/dashboard.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list()))
+    return render_template("general/dashboard.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list_string()))
     
 @app.route("/settings")
 def settings():
@@ -314,7 +335,33 @@ def add_job():
     os.makedirs(directory + job_name + "/temporary_images/")
     with open(directory + job_name +'/job_description.txt', 'w') as f:
         f.write('')
-    current_user.create_new_job(job_name)
+    #current_user.create_new_job(job_name)
+
+    
+
+    
+    # data = { "$set": { "Job List": current_user.get_job_list() } }
+    # job_list_update = current_user.get_job_list()
+    # params = {}
+    # params[job_list_update] = data
+    # user.update(**params)
+
+    jobs = current_user.get_job_list()
+    user =  User.objects(id=current_user.id).get()
+    user.job_list.append(jobs)
+    user.save()
+    # user.update(job_list=jobs)
+
+
+
+    #job_objects = {"$set"} {current_user.get_job_list()}
+
+    #job_list_update = "job_list"
+
+    # query = {"name": self.name, "email": self.email, "password": self.password}
+    #    data = { "$set": { "Job List": self.job_list } }
+    #  self.name.update(query, data)
+
     return job_name + " was created"
 
 # @app.route('/set_job')
