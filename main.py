@@ -81,15 +81,39 @@ def user_info():
                 "data": {"message": "user no login"}}
     return jsonify(resp)
 
-class Job(EmbeddedDocument):
-    username = StringField()
-    job_name = StringField()
-    current_step = StringField()
+class Job(db.EmbeddedDocument):
+    username = db.StringField()
+    job_name = db.StringField()
+    # current_step = db.StringField()
         # if (path == None):
         #     self.path = "user_data/" + username + "/" + job_name + "/"
         # else:
         #     self.path = path
-    fcs_file_list = StringField()
+    # fcs_file_list = db.StringField()
+    path = db.StringField()
+
+    def get_name(self):
+        return self.job_name
+    def set_current_step(self, step):
+        self.current_step = step
+        return self.current_step
+    def add_fcs(self):
+        self.fcs_files
+        return 42
+    def get_fcs_names(self):
+        self.path = "user_data/" + self.username + "/" + self.job_name + "/"
+        self.fcs_files = os.listdir(self.path + "fcs_files/")
+        return self.fcs_file_list
+    def add_gates(self):
+        return 42
+    def add_normalized_fcs(self):
+        return 42
+    # def toJSON(self):
+    #     print("my own json creation below")
+    #     print(json.dumps(self, default=lambda o: o.__dict__, ))
+    #     return json.dumps(self, default=lambda o: o.__dict__)
+
+    #user = db.
     # def __init__(self, username, job_name, current_step = "cool", path = None, fcs_file_list = []): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_file
     #     self.username = username 
     #     self.job_name = job_name
@@ -99,20 +123,6 @@ class Job(EmbeddedDocument):
     #     # else:
     #     #     self.path = path
     #     self.fcs_file_list = fcs_file_list
-    def get_name(self):
-        return self.job_name
-    def add_fcs(self):
-        self.fcs_files
-        return 42
-    def get_fcs_names(self):
-        self.fcs_files = os.listdir(self.path + "fcs_files/")
-        return self.fcs_file_list
-    def add_gates(self):
-        return 42
-    def add_normalized_fcs(self):
-        return 42
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
 
 class User(db.Document):
     name = db.StringField()
@@ -121,8 +131,9 @@ class User(db.Document):
     email = db.StringField()
     #job_list = []
     current_job = db.StringField()
-    job_list = db.ListField(EmbeddedDocumentField(Job))
-
+    #job_list = db.ListField(EmbeddedDocumentField(Job))
+    jobs = MapField(field=EmbeddedDocumentField(Job))
+# http://docs.mongoengine.org/guide/defining-documents.html?highlight=object%20key%20value#field-arguments
     def to_json(self):
         return {"name": self.name,
                 "email": self.email}
@@ -139,33 +150,32 @@ class User(db.Document):
     def create_new_job(self, job_name):
         #self.job_list.append(Job(self.name, job_name))
         return 42 #self.job_list
-    def recreate_job_objects_on_login(self):
-        self.get_job_list_string()
-        for i in range(len(self.job_list_string)):
-            job_name = self.job_list_string[i]
-            current_step = "cool"
-            path = "user_data/" + self.name + "/" + job_name + "/"
-            fcs_file_list = os.listdir(path + "fcs_files/")
-            #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
-        return 42 #self.job_list
+    # def recreate_job_objects_on_login(self):
+    #     self.get_job_list_string()
+    #     for i in range(len(self.job_list_string)):
+    #         job_name = self.job_list_string[i]
+    #         #current_step = "cool"
+    #         path = "user_data/" + self.name + "/" + job_name + "/"
+    #         fcs_file_list = os.listdir(path + "fcs_files/")
+    #         #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
+    #     return self.jobs
     def get_job_list_string(self):
         path = "user_data/" + current_user.get_name()
         self.job_list_string = os.listdir(path)
         return self.job_list_string
     def get_job_list(self):
-        return self.job_list
+        return self.jobs
     def set_current_job(self, job_name):
-        for job in self.job_list:
-            if(job.get_name() == job_name):
-                print("set current job to" + job_name)
-                self.current_job = job
+        self.current_job = job_name
         return self.current_job
     def get_current_job(self):
-        # if (self.current_job == None):
-        #     return 42
-        return self.current_job
-    def get_job_list(self):
-        return self.job_list
+        return self.jobs[self.current_job]
+        #for job in self.job_list:
+        #    print(job.get_name())
+        #    if (job.get_name() == self.current_job):
+        #       return job
+    #def get_job_list(self):
+    #    return self.jobs
 
 
 
@@ -194,6 +204,8 @@ def create_record():
     user = User(name=record['name'],
                 password=record['password'],
                 email=record['email'])
+
+    # try catch if error tell user to try another name
     user.save()
     #collection.insert_one(user)
     #logging.info("trying to create login")
@@ -249,7 +261,7 @@ def account():
 
 @app.route("/dashboard")
 def dashboard():
-    current_user.recreate_job_objects_on_login()
+    # current_user.recreate_job_objects_on_login()
     return render_template("general/dashboard.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list_string()))
     
 @app.route("/settings")
@@ -262,16 +274,18 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route("/upload_data", methods=['GET', 'POST'], defaults={'job_passed_in': ""})
 @app.route("/upload_data/<job_passed_in>", methods=['GET', 'POST'])
 def upload_data(job_passed_in = ""):
     if (job_passed_in != ""):
         job_name = job_passed_in #request.args.get('job_name')
-    current_user.set_current_job(job_name)
-    current_job = current_user.get_current_job()
-    user =  User.objects(id=current_user.id)
-    user.update(current_job=job_name)
-    print(type(current_job))
-    path = current_job.path + "fcs_files"
+        current_user.set_current_job(job_name)
+        #current_job = current_user.get_current_job()
+        user =  User.objects(id=current_user.id)
+        user.update(current_job=job_name)
+    #print(type(current_job))
+    job_name = current_user.get_current_job().get_name()
+    path = current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
     if request.method == 'POST':
         # check if the post request has the file part
         print(request.files)
@@ -291,36 +305,50 @@ def upload_data(job_passed_in = ""):
             #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename)) 
             file.save(os.path.join(path, filename))
             return redirect(url_for('upload_helper', name=filename))
-    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON())) #job = json.dumps(current_user.get_current_job().get_name()), fcs_files = json.dumps(((current_user.get_current_job()).get_fcs_names())
+
+    # print(current_user.get_current_job())
+    # print((current_user.get_current_job()).toJSON())
+    # print(json.dumps((current_user.get_current_job()).toJSON()))
+    print(current_user.get_current_job())
+    current_user.get_current_job().set_current_step("upload data")
+    # user.update(current_job=job_name)
+    #user.find({"job_list": {"$elemMatch": {"username": current_user.get_name(), "job_name":1975}}})
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/upload_helper")
 def upload_helper():
-    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
+    return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/automated_qc")
 def automated_qc():
-    return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
+    print(current_user.get_current_job())
+    current_user.get_current_job().set_current_step("automated qc")
+    return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/gating")
 def gating():
-    print(current_user.get_current_job())
-    return render_template("job_specific/gating.html", name = current_user.get_name(), job = current_user.get_current_job())
+    current_user.get_current_job().set_current_step("gating")
+    return render_template("job_specific/gating.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/normalization")
 def normalization():
-    return render_template("job_specific/normalization.html", name = current_user.get_name(), job = current_user.get_current_job())
+    current_user.get_current_job().set_current_step("normalization")
+    return render_template("job_specific/normalization.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/downsampling")
 def downsampling():
-    return render_template("job_specific/downsampling.html", name = current_user.get_name(), job = current_user.get_current_job())
+    current_user.get_current_job().set_current_step("udownsampling")
+    return render_template("job_specific/downsampling.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/dr_clustering")
 def dr_clustering():
-    return render_template("job_specific/dr_clustering.html", name = current_user.get_name(), job = current_user.get_current_job())
+    current_user.get_current_job().set_current_step("dr clustering")
+    return render_template("job_specific/dr_clustering.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/download_results")
 def download_results():
-    return render_template("job_specific/download_results.html", name = current_user.get_name(), job = current_user.get_current_job())
+    current_user.get_current_job().set_current_step("download results")
+    return render_template("job_specific/download_results.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
 
 ############################ ajax requests ############################
 #######################################################################
@@ -342,15 +370,15 @@ def add_job():
     
     # data = { "$set": { "Job List": current_user.get_job_list() } }
     # job_list_update = current_user.get_job_list()
-    # params = {}
+    # params = {} 
     # params[job_list_update] = data
     # user.update(**params)
 
-    jobs = current_user.get_job_list()
+    jobs = Job(username=user_name, job_name=job_name) #current_user.get_job_list()
     user =  User.objects(id=current_user.id).get()
-    user.job_list.append(jobs)
+    user.jobs[job_name] = jobs
     user.save()
-    # user.update(job_list=jobs)
+    #user.insert({ "$push": { "job_db": { "$set": user.job_list } } })
 
 
 
@@ -359,8 +387,8 @@ def add_job():
     #job_list_update = "job_list"
 
     # query = {"name": self.name, "email": self.email, "password": self.password}
-    #    data = { "$set": { "Job List": self.job_list } }
-    #  self.name.update(query, data)
+    # data = { "$set": { "Job List": self.job_list } }
+    # self.name.update(query, data)
 
     return job_name + " was created"
 

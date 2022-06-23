@@ -14,7 +14,7 @@
                 <input type="submit" class="job_specific-backbutton" value="Back"/>
             </form>
 
-            <div class="job_specific-name"> Job Name </div>
+            <div id = "job_name" class="job_specific-name"> Job Name </div>
 
             <div class="job_specific-navbar">
                 <form action="\upload_data">
@@ -175,8 +175,11 @@
                     }
                 </script>
                  <script>
-                   const job = sessionStorage.getItem('myJob');
-                   console.log(job)
+                    var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
+                    parsedJob = JSON.parse(job);
+                    console.log(parsedJob)
+                    document.getElementById("job_name").innerHTML = parsedJob.job_name;
                 </script>
 
             </div>
