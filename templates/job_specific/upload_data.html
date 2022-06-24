@@ -53,16 +53,12 @@
                 </div>
                 <div id="container" class="job_specific-upload_data-content-fileholder">
                     <div class="job_specific-upload_data-content-fileholder-title"> Files </div>
-                    <!-- <input type="file" id="file_upload" name="file_upload" accept="image/png, image/jpeg"> -->
                     <form id="form" method=post enctype=multipart/form-data>
-                        <!-- <input type=file name=file> -->
                         <div class="job_specific-upload_data-content-fileholder-addfile">
                             <div class="job_specific-upload_data-content-fileholder-addfile-label"> + Add New File </div>
                             <input id="file" class="job_specific-upload_data-content-fileholder-addfile-hide" type="file" name="file_upload" accept="image/png, image/jpeg"/>
                         </div>
-                        <!-- <input class="upload_button" type=submit value=Upload> -->
                     </form>
-                    <!-- <button class="job_specific-upload_data-content-fileholder-addfile" onclick="add_file()"> + Add File </button> -->
                 </div>
 
                 <script>
@@ -71,71 +67,29 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_path = "user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
+
+                    file_body = document.getElementById("container")
 
                     for (var file in fcs_file_list){
                         const button = document.createElement("button");
                         button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                        button.innerHTML = files[file];
+                        button.innerHTML = fcs_file_list[file];
                         file_body.appendChild(button);
                     }
 
                     document.getElementById("file").onchange = function() {
-                        // files.push("thing")
-                        // console.log(files)
 
                         for (var file in fcs_file_list){
                             const button = document.createElement("button");
                             button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                            button.innerHTML = files[file];
+                            button.innerHTML = fcs_file_list[file];
                             file_body.appendChild(button);
                         }
                         document.getElementById("form").submit();
                     };
 
-                </script>
-
-                <script>
-                    // if (typeof files == "undefined"){
-                    //     var files = ["stuff"]
-                    // }
-                    // var files = ["stuff"]
-                    // var file_body = document.getElementById("container")
-
-                    // for (var file in files){
-                    //     var button = document.createElement("div");
-                    //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                    //     button.innerHTML = files[file];
-                    //     file_body.appendChild(button);
-                    // }
-
-                    // document.getElementById("file").addEventListener("change", function (e) {
-                    //     files.push("thing")
-                    //     console.log(files)
-
-                    //     // for (var file in files){
-                    //     //     var button = document.createElement("div");
-                    //     //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                    //     //     button.innerHTML = files[file];
-                    //     //     file_body.appendChild(button);
-                    //     // }
-                    //     document.getElementById("form").submit();
-                    //     }, false);
-
-                    // document.getElementById("file").onchange = function() {
-                    //     files.push("thing")
-                    //     console.log(files)
-
-                    //     // for (var file in files){
-                    //     //     var button = document.createElement("div");
-                    //     //     button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                    //     //     button.innerHTML = files[file];
-                    //     //     file_body.appendChild(button);
-                    //     // }
-                    //     document.getElementById("form").submit();
-                    // };
-                    
                 </script>
 
             </div>

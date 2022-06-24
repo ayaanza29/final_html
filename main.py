@@ -1,3 +1,4 @@
+from email.policy import default
 import json
 from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
@@ -89,8 +90,8 @@ class Job(db.EmbeddedDocument):
         #     self.path = "user_data/" + username + "/" + job_name + "/"
         # else:
         #     self.path = path
-    # fcs_file_list = db.StringField()
-    path = db.StringField()
+    fcs_files = db.StringField()
+    path = db.StringField() #default=lambda: "user_data/" + username + job_name
 
     def get_name(self):
         return self.job_name
@@ -103,7 +104,7 @@ class Job(db.EmbeddedDocument):
     def get_fcs_names(self):
         self.path = "user_data/" + self.username + "/" + self.job_name + "/"
         self.fcs_files = os.listdir(self.path + "fcs_files/")
-        return self.fcs_file_list
+        return self.fcs_files
     def add_gates(self):
         return 42
     def add_normalized_fcs(self):
@@ -113,16 +114,6 @@ class Job(db.EmbeddedDocument):
     #     print(json.dumps(self, default=lambda o: o.__dict__, ))
     #     return json.dumps(self, default=lambda o: o.__dict__)
 
-    #user = db.
-    # def __init__(self, username, job_name, current_step = "cool", path = None, fcs_file_list = []): #, job_description, fcs_files, qc_files, normalize_files, normalize_graph, downsample_file
-    #     self.username = username 
-    #     self.job_name = job_name
-    #     self.current_step = current_step
-    #     # if (path == None):
-    #     #     self.path = "user_data/" + username + "/" + job_name + "/"
-    #     # else:
-    #     #     self.path = path
-    #     self.fcs_file_list = fcs_file_list
 
 class User(db.Document):
     name = db.StringField()
@@ -285,10 +276,10 @@ def upload_data(job_passed_in = ""):
         user.update(current_job=job_name)
     #print(type(current_job))
     job_name = current_user.get_current_job().get_name()
-    path = current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
+    path = "user_data/" + current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
     if request.method == 'POST':
         # check if the post request has the file part
-        print(request.files)
+        # print(request.files)
         if 'file_upload' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -298,21 +289,20 @@ def upload_data(job_passed_in = ""):
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        print(path + " got there")
-        print(file.filename)
+        # print(path + " got there")
+        # print(file.filename)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename)) 
             file.save(os.path.join(path, filename))
-            return redirect(url_for('upload_helper', name=filename))
+            current_user.get_current_job().get_fcs_names()
+            return redirect(url_for('upload_data', name=filename))
 
-    # print(current_user.get_current_job())
-    # print((current_user.get_current_job()).toJSON())
-    # print(json.dumps((current_user.get_current_job()).toJSON()))
-    print(current_user.get_current_job())
-    current_user.get_current_job().set_current_step("upload data")
+    #current_user.get_current_job().set_current_step("upload data")
     # user.update(current_job=job_name)
     #user.find({"job_list": {"$elemMatch": {"username": current_user.get_name(), "job_name":1975}}})
+    current_user.get_current_job().get_fcs_names()
+    # print(current_user.get_current_job().fcs_files)
     return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/upload_helper")
@@ -360,6 +350,7 @@ def add_job():
     directory = "user_data/" + user_name + "/"
     os.makedirs(directory + job_name + "/")
     os.makedirs(directory + job_name + "/fcs_files/")
+    os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
     os.makedirs(directory + job_name + "/temporary_images/")
     with open(directory + job_name +'/job_description.txt', 'w') as f:
         f.write('')
@@ -379,13 +370,8 @@ def add_job():
     user.jobs[job_name] = jobs
     user.save()
     #user.insert({ "$push": { "job_db": { "$set": user.job_list } } })
-
-
-
     #job_objects = {"$set"} {current_user.get_job_list()}
-
     #job_list_update = "job_list"
-
     # query = {"name": self.name, "email": self.email, "password": self.password}
     # data = { "$set": { "Job List": self.job_list } }
     # self.name.update(query, data)
@@ -401,56 +387,14 @@ def add_job():
 
 ############################ r files ############################
 
-# @app.route("/get_peaqo") 
-# def get_peaqo():  
-
-#     path = request.args.get("path")
-#     channels = request.args.get("channels")
-
-    # fileName = "peaqo.r"
-    # url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\peaqo.r"
-    # with lc(ro.default_converter + pr.converter):
-    #     fileName_c = ro.conversion.py2rpy(fileName)
-    #     url_c = ro.conversion.py2rpy(url)
-    # ro.globalenv['fileName'] = fileName_c
-    # ro.globalenv['url'] = url_c
-
-    # r = robjects.r
-    # r.source('R_files\\clustering_dr.r')
-
-    # densvis_umap = robjects.globalenv['densvis_umap']
-    # print("start qc cool")
-    # densvis_umap(path)
-
-    #return 42 (output_path)
-
-# @app.route("/get_peaqo")
-# def get_peaqo():
-
-#     path = request.args.get("path")
-#     channels = request.args.get("channels")
-
-#     fileName = "peaqo.r"
-#     url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\peaqo.r"
-#     with lc(ro.default_converter + pr.converter):
-#         fileName_c = ro.conversion.py2rpy(fileName)
-#         url_c = ro.conversion.py2rpy(url)
-#     ro.globalenv['fileName'] = fileName_c
-#     ro.globalenv['url'] = url_c
-
-#     r = robjects.r
-#     r.source('R_files\\clustering_dr.r')
-
-#     densvis_umap = robjects.globalenv['densvis_umap']
-#     print("start qc cool")
-#     densvis_umap(path)
-
-#     return 42 #(output_path)
-
 @app.route("/get_peaqo")
 def get_peaqo():
-    fileName = "peaqo.r"
-    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\peaqo.r"
+    job_path = request.args.get("job_path")
+    print(job_path)
+    fcs_files_path = job_path + "/fcs_files/"
+
+    fileName = "r_files/peaqo.r"
+    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\peaqo.r"
     with lc(ro.default_converter + pr.converter):
         fileName_c = ro.conversion.py2rpy(fileName)
         url_c = ro.conversion.py2rpy(url)
@@ -458,11 +402,14 @@ def get_peaqo():
     ro.globalenv['url'] = url_c
 
     r = robjects.r
-    r.source('R_files\\peaqo.r')
+    r.source('r_files\\peaqo.r')
 
     run_QC = robjects.globalenv['run_QC']
-    run_QC('C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs', output = 'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\')
-    return 'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\'
+
+    for file in os.listdir(fcs_files_path):
+        run_QC(file, output = job_path + "/qc_cleaned_fcs/")
+
+    return job_path + "/qc_cleaned_fcs/"
 
 
 

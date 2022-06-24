@@ -14,7 +14,7 @@
                 <input type="submit" class="job_specific-backbutton" value="Back"/>
             </form>
 
-            <div class="job_specific-name"> Job Name </div>
+            <div id="job_name" class="job_specific-name"> Job Name </div>
 
             <div class="job_specific-navbar">
                 <form action="\upload_data">
@@ -53,7 +53,19 @@
                     Quality control can be automatically run with the aid of the PeaqoQC package, all you have to do is press Run QC below.
                 </div>
                 
-                <button class="job_specific-automated_qc-content-run_qc" onclick="run_qc()"> Run QC </button>
+                <button id="qc" class="job_specific-automated_qc-content-run_qc"> Run QC </button> <!-- onclick="run_qc()"-->
+
+                <div id="popup" class="job_specific-automated_qc-content-popup">
+                    <div class="job_specific-automated_qc-content-popup-content">
+                        <div class="job_specific-automated_qc-content-popup-content-title"> Results of running automated QC: </div>
+                    </div>
+                </div>
+
+                <div id="loading_popup" class="job_specific-automated_qc-content-loading_popup">
+                    <!-- <div class="job_specific-automated_qc-content-loading_popup-content">
+                        <div class="job_specific-automated_qc-content-popup-content-title"> Results of running automated QC: </div>
+                    </div> -->
+                </div>
 
                 <script>
                     var job = '{{job|safe}}';
@@ -61,21 +73,34 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_path = "user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
+                    var job_path = "user_data/" + job.username + "/" + job.job_name
+
+                    var modal = document.getElementById("popup");
+                    var loading_modal = document.getElementById("loading_popup");
+                    var btn = document.getElementById("qc");
                     
-                    function run_qc() {
-                        console.log("ruuunnnn qqqqqccccc")
-                        // jQuery.ajax({
-                        //     url: "/dashboard",
-                        // })
-                        //somehow add file
+                    btn.onclick = function() {
+                        modal.style.display = "block";
+                        loading_modal.style.display = "block";
+                        btn.style.display = "none";
+                        console.log(job.path)
+                        jQuery.ajax({
+                            url: "/get_peaqo",
+                            data: {"job_path": job_path}
+                        }).done(function(){
+                            loading_modal.style.display = "none";
+                        });
                     }
+                    // function run_qc() {
+                    //     console.log("ruuunnnn qqqqqccccc")
+                    //     // jQuery.ajax({
+                    //     //     url: "/dashboard",
+                    //     // })
+                    //     //somehow add file
+                    // }
                 </script>
-
-                <!-- stuff that happens when click button probably modal
-                <div class="job_specific-automated_qc-content-qc_result"> Results of QC </div> -->
-
             </div>
 
         </div>

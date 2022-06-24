@@ -51,24 +51,25 @@ stuff <- function() {
 # QC_instance <- quality_control(file = "C:/Users/Zuhayr/Downloads/776 F SP.fcs", channels = all)
 # QC_instance$run_QC()
 
-run_QC <- function(location_file, channels, output = "/static")
+run_QC <- function(location_file, output = "/static") #channels
                        {
+                           channels <- c(1, 3, 5:14, 18, 21)
                            file <- flowCore::read.FCS(location_file)
                            #file <- format_fcs(path)
-                           print("cool")
+                        #    print("cool")
                            PeacoQC_res <- PeacoQC(file, channels=channels, determine_good_cells="all", save_fcs=TRUE, output_directory = output)
                        }
 format_fcs <- function(location_file, channels = "")
                        {
-                        #    read_fcs <- flowCore::read.FCS(location_file)
-                        #    read_fcs <<- RemoveMargins(ff=read_fcs, channels=channels, output="frame")
-                        #    #first compensate
-                        #    read_fcs <<- flowCore::compensate(read_fcs, flowCore::keyword(read_fcs)$SPILL)
-                        #    #then transform
-                        #    read_fcs <<- flowCore::transform(read_fcs, flowCore::estimateLogicle(file, colnames(flowCore::keyword(read_fcs)$SPILL)))
-                        #    read_fcs <<- flowCore::transform(read_fcs, flowCore::estimateLinear(file, colnames(flowCore::keyword(read_fcs)$SPILL)))
+                           read_fcs <- flowCore::read.FCS(location_file)
+                           read_fcs <<- RemoveMargins(ff=read_fcs, channels=channels, output="frame")
+                           #first compensate
+                           read_fcs <<- flowCore::compensate(read_fcs, flowCore::keyword(read_fcs)$SPILL)
+                           #then transform
+                           read_fcs <<- flowCore::transform(read_fcs, flowCore::estimateLogicle(file, colnames(flowCore::keyword(read_fcs)$SPILL)))
+                           read_fcs <<- flowCore::transform(read_fcs, flowCore::estimateLinear(file, colnames(flowCore::keyword(read_fcs)$SPILL)))
 
-                        #    return(read_fcs)
+                           return(read_fcs)
                        }
 # location_file <<- "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\static\\PeacoQC_results\\fcs_files\\776 F SP_QC.fcs"
 # format_fcs(location_file)

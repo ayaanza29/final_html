@@ -52,7 +52,7 @@
                     Here is where you can perform doublet exclusion, live-dead tests, and preselect a specific cell subset.
                 </div>
 
-                <div class="job_specific-gating-content-gates_created">
+                <div id="container" class="job_specific-gating-content-gates_created">
                     <div class="job_specific-gating-content-gates_created-title"> Gates </div>
                     <button class="job_specific-gating-content-gates_created-addgate" id="add_gate"> + Add Gate </button>
                 </div>
@@ -76,12 +76,13 @@
                         <div class="job_specific-gating-content-gate_popup-content-title"> Choose New Gate Parameters </div>
                         <div class="job_specific-gating-content-gate_popup-content-label"> 
                             Choose X Axis: <select name="x_axis" id="x_axis">
-                                <option value="" selected="selected">Select x-axis</option>
+                                <option id="x_initial" value="" selected="selected">Select x-axis</option> <!-- selected="selected"-->
                             </select>
                             Choose Y Axis: <select name="y_axis" id="y_axis">
-                                <option value="" selected="selected">Select y-axis</option>
+                                <option id="y_selected" value="" selected="selected">Select y-axis</option>
                             </select>
                         </div>
+                        <button id="create_gate" class="job_specific-gating-content-gate_popup-content-button"> Create Gate </button>
                     </div>
                 </div>
 
@@ -139,16 +140,13 @@
                     <script src="..\static\new_graph.js"></script>
                 </div>
 
-
-
-
                 <script>
                     var modal = document.getElementById("popup");
                     var btn = document.getElementById("add_gate");
                     var span = document.getElementsByClassName("job_specific-gating-content-gate_popup-content-close")[0];
 
                     btn.onclick = function() {
-                    modal.style.display = "block";
+                        modal.style.display = "block";
                     }
                     span.onclick = function() {
                         modal.style.display = "none";
@@ -174,11 +172,48 @@
                         }
                     }
                 </script>
+                <script>
+                    var modal = document.getElementById("popup");
+                    var create_gate = document.getElementById("create_gate");
+                    var gate_body = document.getElementById("container")
+                    // var x_selected = document.getElementById("x_selected").value;
+                    // var x_selected1 = document.getElementById("x_selected").selected;
+                    // var x_selected2 = document.getElementById("x_selected").innerHTML;
+                    // var y_selected = document.getElementById("y_selected").innerHTML;
+                    // console.log("this is x selected")
+                    // console.log(x_selected)
+                    // console.log(x_selected1)
+                    // console.log(x_selected2)
+
+                    // // var x_axis = document.getElementById("x_axis");
+                    // console.log(x_axis.options)
+                    // for (var x in x_axis.options) {
+                    //     if (x.selected == true){
+                    //         print(x.selected)
+                    //     }
+                    //     // x_axis.options[x_axis.options.length] = new Option(axis_options[x], x);
+                    // }
+
+                    create_gate.onclick = function() {
+                        modal.style.display = "none";
+                        var x_selected = document.getElementById("x_selected").innerHTML;
+                        var y_selected = document.getElementById("y_selected").innerHTML;
+
+                        var select = document.getElementById('x_axis');
+                        var value = select.options[select.selectedIndex].value;
+                        console.log(value);
+
+                        const button = document.createElement("button");
+                        button.classList.add("job_specific-gating-content-gates_created-new_gate") 
+                        button.innerHTML = "x-axis:" + x_selected + "  y-axis:" + y_selected;
+                        gate_body.appendChild(button);
+                    }
+                </script>
                  <script>
                     var job = '{{job|safe}}';
                     job = job.slice(1, -1)
                     parsedJob = JSON.parse(job);
-                    console.log(parsedJob)
+                    // console.log(parsedJob)
                     document.getElementById("job_name").innerHTML = parsedJob.job_name;
                 </script>
 
