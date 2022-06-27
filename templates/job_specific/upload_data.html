@@ -67,7 +67,7 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = "user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
+                    var fcs_path = job.path + "/fcs_files/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
 
                     file_body = document.getElementById("container")

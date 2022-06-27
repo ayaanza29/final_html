@@ -50,14 +50,25 @@ stuff <- function() {
 
 # QC_instance <- quality_control(file = "C:/Users/Zuhayr/Downloads/776 F SP.fcs", channels = all)
 # QC_instance$run_QC()
+# get_Markers <- function(location_file, output = "/static") #channels
+#                        {
+#                            channels <- c(1, 3, 5:14, 18, 21)
+#                            file <- flowCore::read.FCS(location_file)
 
+#                            PeacoQC_res <- PeacoQC(file, channels=channels, determine_good_cells="all", save_fcs=TRUE, output_directory = output)
+#                        }
 run_QC <- function(location_file, output = "/static") #channels
                        {
                            channels <- c(1, 3, 5:14, 18, 21)
-                           file <- flowCore::read.FCS(location_file)
-                           #file <- format_fcs(path)
-                        #    print("cool")
-                           PeacoQC_res <- PeacoQC(file, channels=channels, determine_good_cells="all", save_fcs=TRUE, output_directory = output)
+                           fcs_file <- flowCore::read.FCS(location_file)
+                           fcs_file_markernames <- flowCore::markernames(fcs_file)
+                           print(fcs_file_markernames)
+
+                           
+                           #channels definately needs changed
+                           PeacoQC_res <- PeacoQC(fcs_file, channels=channels, determine_good_cells="all", save_fcs=TRUE, output_directory = output)
+
+                           return(fcs_file_markernames)
                        }
 format_fcs <- function(location_file, channels = "")
                        {

@@ -158,7 +158,13 @@
                     }
                 </script>
                 <script>
+                    var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
+                    job = JSON.parse(job);
+                    document.getElementById("job_name").innerHTML = job.job_name;
+
                     var axis_options = ["FSC-A", "FSC-H", "FSC-W"]
+                    axis_options = job.channels
                 
                     window.onload = function() {
                         var x_axis = document.getElementById("x_axis");
@@ -209,13 +215,13 @@
                         gate_body.appendChild(button);
                     }
                 </script>
-                 <script>
+                 <!-- <script>
                     var job = '{{job|safe}}';
                     job = job.slice(1, -1)
                     parsedJob = JSON.parse(job);
                     // console.log(parsedJob)
                     document.getElementById("job_name").innerHTML = parsedJob.job_name;
-                </script>
+                </script> -->
 
             </div>
 

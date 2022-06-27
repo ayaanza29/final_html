@@ -92,6 +92,7 @@ class Job(db.EmbeddedDocument):
         #     self.path = path
     fcs_files = db.StringField()
     path = db.StringField() #default=lambda: "user_data/" + username + job_name
+    channels = db.StringField()
 
     def get_name(self):
         return self.job_name
@@ -102,13 +103,19 @@ class Job(db.EmbeddedDocument):
         self.fcs_files
         return 42
     def get_fcs_names(self):
-        self.path = "user_data/" + self.username + "/" + self.job_name + "/"
+        #self.path = "C:/Users/Zuhayr/Desktop/user_data/" + self.username + "/" + self.job_name + "/" #"C:\Users\Zuhayr\Desktop\user_data\tim"
         self.fcs_files = os.listdir(self.path + "fcs_files/")
         return self.fcs_files
     def add_gates(self):
         return 42
     def add_normalized_fcs(self):
         return 42
+    def set_channels(self, channels):
+        print(channels)
+        self.channels = channels
+        return self.channels
+    def get_channels(self):
+        return self.channels
     # def toJSON(self):
     #     print("my own json creation below")
     #     print(json.dumps(self, default=lambda o: o.__dict__, ))
@@ -151,7 +158,7 @@ class User(db.Document):
     #         #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
     #     return self.jobs
     def get_job_list_string(self):
-        path = "user_data/" + current_user.get_name()
+        path = "C:/Users/Zuhayr/Desktop/user_data/" + current_user.get_name()
         self.job_list_string = os.listdir(path)
         return self.job_list_string
     def get_job_list(self):
@@ -275,8 +282,9 @@ def upload_data(job_passed_in = ""):
         user =  User.objects(id=current_user.id)
         user.update(current_job=job_name)
     #print(type(current_job))
-    job_name = current_user.get_current_job().get_name()
-    path = "user_data/" + current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
+    job = current_user.get_current_job()
+    job_name = job.get_name()
+    path = job.path + "fcs_files" #"user_data/" + current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
     if request.method == 'POST':
         # check if the post request has the file part
         # print(request.files)
@@ -298,7 +306,7 @@ def upload_data(job_passed_in = ""):
             current_user.get_current_job().get_fcs_names()
             return redirect(url_for('upload_data', name=filename))
 
-    #current_user.get_current_job().set_current_step("upload data")
+    current_user.get_current_job().set_current_step("upload data")
     # user.update(current_job=job_name)
     #user.find({"job_list": {"$elemMatch": {"username": current_user.get_name(), "job_name":1975}}})
     current_user.get_current_job().get_fcs_names()
@@ -347,7 +355,7 @@ def download_results():
 def add_job():
     job_name = request.args.get("job_name")
     user_name = current_user.get_name()
-    directory = "user_data/" + user_name + "/"
+    directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/"
     os.makedirs(directory + job_name + "/")
     os.makedirs(directory + job_name + "/fcs_files/")
     os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
@@ -365,7 +373,7 @@ def add_job():
     # params[job_list_update] = data
     # user.update(**params)
 
-    jobs = Job(username=user_name, job_name=job_name) #current_user.get_job_list()
+    jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/") #current_user.get_job_list()
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()
@@ -390,8 +398,8 @@ def add_job():
 @app.route("/get_peaqo")
 def get_peaqo():
     job_path = request.args.get("job_path")
-    print(job_path)
-    fcs_files_path = job_path + "/fcs_files/"
+    #print(job_path)
+    fcs_files_path = job_path + "fcs_files/"
 
     fileName = "r_files/peaqo.r"
     url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\peaqo.r"
@@ -405,9 +413,11 @@ def get_peaqo():
     r.source('r_files\\peaqo.r')
 
     run_QC = robjects.globalenv['run_QC']
+    for fcs in os.listdir(fcs_files_path):
+        markernames = run_QC(fcs_files_path + fcs, output = job_path + "/qc_cleaned_fcs/")
+        print(markernames)
 
-    for file in os.listdir(fcs_files_path):
-        run_QC(file, output = job_path + "/qc_cleaned_fcs/")
+    current_user.get_current_job().set_channels(markernames)
 
     return job_path + "/qc_cleaned_fcs/"
 

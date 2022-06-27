@@ -58,6 +58,9 @@
                 <div id="popup" class="job_specific-automated_qc-content-popup">
                     <div class="job_specific-automated_qc-content-popup-content">
                         <div class="job_specific-automated_qc-content-popup-content-title"> Results of running automated QC: </div>
+                        <form id="cleaned_fcs" method="get"> <!--action="fcs_files" -->
+                            <button type="submit" class="job_specific-automated_qc-content-popup-content-results"> Download Cleaned fcs Files </button>
+                        </form>
                     </div>
                 </div>
 
@@ -73,9 +76,12 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = "user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
+                    var job_path = job.path;
+                    var fcs_path = job.path + "/fcs_files/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
-                    var job_path = "user_data/" + job.username + "/" + job.job_name
+
+                    document.getElementById("cleaned_fcs").action = job.path + "qc_cleaned_fcs/PeaqoQC_results/fcs_files"
+                    //var job_path = "user_data/" + job.username + "/" + job.job_name
 
                     var modal = document.getElementById("popup");
                     var loading_modal = document.getElementById("loading_popup");
@@ -91,6 +97,26 @@
                             data: {"job_path": job_path}
                         }).done(function(){
                             loading_modal.style.display = "none";
+                            // var container = document.getElementById("job_specific-automated_qc-content-popup-content");
+
+                            // const button_cleaned_fcs = document.createElement("form");
+                            // button_cleaned_fcs.classList.add("job_specific-automated_qc-content-popup-content-results");
+                            // button_cleaned_fcs.value = "Cleaned FCS Files";
+                            // button_cleaned_fcs.method = 'POST';
+                            // button_cleaned_fcs.action = "";
+                            // container.appendChild(button_cleaned_fcs);
+
+                            // const button_plot_fcs = document.createElement("button");
+                            // button_plot_fcs.classList.add("job_specific-automated_qc-content-popup-content-results") ;
+                            // button_plot_fcs.innerHTML = "Cleaned FCS Plot";
+                            // button_plot_fcs.id = "plot_fcs";
+                            // container.appendChild(button_plot_fcs);
+
+                            // const button_result_fcs = document.createElement("button");
+                            // button_result_fcs.classList.add("job_specific-automated_qc-content-popup-content-results") ;
+                            // button_result_fcs.innerHTML = "Cleaned FCS Report";
+                            // button_result_fcs.id = "result_fcs";
+                            // container.appendChild(button_result_fcs);
                         });
                     }
                     // function run_qc() {

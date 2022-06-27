@@ -459,6 +459,23 @@
     font-size: 40px;
     padding-bottom: 5%;
 }
+.job_specific-automated_qc-content-popup-content-results{
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--color4);
+    border-radius: 10px;
+    position: relative;
+    align-items: center;
+    margin: 8px;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: var(--color4);
+    width: 98%;
+    color: var(--color1);
+    height: 40px;
+    font-size: 30px;
+}
 .job_specific-automated_qc-content-loading_popup {
     display: none; /* Hidden by default */
     position: fixed;
@@ -664,7 +681,11 @@
     background-color: var(--color4);
     color: var(--color1);
 } */
-.job_specific-normalization-content-run_normalization{
+.job_specific-normalization-content-position{
+    position: relative;
+    left: 20%;
+}
+.job_specific-normalization-content-position-run_normalization{
     color: var(--color1);
     font-size: 30px;
     border-color: var(--color4);
@@ -674,7 +695,6 @@
     cursor: pointer;
     text-align: center;
     padding: 15px 80px;
-    left: 30%;
     margin-top: 30px;
 }
 .job_specific-normalization-content-run_normalization:active{
