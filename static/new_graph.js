@@ -33,7 +33,7 @@ drawOnImage();
 // }); 
 
 var path_cleaned_fcs_files = job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/776 F SP_QC_QC.fcs" //"C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs" "F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776 F SP_QC_QC.fcs"
-
+print("path for graphing " + path_cleaned_fcs_files)
 
 jQuery.ajax({type: "GET", 
       url:"/new",

@@ -892,7 +892,7 @@
     padding: 20px;
     border: 1px solid #888;
     width: 60%; /* Could be more or less, depending on screen size */
-    height: 30%;
+    height: 40%;
 }
 .job_specific-dr_clustering-content-popup-content-close {
     color: #aaa;
@@ -927,6 +927,9 @@
     align-items: center;
     color: var(--color1);
     font-size: 30px;
+    border-radius: 15px;
+    margin: 10px;
+    cursor: pointer;
 }
 
 /********** download results **********/

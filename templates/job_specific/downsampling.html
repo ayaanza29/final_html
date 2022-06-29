@@ -73,6 +73,11 @@
                     </div>
                 </div>
 
+                <div id="loading_popup" class="job_specific-automated_qc-content-loading_popup">
+                    <div class="job_specific-automated_qc-content-loading_popup-text"> Running Downsampling . . . </div>
+                    <!-- Maybe add a loading animation-->
+                </div>
+
                 <script>
                     var job = '{{job|safe}}';
                     job = job.slice(1, -1)
@@ -105,21 +110,39 @@
 
                     var fcs_path = job.path + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
+                    var job_path = job.path
                     
                     var modal1 = document.getElementById("popup1");
                     var modal2 = document.getElementById("popup2");
                     var btn1 = document.getElementById("srs");
                     var btn2 = document.getElementById("spade");
+                    var loading_modal = document.getElementById("loading_popup");
 
                     btn1.onclick = function() {
-                        modal1.style.display = "block";
+                        loading_modal.style.display = "block";
                         btn1.style.display = "none";
                         btn2.style.display = "none";
+                        console.log(job.path)
+                        jQuery.ajax({
+                            url: "/get_random_downsampling",
+                            data: {"job_path": job_path}
+                        }).done(function(){
+                            modal1.style.display = "block";
+                            loading_modal.style.display = "none";
+                        });
                     }
                     btn2.onclick = function() {
-                        modal2.style.display = "block";
+                        loading_modal.style.display = "block";
                         btn1.style.display = "none";
                         btn2.style.display = "none";
+                        console.log(job.path)
+                        jQuery.ajax({
+                            url: "/get_spade_downsampling",
+                            data: {"job_path": job_path}
+                        }).done(function(){
+                            modal2.style.display = "block";
+                            loading_modal.style.display = "none";
+                        });
                     }
                 </script>
 

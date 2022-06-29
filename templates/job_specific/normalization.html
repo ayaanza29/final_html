@@ -175,10 +175,10 @@
                         channel_body.style.display = "none";
                         loading_modal.style.display = "block";
                         btn.style.display = "none";
-                        console.log(channels)
+                        console.log(selected_channels)
                         jQuery.ajax({
                             url: "/get_normalize",
-                            data: {"job_path": job_path, "channels": channels}
+                            data: {"job_path": job_path, "selected_channels": selected_channels}
                         }).done(function(){
                             loading_modal.style.display = "none";
                             modal.style.display = "block";

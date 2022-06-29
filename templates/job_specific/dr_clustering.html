@@ -54,7 +54,7 @@
                 <div class="job_specific-dr_clustering-content-description"> 
                     Here is where you choose which dimensionality reduction or clustering processes you wish to run.
                 </div>
-                <div class="job_specific-dr_clustering-content-analysis">
+                <div id="analysis_body" class="job_specific-dr_clustering-content-analysis">
                     <div class="job_specific-dr_clustering-content-analysis-title"> Current Analysis Running: </div>
                     <button class="job_specific-dr_clustering-content-analysis-add_option" id="add_option"> + Add UMAP or TSNE </button>
                 </div>
@@ -64,7 +64,7 @@
                         <span class="job_specific-dr_clustering-content-popup-content-close">&times;</span>
                         <div class="job_specific-dr_clustering-content-popup-content-title"> Choose New Analysis: </div>
                         <div class="job_specific-dr_clustering-content-popup-content-position"> 
-                            <form action="\dr_clustering">
+                            <form id="pca_form"> <!--action="\dr_clustering"-->
                                 <input type="submit" id="pca" class="job_specific-dr_clustering-content-popup-content-position-buttons" value="PCA"/>
                             </form>
                             <form action="\dr_clustering">
@@ -78,9 +78,28 @@
                 </div>
 
                 <script>
+                    var analysis_list = []
                     var modal = document.getElementById("popup");
                     var btn = document.getElementById("add_option");
                     var span = document.getElementsByClassName("job_specific-dr_clustering-content-popup-content-close")[0];
+                    var pca_form = document.getElementById("pca_form")
+                    var analysis_body = document.getElementById("analysis_body")
+                    pca_form.action = function () {
+                        modal.style.display = "none"
+                        analysis_list.push("pca")
+                    }
+
+                    for (var analysis in analysis_list){
+                        const button = document.createElement("button");
+                        button.classList.add("job_specific-dr_clustering-content-analysis-new_analysis") 
+                        button.innerHTML = "Running " + analysis_list[analysis];
+                        button.id = analysis_list[analysis];
+                        button.onclick = function() {
+                            // if (id )
+                        }
+                        analysis_body.appendChild(button);
+                    }
+
 
                     btn.onclick = function() {
                     modal.style.display = "block";
@@ -96,18 +115,18 @@
                 </script>
 
                 <script>
-                    document.getElementById("file").onchange = function() {
-                        // files.push("thing")
-                        // console.log(files)
+                    // document.getElementById("file").onchange = function() {
+                    //     // files.push("thing")
+                    //     // console.log(files)
 
-                        for (var file in fcs_file_list){
-                            const button = document.createElement("button");
-                            button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                            button.innerHTML = files[file];
-                            file_body.appendChild(button);
-                        }
-                        document.getElementById("form").submit();
-                    };
+                    //     for (var file in fcs_file_list){
+                    //         const button = document.createElement("button");
+                    //         button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                    //         button.innerHTML = files[file];
+                    //         file_body.appendChild(button);
+                    //     }
+                    //     document.getElementById("form").submit();
+                    // };
 
                     var job = '{{job|safe}}';
                     job = job.slice(1, -1)

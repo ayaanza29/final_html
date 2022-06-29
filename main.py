@@ -492,8 +492,8 @@ def get_peaqo():
     #print(job_path)
     fcs_files_path = job_path + "fcs_files/"
 
-    fileName = "r_files/peaqo.r"
-    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\peaqo.r"
+    fileName = "R_files\\peaqo.r"
+    url = "C:\\Users\\rkhan\\Documents\\GitHub\\front_end_flow\\R_files\\peaqo.r" # C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\peaqo.r
     with lc(ro.default_converter + pr.converter):
         fileName_c = ro.conversion.py2rpy(fileName)
         url_c = ro.conversion.py2rpy(url)
@@ -501,7 +501,7 @@ def get_peaqo():
     ro.globalenv['url'] = url_c
 
     r = robjects.r
-    r.source('r_files\\peaqo.r')
+    r.source('R_files\\peaqo.r') # lowercase r
 
     run_QC = robjects.globalenv['run_QC']
     for fcs in os.listdir(fcs_files_path):
@@ -529,12 +529,13 @@ def get_peaqo():
 
 @app.route("/get_normalize")
 def get_normalize():
-    channels = request.args.get("channels")
+    selected_channels = request.args.get("selected_channels")
+    print(selected_channels)
     job_path = request.args.get("job_path")
     fcs_files_path = job_path + "qc_cleaned_fcs/PeacoQC_results/fcs_files"#"gated_fcs_files/"
 
-    fileName = "gaussNorm.r"
-    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\gaussNorm.r" #"C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\normalize.r"
+    fileName = "R_files\\gaussNorm.r"
+    url = "C:\\Users\\rkhan\\Documents\\GitHub\\front_end_flow\\R_files\\gaussNorm.r" #"C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\gaussNorm.r" #C:\Users\rkhan\Documents\GitHub\front_end_flow\R_files\gaussNorm.r
     with lc(ro.default_converter + pr.converter):
         fileName_c = ro.conversion.py2rpy(fileName)
         url_c = ro.conversion.py2rpy(url)
@@ -547,18 +548,19 @@ def get_normalize():
     gaussNorm = robjects.globalenv['run_norm']
     path = fcs_files_path
     files_vector = os.listdir(path)
-    channels_vector = channels
-    normalize_peaks_graph = gaussNorm(path, files_vector, channels_vector) #'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs'
+    channels_vector = selected_channels
+    normalize_peaks_graph = gaussNorm(path, files_vector) #channels_vector #'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs'
     return(normalize_peaks_graph)
 
 
-@app.route("/get_downsampling")
-def get_downsampling():
-    path = request.args.get("path")
-    channels = request.args.get("channels")
+@app.route("/get_random_downsampling")
+def get_random_downsampling():
+    output_path = request.args.get("job_path")
+    fcs_path = output_path + "qc_cleaned_fcs\\PeacoQC_results\\fcs_files\\776_F_SP_QC_QC.fcs" #"F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776_F_SP_QC_QC.fcs"
+    # channels = request.args.get("channels")
 
-    fileName = "downsample.r"
-    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\downsample.r"
+    fileName = "R_files\\downsampling.r"
+    url = "C:\\Users\\rkhan\\Documents\\GitHub\\front_end_flow\\R_files\\downsampling.r"
     with lc(ro.default_converter + pr.converter):
         fileName_c = ro.conversion.py2rpy(fileName)
         url_c = ro.conversion.py2rpy(url)
@@ -566,11 +568,33 @@ def get_downsampling():
     ro.globalenv['url'] = url_c
 
     r = robjects.r
-    r.source('R_files\\downsample.r')
+    r.source('R_files\\downsampling.r')
+
+    random_downsample = robjects.globalenv['random_downsample']
+    random_downsample(fcs_path, output_path)
+    return "42"#(spade_graph)
+
+
+@app.route("/get_spade_downsampling")
+def get_spade_downsampling():
+    output_path = request.args.get("job_path")
+    fcs_path = output_path + "qc_cleaned_fcs\\PeacoQC_results\\fcs_files\\776_F_SP_QC_QC.fcs" #"F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776_F_SP_QC_QC.fcs"
+    # channels = request.args.get("channels")
+
+    fileName = "R_files\\downsampling.r"
+    url = "C:\\Users\\rkhan\\Documents\\GitHub\\front_end_flow\\R_files\\downsampling.r"
+    with lc(ro.default_converter + pr.converter):
+        fileName_c = ro.conversion.py2rpy(fileName)
+        url_c = ro.conversion.py2rpy(url)
+    ro.globalenv['fileName'] = fileName_c
+    ro.globalenv['url'] = url_c
+
+    r = robjects.r
+    r.source('R_files\\downsampling.r')
 
     spade_downsample = robjects.globalenv['spade_downsample']
-    spade_graph = spade_downsample(path, channels = channels)
-    return(spade_graph)
+    spade_downsample(fcs_path, output_path)
+    return "42"#(spade_graph)
 
 
 @app.route("/get_clustering_dr")
