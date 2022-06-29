@@ -338,6 +338,20 @@
     z-index: 2;
     background-color: var(--color1);
 }
+.job_specific-disable-button{
+    left: 20%;
+    top: 28%;
+    position: absolute;
+    z-index: 2;
+    color: var(--color1);
+    font-size: 30px;
+    border-color: var(--color4);
+    background: var(--color4);
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px 10px;
+}
 
 /********** upload data **********/
 
@@ -823,6 +837,23 @@
 .job_specific-downsampling-content-popup-content-title{
     font-size: 40px;
     padding-bottom: 5%;
+}
+.job_specific-downsampling-content-popup-content-results{
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--color4);
+    border-radius: 10px;
+    position: relative;
+    align-items: center;
+    margin: 8px;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: var(--color4);
+    width: 98%;
+    color: var(--color1);
+    height: 40px;
+    font-size: 30px;
 }
 .job_specific-downsampling-content-popup-content-label{
     font-size: 30px;

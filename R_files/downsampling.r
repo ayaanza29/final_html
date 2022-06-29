@@ -54,7 +54,7 @@ simple_random_sampling <- function(data_file_path, output_dir, sampling_ceiling 
      ff <- Subset(ff, result)
      # print(result)
      # print(ff)
-     write.FCS(ff, output_dir + "downsampled.fcs")
+     flowCore::write.FCS(ff, paste(output_dir, "downsampled.fcs"))
 }
 
 

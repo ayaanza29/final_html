@@ -64,12 +64,18 @@
                 <div id="popup1" class="job_specific-downsampling-content-popup">
                     <div class="job_specific-downsampling-content-popup-content">
                         <div class="job_specific-downsampling-content-popup-content-title"> Results of running simple random downsample: </div>
+                        <form id="srs_fcs" method="get"> <!--action="fcs_files" -->
+                            <button type="submit" class="job_specific-downsampling-content-popup-content-results"> Download Downsampled fcs Files </button>
+                        </form>
                     </div>
                 </div>
 
                 <div id="popup2" class="job_specific-downsampling-content-popup">
                     <div class="job_specific-downsampling-content-popup-content">
                         <div class="job_specific-downsampling-content-popup-content-title"> Results of running density dependent downsample: </div>
+                        <form id="spade_fcs" method="get"> <!--action="fcs_files" -->
+                            <button type="submit" class="job_specific-downsampling-content-popup-content-results"> Download Downsampled fcs Files </button>
+                        </form>
                     </div>
                 </div>
 
@@ -117,6 +123,9 @@
                     var btn1 = document.getElementById("srs");
                     var btn2 = document.getElementById("spade");
                     var loading_modal = document.getElementById("loading_popup");
+
+                    // document.getElementById("srs_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "downsampled.fcs"}})
+                    // document.getElementById("spade_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "downsampled.fcs"}})
 
                     btn1.onclick = function() {
                         loading_modal.style.display = "block";

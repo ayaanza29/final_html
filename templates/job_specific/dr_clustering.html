@@ -64,39 +64,54 @@
                         <span class="job_specific-dr_clustering-content-popup-content-close">&times;</span>
                         <div class="job_specific-dr_clustering-content-popup-content-title"> Choose New Analysis: </div>
                         <div class="job_specific-dr_clustering-content-popup-content-position"> 
-                            <form id="pca_form"> <!--action="\dr_clustering"-->
-                                <input type="submit" id="pca" class="job_specific-dr_clustering-content-popup-content-position-buttons" value="PCA"/>
+                            <form id="pca_form" action="\dr_clustering">
+                                <button type="submit" id="pca" class="job_specific-dr_clustering-content-popup-content-position-buttons">PCA</button>
                             </form>
-                            <form action="\dr_clustering">
-                                <input type="submit" id="umap" class="job_specific-dr_clustering-content-popup-content-position-buttons" value="UMAP"/>
+                            <form id="umap_form" action="\dr_clustering">
+                                <button type="submit" id="umap" class="job_specific-dr_clustering-content-popup-content-position-buttons">UMAP</button>
                             </form>
-                            <form action="\dr_clustering">
-                                <input type="submit" id="tsne" class="job_specific-dr_clustering-content-popup-content-position-buttons" value="TSNE"/>
+                            <form id="tsne_form" action="\dr_clustering">
+                                <button type="submit" id="tsne" class="job_specific-dr_clustering-content-popup-content-position-buttons">TSNE</button>
                             </form>
                         </div>
                     </div>
                 </div>
 
                 <script>
-                    var analysis_list = []
+                    var analysis_list = list()
                     var modal = document.getElementById("popup");
                     var btn = document.getElementById("add_option");
                     var span = document.getElementsByClassName("job_specific-dr_clustering-content-popup-content-close")[0];
                     var pca_form = document.getElementById("pca_form")
                     var analysis_body = document.getElementById("analysis_body")
-                    pca_form.action = function () {
-                        modal.style.display = "none"
+
+                    var pca_add = document.getElementById("pca")
+                    pca_add.onclick = function() {
                         analysis_list.push("pca")
+                        console.log(analysis_list)
                     }
 
+                    var umap_add = document.getElementById("umap")
+                    umap_add.onclick = function() {
+                        analysis_list.push("umap")
+                        console.log(analysis_list)
+                    }
+
+                    var tsne_add = document.getElementById("tsne")
+                    tsne_add.onclick = function() {
+                        analysis_list.push("tsne")
+                        console.log(analysis_list)
+                    }
+                    console.log(analysis_list)
                     for (var analysis in analysis_list){
+                        console.log("cool")
                         const button = document.createElement("button");
                         button.classList.add("job_specific-dr_clustering-content-analysis-new_analysis") 
                         button.innerHTML = "Running " + analysis_list[analysis];
                         button.id = analysis_list[analysis];
-                        button.onclick = function() {
-                            // if (id )
-                        }
+                        // button.onclick = function() {
+                        //     // if (id )
+                        // }
                         analysis_body.appendChild(button);
                     }
 

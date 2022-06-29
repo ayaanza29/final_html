@@ -17,6 +17,10 @@ library(ggcyto)
 
 
 run_norm <- function(path, files_vector){ #channels_vector
+    print(path)
+    print(files_vector)
+    files_vector <- c(as.character(files_vector))
+    print(files_vector)
     ff <- flowCore::read.flowSet(files = files_vector, path = path)
     channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
     #channel_names_normalize <- channels_vector #"Alexa Fluor 700-A"

@@ -162,7 +162,7 @@ class User(db.Document):
     #         #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
     #     return self.jobs
     def get_job_list_string(self):
-        path =  "F:/user_data/" + current_user.get_name() #"F:\user_data\tim" "C:/Users/Zuhayr/Desktop/user_data/"
+        path =  "C:/Users/Zuhayr/Desktop/user_data/" + current_user.get_name() #"F:\user_data\tim" "C:/Users/Zuhayr/Desktop/user_data/"
         self.job_list_string = os.listdir(path)
         return self.job_list_string
     def get_job_list(self):
@@ -409,7 +409,7 @@ def download_results():
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
-    return render_template("job_specific/download_results.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
+    return render_template("job_specific/download_results.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 ############################ ajax requests ############################
 #######################################################################
@@ -418,7 +418,7 @@ def download_results():
 def add_job():
     job_name = request.args.get("job_name")
     user_name = current_user.get_name()
-    directory = "F:/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"
+    directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"  F:/user_data/
     os.makedirs(directory + job_name + "/")
     os.makedirs(directory + job_name + "/fcs_files/")
     os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
@@ -436,7 +436,7 @@ def add_job():
     # params[job_list_update] = data
     # user.update(**params)
 
-    jobs = Job(username=user_name, job_name=job_name, path="F:/user_data/" + user_name + "/" + job_name + "/", current_step=1) # "C:/Users/Zuhayr/Desktop/user_data/"   current_user.get_job_list()
+    jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/", current_step=1) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()
@@ -456,6 +456,9 @@ def add_job():
 
 #     return send_file(path, as_attachment=True)
 
+
+
+##################################    maybe make a download one file and download everything in directory
 @app.route('/download_file')
 def download_file():
     # target = 'dir1/dir2'
@@ -570,7 +573,7 @@ def get_random_downsampling():
     r = robjects.r
     r.source('R_files\\downsampling.r')
 
-    random_downsample = robjects.globalenv['random_downsample']
+    random_downsample = robjects.globalenv['simple_random_sampling']
     random_downsample(fcs_path, output_path)
     return "42"#(spade_graph)
 
@@ -599,6 +602,7 @@ def get_spade_downsampling():
 
 @app.route("/get_clustering_dr")
 def get_clustering():
+    analysis_method = request.args.get("analysis_method")
     path = request.args.get("path")
     channels = request.args.get("channels")
 
@@ -612,10 +616,18 @@ def get_clustering():
 
     r = robjects.r
     r.source('R_files\\clustering_dr.r')
-
-    spade_downsample = robjects.globalenv['demap']
-    spade_graph = spade_downsample(path, channels = channels)
-    return(spade_graph)
+    if (analysis_method == "pca"):
+        pca = robjects.globalenv['scree_plot']
+        pca_plot = pca(path, channels = channels)
+        return(pca_plot)
+    if (analysis_method == "umap"):
+        pca = robjects.globalenv['scree_plot']
+        pca_plot = pca(path, channels = channels)
+        return(pca_plot)
+    if (analysis_method == "tsne"):
+        pca = robjects.globalenv['scree_plot']
+        pca_plot = pca(path, channels = channels)
+        return(pca_plot)
 
 
 if __name__ == "__main__":
