@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import logging
 logging.basicConfig(level=logging.INFO)
-from flask import Flask, g, request, jsonify, render_template, redirect
+from flask import Flask, g, request, jsonify, render_template, redirect, send_from_directory, send_file
 from flask_login import (current_user, LoginManager,
                              login_user, logout_user,
                              login_required)
@@ -17,6 +17,9 @@ from rpy2 import robjects as ro
 import rpy2.robjects as robjects
 from rpy2.robjects.conversion import localconverter as lc
 from flask_cors import CORS
+from glob import glob
+from io import BytesIO
+from zipfile import ZipFile
 
 ALLOWED_EXTENSIONS = {'fcs', "png", "jpg", "txt"}
 #UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
@@ -92,7 +95,8 @@ class Job(db.EmbeddedDocument):
         #     self.path = path
     fcs_files = db.StringField()
     path = db.StringField() #default=lambda: "user_data/" + username + job_name
-    channels = db.StringField()
+    channels = db.ListField()
+    current_step = db.IntField()
 
     def get_name(self):
         return self.job_name
@@ -103,8 +107,8 @@ class Job(db.EmbeddedDocument):
         self.fcs_files
         return 42
     def get_fcs_names(self):
-        #self.path = "C:/Users/Zuhayr/Desktop/user_data/" + self.username + "/" + self.job_name + "/" #"C:\Users\Zuhayr\Desktop\user_data\tim"
-        self.fcs_files = os.listdir(self.path + "fcs_files/")
+        #self.path = "F:/user_data/" + self.username + "/" + self.job_name + "/" #"C:\Users\Zuhayr\Desktop\user_data\tim"
+        self.fcs_files = os.listdir(self.path + "fcs_files/") #"F:\user_data\tom\cool\fcs_files\776_F_SP_QC.fcs"
         return self.fcs_files
     def add_gates(self):
         return 42
@@ -158,7 +162,7 @@ class User(db.Document):
     #         #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
     #     return self.jobs
     def get_job_list_string(self):
-        path = "C:/Users/Zuhayr/Desktop/user_data/" + current_user.get_name()
+        path =  "F:/user_data/" + current_user.get_name() #"F:\user_data\tim" "C:/Users/Zuhayr/Desktop/user_data/"
         self.job_list_string = os.listdir(path)
         return self.job_list_string
     def get_job_list(self):
@@ -306,7 +310,7 @@ def upload_data(job_passed_in = ""):
             current_user.get_current_job().get_fcs_names()
             return redirect(url_for('upload_data', name=filename))
 
-    current_user.get_current_job().set_current_step("upload data")
+    #current_user.get_current_job().set_current_step(1)
     # user.update(current_job=job_name)
     #user.find({"job_list": {"$elemMatch": {"username": current_user.get_name(), "job_name":1975}}})
     current_user.get_current_job().get_fcs_names()
@@ -319,33 +323,92 @@ def upload_helper():
 
 @app.route("/automated_qc")
 def automated_qc():
-    print(current_user.get_current_job())
-    current_user.get_current_job().set_current_step("automated qc")
+    if current_user.get_current_job().current_step < 2:
+        user_name = current_user.get_current_job().username
+        job_name = current_user.get_current_job().job_name
+        path = current_user.get_current_job().path
+        fcs_files = current_user.get_current_job().fcs_files
+        channels = current_user.get_current_job().channels
+
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=2, channels=channels)
+        user =  User.objects(id=current_user.id).get()
+        user.jobs[job_name] = jobs
+        user.save()
     return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/gating")
 def gating():
-    current_user.get_current_job().set_current_step("gating")
+    if current_user.get_current_job().current_step < 3:
+        user_name = current_user.get_current_job().username
+        job_name = current_user.get_current_job().job_name
+        path = current_user.get_current_job().path
+        fcs_files = current_user.get_current_job().fcs_files
+        channels = current_user.get_current_job().channels
+
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=3, channels=channels)
+        user =  User.objects(id=current_user.id).get()
+        user.jobs[job_name] = jobs
+        user.save()
     return render_template("job_specific/gating.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/normalization")
 def normalization():
-    current_user.get_current_job().set_current_step("normalization")
+    if current_user.get_current_job().current_step < 4:
+        user_name = current_user.get_current_job().username
+        job_name = current_user.get_current_job().job_name
+        path = current_user.get_current_job().path
+        fcs_files = current_user.get_current_job().fcs_files
+        channels = current_user.get_current_job().channels
+
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=4, channels=channels)
+        user =  User.objects(id=current_user.id).get()
+        user.jobs[job_name] = jobs
+        user.save()
     return render_template("job_specific/normalization.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/downsampling")
 def downsampling():
-    current_user.get_current_job().set_current_step("udownsampling")
+    if current_user.get_current_job().current_step < 5:
+        user_name = current_user.get_current_job().username
+        job_name = current_user.get_current_job().job_name
+        path = current_user.get_current_job().path
+        fcs_files = current_user.get_current_job().fcs_files
+        channels = current_user.get_current_job().channels
+
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=5, channels=channels)
+        user =  User.objects(id=current_user.id).get()
+        user.jobs[job_name] = jobs
+        user.save()
     return render_template("job_specific/downsampling.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/dr_clustering")
 def dr_clustering():
-    current_user.get_current_job().set_current_step("dr clustering")
+    if current_user.get_current_job().current_step < 6:
+        user_name = current_user.get_current_job().username
+        job_name = current_user.get_current_job().job_name
+        path = current_user.get_current_job().path
+        fcs_files = current_user.get_current_job().fcs_files
+        channels = current_user.get_current_job().channels
+
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=6, channels=channels)
+        user =  User.objects(id=current_user.id).get()
+        user.jobs[job_name] = jobs
+        user.save()
     return render_template("job_specific/dr_clustering.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/download_results")
 def download_results():
-    current_user.get_current_job().set_current_step("download results")
+    if current_user.get_current_job().current_step < 7:
+        user_name = current_user.get_current_job().username
+        job_name = current_user.get_current_job().job_name
+        path = current_user.get_current_job().path
+        fcs_files = current_user.get_current_job().fcs_files
+        channels = current_user.get_current_job().channels
+
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=7, channels=channels)
+        user =  User.objects(id=current_user.id).get()
+        user.jobs[job_name] = jobs
+        user.save()
     return render_template("job_specific/download_results.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).toJSON()))
 
 ############################ ajax requests ############################
@@ -355,7 +418,7 @@ def download_results():
 def add_job():
     job_name = request.args.get("job_name")
     user_name = current_user.get_name()
-    directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/"
+    directory = "F:/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"
     os.makedirs(directory + job_name + "/")
     os.makedirs(directory + job_name + "/fcs_files/")
     os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
@@ -373,7 +436,7 @@ def add_job():
     # params[job_list_update] = data
     # user.update(**params)
 
-    jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/") #current_user.get_job_list()
+    jobs = Job(username=user_name, job_name=job_name, path="F:/user_data/" + user_name + "/" + job_name + "/", current_step=1) # "C:/Users/Zuhayr/Desktop/user_data/"   current_user.get_job_list()
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()
@@ -385,6 +448,34 @@ def add_job():
     # self.name.update(query, data)
 
     return job_name + " was created"
+
+
+# @app.route('/download_file')
+# def download_file():
+#     path = os.listdir(request.args.get("path"))
+
+#     return send_file(path, as_attachment=True)
+
+@app.route('/download_file')
+def download_file():
+    # target = 'dir1/dir2'
+    path = request.args.get("path")
+    files = os.listdir(path)
+    #files = [] ############### remove this line when trying to actually run
+    if files != []:
+        stream = BytesIO()
+        with ZipFile(stream, 'w') as zf:
+            for file in files:#glob(os.path.join(target, '*.sql'))
+                print(path + file)
+                zf.write(file, os.path.basename(path + file))
+
+                # data = zipfile.ZipInfo(individualFile['fileName'])
+                # data.date_time = time.localtime(time.time())[:6]
+                # data.compress_type = zipfile.ZIP_DEFLATED
+                # zf.writestr(data, individualFile['fileData'])
+        stream.seek(0)
+        return send_file(stream, as_attachment=True, attachment_filename='cleaned_fcs.zip')
+    return "42"
 
 # @app.route('/set_job')
 # def set_job():
@@ -416,12 +507,91 @@ def get_peaqo():
     for fcs in os.listdir(fcs_files_path):
         markernames = run_QC(fcs_files_path + fcs, output = job_path + "/qc_cleaned_fcs/")
         print(markernames)
+        markernames = list(markernames)
+        print(markernames)
+        print(type(markernames))
 
-    current_user.get_current_job().set_channels(markernames)
+
+    #current_user.get_current_job().set_channels(markernames)
+
+    user_name = current_user.get_current_job().username
+    job_name = current_user.get_current_job().job_name
+    path = current_user.get_current_job().path
+    fcs_files = current_user.get_current_job().fcs_files
+    current_step = current_user.get_current_job().current_step
+
+    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=markernames)
+    user =  User.objects(id=current_user.id).get()
+    user.jobs[job_name] = jobs
+    user.save()
 
     return job_path + "/qc_cleaned_fcs/"
 
+@app.route("/get_normalize")
+def get_normalize():
+    channels = request.args.get("channels")
+    job_path = request.args.get("job_path")
+    fcs_files_path = job_path + "qc_cleaned_fcs/PeacoQC_results/fcs_files"#"gated_fcs_files/"
 
+    fileName = "gaussNorm.r"
+    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\gaussNorm.r" #"C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\normalize.r"
+    with lc(ro.default_converter + pr.converter):
+        fileName_c = ro.conversion.py2rpy(fileName)
+        url_c = ro.conversion.py2rpy(url)
+    ro.globalenv['fileName'] = fileName_c
+    ro.globalenv['url'] = url_c
+
+    r = robjects.r
+    r.source('R_files\\gaussNorm.r')
+
+    gaussNorm = robjects.globalenv['run_norm']
+    path = fcs_files_path
+    files_vector = os.listdir(path)
+    channels_vector = channels
+    normalize_peaks_graph = gaussNorm(path, files_vector, channels_vector) #'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs'
+    return(normalize_peaks_graph)
+
+
+@app.route("/get_downsampling")
+def get_downsampling():
+    path = request.args.get("path")
+    channels = request.args.get("channels")
+
+    fileName = "downsample.r"
+    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\downsample.r"
+    with lc(ro.default_converter + pr.converter):
+        fileName_c = ro.conversion.py2rpy(fileName)
+        url_c = ro.conversion.py2rpy(url)
+    ro.globalenv['fileName'] = fileName_c
+    ro.globalenv['url'] = url_c
+
+    r = robjects.r
+    r.source('R_files\\downsample.r')
+
+    spade_downsample = robjects.globalenv['spade_downsample']
+    spade_graph = spade_downsample(path, channels = channels)
+    return(spade_graph)
+
+
+@app.route("/get_clustering_dr")
+def get_clustering():
+    path = request.args.get("path")
+    channels = request.args.get("channels")
+
+    fileName = "clustering_dr.r"
+    url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\clustering_dr.r"
+    with lc(ro.default_converter + pr.converter):
+        fileName_c = ro.conversion.py2rpy(fileName)
+        url_c = ro.conversion.py2rpy(url)
+    ro.globalenv['fileName'] = fileName_c
+    ro.globalenv['url'] = url_c
+
+    r = robjects.r
+    r.source('R_files\\clustering_dr.r')
+
+    spade_downsample = robjects.globalenv['demap']
+    spade_graph = spade_downsample(path, channels = channels)
+    return(spade_graph)
 
 
 if __name__ == "__main__":

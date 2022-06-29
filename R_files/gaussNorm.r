@@ -13,57 +13,69 @@ library(PeacoQC)
 library(xfun)
 library(flowStats)
 library(ggcyto)
-library(flowAssist)
+#library(flowAssist)
 
 
-# # file <- flowCore::read.FCS("C:/Users/Zuhayr/Desktop/GaussNormSamples/T804 KTX.fcs")
-# # print(markernames(file))
+run_norm <- function(path, files_vector, channels_vector){
+    ff <- flowCore::read.flowSet(files = files_vector, path = path)
+    # channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
+    channel_names_normalize <- channels_vector #"Alexa Fluor 700-A"
+    # print(markernames(file))
+    # ggcyto(file, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
+    transform_logicle <- estimateMedianLogicle(ff, channels = channel_names_normalize)
+    transform_set <- transform(ff, transform_logicle)
 
-ff <- flowCore::read.flowSet(files = c("KTX S361.fcs", "KTX S362.fcs", "KTX S363.fcs", "KTX S365.fcs"), path = "C:/Users/Zuhayr/Desktop/GaussNormSamples")
-# channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
-channel_names_normalize <- c("PE-A", "BV750-A", "PE-Cy5.5-A", "PerCP-Cy5.5-A") #"Alexa Fluor 700-A"
-# print(markernames(file))
-# ggcyto(file, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
-transform_logicle <- estimateMedianLogicle(ff, channels = channel_names_normalize)
-transform_set <- transform(ff, transform_logicle)
+    norm <- gaussNorm(transform_set, channel_names_normalize, max.lms = 1)
 
-norm <- gaussNorm(transform_set, channel_names_normalize, max.lms = 1)
-flow_sub <- (norm[["flowset"]])
-print(flow_sub)
-flow_sub <- flow_sub$"KTX S361.fcs"
-print(flow_sub)
-getChannelMarker(flow_sub, "PE-A")
-ggcyto(flow_sub, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
+    # return "42"
+}
 
 
+if (1<0){
+
+    ff <- flowCore::read.flowSet(files = c("KTX S361.fcs", "KTX S362.fcs", "KTX S363.fcs", "KTX S365.fcs"), path = "C:/Users/Zuhayr/Desktop/GaussNormSamples")
+    # channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
+    channel_names_normalize <- c("PE-A", "BV750-A", "PE-Cy5.5-A", "PerCP-Cy5.5-A") #"Alexa Fluor 700-A"
+    # print(markernames(file))
+    # ggcyto(file, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
+    transform_logicle <- estimateMedianLogicle(ff, channels = channel_names_normalize)
+    transform_set <- transform(ff, transform_logicle)
+
+    norm <- gaussNorm(transform_set, channel_names_normalize, max.lms = 1)
+    flow_sub <- (norm[["flowset"]])
+    print(flow_sub)
+    flow_sub <- flow_sub$"KTX S361.fcs"
+    print(flow_sub)
+    getChannelMarker(flow_sub, "PE-A")
+    ggcyto(flow_sub, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
 
 
+    # path <- "C:/Users/Zuhayr/Desktop/GaussNormSamples/"
+    # channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
+    # filename_vector <- c("KTX S361.fcs", "KTX S362.fcs", "KTX S363.fcs", "KTX S365.fcs")
+    # ff_list <- list()
+    # fs <- new("flowSet")
+    # for (file in filename_vector){
+    #     ff <- flowCore::read.FCS(paste(path, file, sep=""))
+    #     transform_logicle <- estimateLogicle(ff, channels = channel_names_normalize)
+    #     transform_set <- transform(ff, transform_logicle)
+    #     print(transform_set)
+    #     fs <- rbind2(fs, transform_set)
+    #     transform_set <- 0
+    #     transform_logicle <- 0
+    #     ff <- 0
+    # }
 
-# path <- "C:/Users/Zuhayr/Desktop/GaussNormSamples/"
-# channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
-# filename_vector <- c("KTX S361.fcs", "KTX S362.fcs", "KTX S363.fcs", "KTX S365.fcs")
-# ff_list <- list()
-# fs <- new("flowSet")
-# for (file in filename_vector){
-#     ff <- flowCore::read.FCS(paste(path, file, sep=""))
-#     transform_logicle <- estimateLogicle(ff, channels = channel_names_normalize)
-#     transform_set <- transform(ff, transform_logicle)
-#     print(transform_set)
-#     fs <- rbind2(fs, transform_set)
-#     transform_set <- 0
-#     transform_logicle <- 0
-#     ff <- 0
-# }
-
-# fs <- new("flowSet", frames = ff_list)
-# flowCore::read.flowSet()
-# as(ff_list,"flowSet")
-
-
-#norm <- gaussNorm(fs, channel_names_normalize)
+    # fs <- new("flowSet", frames = ff_list)
+    # flowCore::read.flowSet()
+    # as(ff_list,"flowSet")
 
 
-# append(ff_list, transform_set)
-#transform_set <- flowAssist::DFtoFF(transform_set)  
-#print(transform_set)
-#colnames(transform_set) <- value
+    #norm <- gaussNorm(fs, channel_names_normalize)
+
+
+    # append(ff_list, transform_set)
+    #transform_set <- flowAssist::DFtoFF(transform_set)  
+    #print(transform_set)
+    #colnames(transform_set) <- value
+}

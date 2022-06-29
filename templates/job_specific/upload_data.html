@@ -40,6 +40,9 @@
                 </form>
             </div>
 
+            <div id="previous" class="job_specific-disable"> Editing a previous step will erase all future steps </div>
+            <div id="future" class="job_specific-disable"> Please finish previous steps </div>
+
             <script>
                 document.getElementById("upload_data").style.borderColor = "var(--color4)"
                 document.getElementById("upload_data").style.color = "var(--color4)"
@@ -47,7 +50,7 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="job_specific-upload_data-content">
+            <div id="everything" class="job_specific-upload_data-content">
                 <div class="job_specific-upload_data-content-description"> 
                     Here is where you can upload your FCS files, for more information on file format please visit the documentation.
                 </div>
@@ -69,6 +72,31 @@
 
                     var fcs_path = job.path + "/fcs_files/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
+
+                    
+                    var everything = document.getElementById("everything")
+                    var previous = document.getElementById("previous")
+                    var future = document.getElementById("future")
+                    console.log(job.current_step)
+                    if (job.current_step > 1) {
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        previous.style.display = "block";
+                        future.style.display = "none";
+                    }
+                    if (job.current_step < 1) {
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        previous.style.display = "none";
+                        future.style.display = "block";
+                    }
+                    if (job.current_step == 1) {
+                        everything.style.pointer_events = "all";
+                        everything.style.opacity = 1;
+                        previous.style.display = "none";
+                        future.style.display = "none";
+                    }
+
 
                     file_body = document.getElementById("container")
 

@@ -32,10 +32,12 @@ drawOnImage();
 //   });
 // }); 
 
+var path_cleaned_fcs_files = job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/776 F SP_QC_QC.fcs" //"C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs" "F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776 F SP_QC_QC.fcs"
+
 
 jQuery.ajax({type: "GET", 
       url:"/new",
-      data: {"path": "C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs", "list_points": "all"},
+      data: {"path": path_cleaned_fcs_files, "list_points": "all"},
     }).done(function(){
       alert("done");
       // const image = document.createElement("img");
@@ -63,7 +65,7 @@ jQuery.ajax({type: "GET",
 function updateAxis() {
   jQuery.ajax({type: "GET", 
     url:"/new",
-    data: {"path": "C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs", "list_points": "all", "x_axis": x_axis, "y_axis": y_axis},
+    data: {"path": path_cleaned_fcs_files, "list_points": "all", "x_axis": x_axis, "y_axis": y_axis},
   }).done(function(){
     alert("done");
     // const image = document.createElement("img");
@@ -290,7 +292,7 @@ function drawOnImage(image = null) {
     // xyz = "cool"
     jQuery.ajax({type: "GET", 
       url:"/new",
-      data: {"path": "C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs", "list_points": build_string_array},
+      data: {"path": path_cleaned_fcs_files, "list_points": build_string_array},
       // dataType: "text",
       // success: function(response) {
       //   output = response;

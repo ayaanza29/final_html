@@ -40,6 +40,9 @@
                 </form>
             </div>
 
+            <div id="previous" class="job_specific-disable"> Editing a previous step will erase all future steps </div>
+            <div id="future" class="job_specific-disable"> Please finish previous steps </div>
+
             <script>
                 document.getElementById("automated_qc").style.borderColor = "var(--color4)"
                 document.getElementById("automated_qc").style.color = "var(--color4)"
@@ -47,10 +50,10 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="job_specific-automated_qc-content">
+            <div id="everything" class="job_specific-automated_qc-content">
 
                 <div class="job_specific-automated_qc-content-description"> 
-                    Quality control can be automatically run with the aid of the PeaqoQC package, all you have to do is press Run QC below.
+                    Quality control can be automatically run with the aid of the PeacoQC package, all you have to do is press Run QC below.
                 </div>
                 
                 <button id="qc" class="job_specific-automated_qc-content-run_qc"> Run QC </button> <!-- onclick="run_qc()"-->
@@ -61,13 +64,18 @@
                         <form id="cleaned_fcs" method="get"> <!--action="fcs_files" -->
                             <button type="submit" class="job_specific-automated_qc-content-popup-content-results"> Download Cleaned fcs Files </button>
                         </form>
+                        <form id="plot_fcs" method="get"> <!--action="fcs_files" -->
+                            <button type="submit" class="job_specific-automated_qc-content-popup-content-results"> Plot of Cleaned fcs Files </button>
+                        </form>
+                        <form id="result_fcs" method="get"> <!--action="fcs_files" -->
+                            <button type="submit" class="job_specific-automated_qc-content-popup-content-results"> Result of Cleaned fcs Files </button>
+                        </form>
                     </div>
                 </div>
 
                 <div id="loading_popup" class="job_specific-automated_qc-content-loading_popup">
-                    <!-- <div class="job_specific-automated_qc-content-loading_popup-content">
-                        <div class="job_specific-automated_qc-content-popup-content-title"> Results of running automated QC: </div>
-                    </div> -->
+                    <div class="job_specific-automated_qc-content-loading_popup-text"> Running Quality Control . . . </div>
+                    <!-- Maybe add a loading animation-->
                 </div>
 
                 <script>
@@ -80,15 +88,41 @@
                     var fcs_path = job.path + "/fcs_files/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
 
-                    document.getElementById("cleaned_fcs").action = job.path + "qc_cleaned_fcs/PeaqoQC_results/fcs_files"
-                    //var job_path = "user_data/" + job.username + "/" + job.job_name
-
+                    var everything = document.getElementById("everything")
+                    var previous = document.getElementById("previous")
+                    var future = document.getElementById("future")
                     var modal = document.getElementById("popup");
                     var loading_modal = document.getElementById("loading_popup");
                     var btn = document.getElementById("qc");
+                    if (job.current_step > 2) {
+                        console.log("what is happening")
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        previous.style.display = "block";
+                        future.style.display = "none";
+                        modal.style.display = "block";
+                        btn.style.display = "none";
+                    }
+                    // if (job.current_step < 2) {
+                    //     everything.style.pointer_events = "none";
+                    //     everything.style.opacity = 0.5;
+                    //     previous.style.display = "none";
+                    //     future.style.display = "block";
+                    // }
+                    if (job.current_step == 2) {
+                        everything.style.pointer_events = "all";
+                        everything.style.opacity = 1;
+                        previous.style.display = "none";
+                        future.style.display = "none";
+                    }
+
+                    document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/"}})//job.path + "qc_cleaned_fcs/PeaqoQC_results/fcs_files"
+                    
+
+                    
                     
                     btn.onclick = function() {
-                        modal.style.display = "block";
+                        // modal.style.display = "block";
                         loading_modal.style.display = "block";
                         btn.style.display = "none";
                         console.log(job.path)
@@ -96,27 +130,9 @@
                             url: "/get_peaqo",
                             data: {"job_path": job_path}
                         }).done(function(){
+                            modal.style.display = "block";
                             loading_modal.style.display = "none";
                             // var container = document.getElementById("job_specific-automated_qc-content-popup-content");
-
-                            // const button_cleaned_fcs = document.createElement("form");
-                            // button_cleaned_fcs.classList.add("job_specific-automated_qc-content-popup-content-results");
-                            // button_cleaned_fcs.value = "Cleaned FCS Files";
-                            // button_cleaned_fcs.method = 'POST';
-                            // button_cleaned_fcs.action = "";
-                            // container.appendChild(button_cleaned_fcs);
-
-                            // const button_plot_fcs = document.createElement("button");
-                            // button_plot_fcs.classList.add("job_specific-automated_qc-content-popup-content-results") ;
-                            // button_plot_fcs.innerHTML = "Cleaned FCS Plot";
-                            // button_plot_fcs.id = "plot_fcs";
-                            // container.appendChild(button_plot_fcs);
-
-                            // const button_result_fcs = document.createElement("button");
-                            // button_result_fcs.classList.add("job_specific-automated_qc-content-popup-content-results") ;
-                            // button_result_fcs.innerHTML = "Cleaned FCS Report";
-                            // button_result_fcs.id = "result_fcs";
-                            // container.appendChild(button_result_fcs);
                         });
                     }
                     // function run_qc() {

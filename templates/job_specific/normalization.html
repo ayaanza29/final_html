@@ -40,6 +40,9 @@
                 </form>
             </div>
 
+            <div id="previous" class="job_specific-disable"> Editing a previous step will erase all future steps </div>
+            <div id="future" class="job_specific-disable"> Please finish previous steps </div>
+
             <script>
                 document.getElementById("normalization").style.borderColor = "var(--color4)"
                 document.getElementById("normalization").style.color = "var(--color4)"
@@ -47,7 +50,7 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div class="job_specific-normalization-content">
+            <div id="everything" class="job_specific-normalization-content">
                 <div class="job_specific-normalization-content-description"> 
                     Here is where you can perform normalization on your files to correct for batch effect using gaussNorm. Selected channels are highlighted, unselected channels are not.
                 </div>
@@ -62,11 +65,18 @@
                     <button id="select_all" class="job_specific-normalization-content-position-run_normalization"> Select All </button>
                 </div>
 
+                <div id="popup" class="job_specific-normalization-content-popup">
+                    <div class="job_specific-normalization-content-popup-content">
+                        <div class="job_specific-normalization-content-popup-content-title"> Results of running gaussNorm: </div>
+                        <form id="normalized_fcs" method="get"> <!--action="fcs_files" -->
+                            <button type="submit" class="job_specific-normalization-content-popup-content-results"> Download Normalized fcs Files </button>
+                        </form>
+                    </div>
+                </div>
 
-                <div id="loading_popup" class="job_specific-automated_qc-content-loading_popup">
-                    <!-- <div class="job_specific-automated_qc-content-loading_popup-content">
-                        <div class="job_specific-automated_qc-content-popup-content-title"> Results of running automated QC: </div>
-                    </div> -->
+                <div id="loading_popup" class="job_specific-normalization-content-loading_popup">
+                    <div class="job_specific-normalization-content-loading_popup-text"> Running Normalization . . . </div>
+                    <!-- Maybe add a loading animation-->
                 </div>
 
                 <script>
@@ -76,9 +86,45 @@
                     document.getElementById("job_name").innerHTML = job.job_name;
                     var job_path = job.path;
                     var fcs_path = job.path + "/fcs_files/";
+
+                    
+                    var everything = document.getElementById("everything")
+                    var previous = document.getElementById("previous")
+                    var future = document.getElementById("future")
+
+                    var btn = document.getElementById("run_normalization")
+                    var buttons = document.getElementById("buttons")
+                    var channel_body = document.getElementById("channel_body")
+                    var loading_modal = document.getElementById("loading_popup")
+                    var modal = document.getElementById("popup");
+
+                    if (job.current_step > 4) {
+                        // buttons.style.display = "none";
+                        // channel_body.style.display = "none";
+                        // btn.style.display = "none";
+                        // modal.style.display = "block";
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        previous.style.display = "block";
+                        future.style.display = "none";
+                    }
+                    // if (job.current_step < 4) {
+                    //     everything.style.pointer_events = "none";
+                    //     everything.style.opacity = 0.5;
+                    //     previous.style.display = "none";
+                    //     future.style.display = "block";
+                    // }
+                    if (job.current_step == 4) {
+                        everything.style.pointer_events = "all";
+                        everything.style.opacity = 1;
+                        previous.style.display = "none";
+                        future.style.display = "none";
+                    }
+
+
                     var fcs_file_list = job.fcs_files;
                     var channels = job.channels;
-                    var channels = ["FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W", "FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W"]
+                    // var channels = ["FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W", "FSC-A", "FSC-H", "FSC-W", "SSC-A", "SSC-H", "SSC-W"]
                     var selected_channels = [];
                     var channel_body = document.getElementById("channel_body")
                     for (var index in channels){
@@ -122,21 +168,20 @@
                 </script>
 
                 <script>
-                    var btn = document.getElementById("run_normalization")
-                    var buttons = document.getElementById("buttons")
-                    var channel_body = document.getElementById("channel_body")
-                    var loading_modal = document.getElementById("loading_modal")
+                    
 
                     btn.onclick = function() {
                         buttons.style.display = "none";
                         channel_body.style.display = "none";
                         loading_modal.style.display = "block";
-
+                        btn.style.display = "none";
+                        console.log(channels)
                         jQuery.ajax({
                             url: "/get_normalize",
                             data: {"job_path": job_path, "channels": channels}
                         }).done(function(){
                             loading_modal.style.display = "none";
+                            modal.style.display = "block";
                         });
                     }
                 </script>

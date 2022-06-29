@@ -63,12 +63,14 @@ run_QC <- function(location_file, output = "/static") #channels
                            fcs_file <- flowCore::read.FCS(location_file)
                            fcs_file_markernames <- flowCore::markernames(fcs_file)
                            print(fcs_file_markernames)
+                           print(typeof(fcs_file_markernames))
+                           print(names(fcs_file_markernames))
 
                            
                            #channels definately needs changed
                            PeacoQC_res <- PeacoQC(fcs_file, channels=channels, determine_good_cells="all", save_fcs=TRUE, output_directory = output)
 
-                           return(fcs_file_markernames)
+                           return(names(fcs_file_markernames))
                        }
 format_fcs <- function(location_file, channels = "")
                        {
