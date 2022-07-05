@@ -341,7 +341,7 @@
 .job_specific-disable-button{
     left: 20%;
     top: 28%;
-    position: absolute;
+    /* position: absolute; */
     z-index: 2;
     color: var(--color1);
     font-size: 30px;
@@ -351,6 +351,7 @@
     cursor: pointer;
     text-align: center;
     padding: 10px 10px;
+    margin-left: 10px;
 }
 
 /********** upload data **********/

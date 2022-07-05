@@ -108,12 +108,12 @@
                         previous.style.display = "block";
                         future.style.display = "none";
                     }
-                    // if (job.current_step < 4) {
-                    //     everything.style.pointer_events = "none";
-                    //     everything.style.opacity = 0.5;
-                    //     previous.style.display = "none";
-                    //     future.style.display = "block";
-                    // }
+                    if (job.current_step < 3) {
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        previous.style.display = "none";
+                        future.style.display = "block";
+                    }
                     if (job.current_step == 4) {
                         everything.style.pointer_events = "all";
                         everything.style.opacity = 1;

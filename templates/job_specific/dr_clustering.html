@@ -78,7 +78,7 @@
                 </div>
 
                 <script>
-                    var analysis_list = list()
+                    var analysis_list = []
                     var modal = document.getElementById("popup");
                     var btn = document.getElementById("add_option");
                     var span = document.getElementsByClassName("job_specific-dr_clustering-content-popup-content-close")[0];
@@ -158,15 +158,15 @@
                     if (job.current_step > 6) {
                         everything.style.pointer_events = "none";
                         everything.style.opacity = 0.5;
-                        previous.style.display = "block";
+                        previous.style.display = "flex";
                         future.style.display = "none";
                     }
-                    // if (job.current_step < 6) {
-                    //     everything.style.pointer_events = "none";
-                    //     everything.style.opacity = 0.5;
-                    //     previous.style.display = "none";
-                    //     future.style.display = "block";
-                    // }
+                    if (job.current_step < 5) {
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        previous.style.display = "none";
+                        future.style.display = "block";
+                    }
                     if (job.current_step == 6) {
                         everything.style.pointer_events = "all";
                         everything.style.opacity = 1;

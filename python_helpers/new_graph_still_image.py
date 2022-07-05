@@ -66,12 +66,21 @@ def loop_numba(polygon, tuples):
     x1 = np.array([])
     y1 = np.array([])
     for point in tuples:
+        #pass in polygon not tuples
         if (polygon.contains(Point(point))):
+            # remove poitns from polygon polygo
             x1 = np.append(x1, point[0])
             y1 = np.append(y1, point[1])
     return (x1, y1)
     # print(x1)
     # print(y1)
+
+# def filter_points(matrix, tuples):
+#     for point in tuples:
+#         if (polygon.contains(Point(point))):
+#             x1 = np.append(x1, point[0])
+#             y1 = np.append(y1, point[1])
+#     return (x1, y1)
 
 def remove_points(x1, y1, selected_x1, selected_y1):
     x1_result = []

@@ -162,7 +162,7 @@ class User(db.Document):
     #         #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
     #     return self.jobs
     def get_job_list_string(self):
-        path =  "C:/Users/Zuhayr/Desktop/user_data/" + current_user.get_name() #"F:\user_data\tim" "C:/Users/Zuhayr/Desktop/user_data/"
+        path =  "F:/user_data/" + current_user.get_name() #"F:/user_data/" "C:/Users/Zuhayr/Desktop/user_data/"
         self.job_list_string = os.listdir(path)
         return self.job_list_string
     def get_job_list(self):
@@ -323,7 +323,7 @@ def upload_helper():
 
 @app.route("/automated_qc")
 def automated_qc():
-    if current_user.get_current_job().current_step < 2:
+    if current_user.get_current_job().current_step == 1:
         user_name = current_user.get_current_job().username
         job_name = current_user.get_current_job().job_name
         path = current_user.get_current_job().path
@@ -338,7 +338,7 @@ def automated_qc():
 
 @app.route("/gating")
 def gating():
-    if current_user.get_current_job().current_step < 3:
+    if current_user.get_current_job().current_step == 2:
         user_name = current_user.get_current_job().username
         job_name = current_user.get_current_job().job_name
         path = current_user.get_current_job().path
@@ -353,7 +353,7 @@ def gating():
 
 @app.route("/normalization")
 def normalization():
-    if current_user.get_current_job().current_step < 4:
+    if current_user.get_current_job().current_step == 3:
         user_name = current_user.get_current_job().username
         job_name = current_user.get_current_job().job_name
         path = current_user.get_current_job().path
@@ -368,7 +368,7 @@ def normalization():
 
 @app.route("/downsampling")
 def downsampling():
-    if current_user.get_current_job().current_step < 5:
+    if current_user.get_current_job().current_step == 4:
         user_name = current_user.get_current_job().username
         job_name = current_user.get_current_job().job_name
         path = current_user.get_current_job().path
@@ -383,7 +383,7 @@ def downsampling():
 
 @app.route("/dr_clustering")
 def dr_clustering():
-    if current_user.get_current_job().current_step < 6:
+    if current_user.get_current_job().current_step == 5:
         user_name = current_user.get_current_job().username
         job_name = current_user.get_current_job().job_name
         path = current_user.get_current_job().path
@@ -398,7 +398,7 @@ def dr_clustering():
 
 @app.route("/download_results")
 def download_results():
-    if current_user.get_current_job().current_step < 7:
+    if current_user.get_current_job().current_step == 6:
         user_name = current_user.get_current_job().username
         job_name = current_user.get_current_job().job_name
         path = current_user.get_current_job().path
@@ -418,7 +418,7 @@ def download_results():
 def add_job():
     job_name = request.args.get("job_name")
     user_name = current_user.get_name()
-    directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"  F:/user_data/
+    directory = "F:/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"  F:/user_data/
     os.makedirs(directory + job_name + "/")
     os.makedirs(directory + job_name + "/fcs_files/")
     os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
@@ -436,7 +436,7 @@ def add_job():
     # params[job_list_update] = data
     # user.update(**params)
 
-    jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/", current_step=1) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
+    jobs = Job(username=user_name, job_name=job_name, path="F:/user_data/" + user_name + "/" + job_name + "/", current_step=1) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()

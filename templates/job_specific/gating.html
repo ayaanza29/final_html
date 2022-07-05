@@ -80,10 +80,10 @@
                         <div class="job_specific-gating-content-gate_popup-content-title"> Choose New Gate Parameters </div>
                         <div class="job_specific-gating-content-gate_popup-content-label"> 
                             Choose X Axis: <select name="x_axis" id="x_axis">
-                                <option id="x_initial" value="" selected="selected">Select x-axis</option> <!-- selected="selected"-->
+                                <option value="" selected="selected">Select x-axis</option> <!-- selected="selected"-->
                             </select>
                             Choose Y Axis: <select name="y_axis" id="y_axis">
-                                <option id="y_selected" value="" selected="selected">Select y-axis</option>
+                                <option value="" selected="selected">Select y-axis</option>
                             </select>
                         </div>
                         <button id="create_gate" class="job_specific-gating-content-gate_popup-content-button"> Create Gate </button>
@@ -153,15 +153,15 @@
                         if (job.current_step > 3) {
                             everything.style.pointer_events = "none";
                             everything.style.opacity = 0.5;
-                            previous.style.display = "block";
+                            previous.style.display = "flex";
                             future.style.display = "none";
                         }
-                        // if (job.current_step < 3) {
-                        //     everything.style.pointer_events = "none";
-                        //     everything.style.opacity = 0.5;
-                        //     previous.style.display = "none";
-                        //     future.style.display = "block";
-                        // }
+                        if (job.current_step == 3) {
+                            everything.style.pointer_events = "none";
+                            everything.style.opacity = 0.5;
+                            previous.style.display = "none";
+                            future.style.display = "block";
+                        }
                         if (job.current_step == 3) {
                             everything.style.pointer_events = "all";
                             everything.style.opacity = 1;
@@ -230,16 +230,25 @@
 
                     create_gate.onclick = function() {
                         modal.style.display = "none";
-                        var x_selected = document.getElementById("x_selected").innerHTML;
-                        var y_selected = document.getElementById("y_selected").innerHTML;
+                        // var x_selected = document.getElementById("x_selected");
+                        // var y_selected = document.getElementById("y_selected");
 
-                        var select = document.getElementById('x_axis');
-                        var value = select.options[select.selectedIndex].value;
-                        console.log(value);
+                        var x_select = document.getElementById('x_axis');
+                        var x_value = (x_select.options[x_select.selectedIndex]).value;
+                        var x_text = (x_select.options[x_select.selectedIndex]).text;
+                        console.log(x_value);
+                        console.log(x_text);
+
+
+                        var y_select = document.getElementById('y_axis');
+                        var y_value = (y_select.options[y_select.selectedIndex]).value;
+                        var y_text = (y_select.options[y_select.selectedIndex]).text;
+                        console.log(y_value);
+                        console.log(y_text);
 
                         const button = document.createElement("button");
                         button.classList.add("job_specific-gating-content-gates_created-new_gate") 
-                        button.innerHTML = "x-axis:" + x_selected + "  y-axis:" + y_selected;
+                        button.innerHTML = "x-axis:" + x_text + "  y-axis:" + y_text;
                         gate_body.appendChild(button);
                     }
                 </script>
