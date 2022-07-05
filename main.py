@@ -20,6 +20,7 @@ from flask_cors import CORS
 from glob import glob
 from io import BytesIO
 from zipfile import ZipFile
+from python_helpers import new_graph_still_image
 
 ALLOWED_EXTENSIONS = {'fcs', "png", "jpg", "txt"}
 #UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
@@ -97,6 +98,7 @@ class Job(db.EmbeddedDocument):
     path = db.StringField() #default=lambda: "user_data/" + username + job_name
     channels = db.ListField()
     current_step = db.IntField()
+    analysis_list = db.ListField()
 
     def get_name(self):
         return self.job_name
@@ -162,7 +164,7 @@ class User(db.Document):
     #         #self.job_list.append(Job(self.name, job_name, current_step, path, fcs_file_list))
     #     return self.jobs
     def get_job_list_string(self):
-        path =  "F:/user_data/" + current_user.get_name() #"F:/user_data/" "C:/Users/Zuhayr/Desktop/user_data/"
+        path =  "C:/Users/Zuhayr/Desktop/user_data/" + current_user.get_name() #"F:/user_data/" "C:/Users/Zuhayr/Desktop/user_data/"
         self.job_list_string = os.listdir(path)
         return self.job_list_string
     def get_job_list(self):
@@ -321,6 +323,17 @@ def upload_data(job_passed_in = ""):
 def upload_helper():
     return render_template("job_specific/upload_data.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
+# def update_job(job_name = current_user.get_current_job().job_name, current_step = current_user.get_current_job().current_step, fcs_files = current_user.get_current_job().fcs_files, channels = current_user.get_current_job().channels, analysis_list = current_user.get_current_job().analysis_list):
+#     user_name = current_user.get_current_job().username
+#     path = current_user.get_current_job().path
+
+#     jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=channels, analysis_list=analysis_list)
+#     user =  User.objects(id=current_user.id).get()
+#     user.jobs[job_name] = jobs
+#     user.save()
+
+#     return "42"
+
 @app.route("/automated_qc")
 def automated_qc():
     if current_user.get_current_job().current_step == 1:
@@ -329,11 +342,13 @@ def automated_qc():
         path = current_user.get_current_job().path
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
+        analysis_list = (current_user.get_current_job().analysis_list)
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=2, channels=channels)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=2, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
+        #update_job(current_step=2)
     return render_template("job_specific/automated_qc.html", name = current_user.get_name(), job = json.dumps((current_user.get_current_job()).to_json()))
 
 @app.route("/gating")
@@ -344,8 +359,9 @@ def gating():
         path = current_user.get_current_job().path
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
+        analysis_list = (current_user.get_current_job().analysis_list)
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=3, channels=channels)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=3, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
@@ -359,8 +375,9 @@ def normalization():
         path = current_user.get_current_job().path
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
+        analysis_list = (current_user.get_current_job().analysis_list)
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=4, channels=channels)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=4, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
@@ -374,8 +391,9 @@ def downsampling():
         path = current_user.get_current_job().path
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
+        analysis_list = (current_user.get_current_job().analysis_list)
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=5, channels=channels)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=5, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
@@ -389,8 +407,9 @@ def dr_clustering():
         path = current_user.get_current_job().path
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
+        analysis_list = (current_user.get_current_job().analysis_list)
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=6, channels=channels)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=6, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
@@ -404,8 +423,9 @@ def download_results():
         path = current_user.get_current_job().path
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
+        analysis_list = (current_user.get_current_job().analysis_list)
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=7, channels=channels)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=7, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
@@ -414,38 +434,56 @@ def download_results():
 ############################ ajax requests ############################
 #######################################################################
 
+@app.route("/new")
+def new(): 
+    path = request.args.get("path")
+    point_list = request.args.get("list_points")
+    x_axis = request.args.get("x_axis")
+    y_axis = request.args.get("y_axis")
+    # print(x_axis, y_axis)
+    
+    #logging.info("new flask " + point_list)
+    #path = "C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs"
+    if (x_axis != None and y_axis != None):
+        new_graph_still_image.createBokeh(path, channel1 = x_axis, channel2 = y_axis, points_array = point_list)
+    else:
+        new_graph_still_image.createBokeh(path, points_array = point_list)
+
+    # b = request.args.get("b")
+    # return jsonify(result = returned_image)
+    print("did it update")
+    return render_template("job_specific/gating.html")
+
+
 @app.route("/create_job")
 def add_job():
     job_name = request.args.get("job_name")
     user_name = current_user.get_name()
-    directory = "F:/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"  F:/user_data/
+    directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"  F:/user_data/
     os.makedirs(directory + job_name + "/")
     os.makedirs(directory + job_name + "/fcs_files/")
     os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
     os.makedirs(directory + job_name + "/temporary_images/")
+    os.makedirs(directory + job_name + "/normalized_fcs/")
+    os.makedirs(directory + job_name + "/clustering_results/")
+    # os.makedirs(directory + job_name + "/available_for_download/")
+
     with open(directory + job_name +'/job_description.txt', 'w') as f:
         f.write('')
-    #current_user.create_new_job(job_name)
 
-    
+    # os.makedirs(directory + job_name + "/")
+    # os.makedirs(directory + job_name + "/upload_data/")
+    # os.makedirs(directory + job_name + "/automated_qc/")
+    # os.makedirs(directory + job_name + "/gating/")
+    # os.makedirs(directory + job_name + "/normalization/")
+    # os.makedirs(directory + job_name + "/downsampling/")
+    # os.makedirs(directory + job_name + "/dr_clustering/")
+    # # os.makedirs(directory + job_name + "/download_results/")
 
-    
-    # data = { "$set": { "Job List": current_user.get_job_list() } }
-    # job_list_update = current_user.get_job_list()
-    # params = {} 
-    # params[job_list_update] = data
-    # user.update(**params)
-
-    jobs = Job(username=user_name, job_name=job_name, path="F:/user_data/" + user_name + "/" + job_name + "/", current_step=1) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
+    jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/", current_step=1, analysis_list=[]) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()
-    #user.insert({ "$push": { "job_db": { "$set": user.job_list } } })
-    #job_objects = {"$set"} {current_user.get_job_list()}
-    #job_list_update = "job_list"
-    # query = {"name": self.name, "email": self.email, "password": self.password}
-    # data = { "$set": { "Job List": self.job_list } }
-    # self.name.update(query, data)
 
     return job_name + " was created"
 
@@ -455,8 +493,6 @@ def add_job():
 #     path = os.listdir(request.args.get("path"))
 
 #     return send_file(path, as_attachment=True)
-
-
 
 ##################################    maybe make a download one file and download everything in directory
 @app.route('/download_file')
@@ -514,16 +550,15 @@ def get_peaqo():
         print(markernames)
         print(type(markernames))
 
-
-    #current_user.get_current_job().set_channels(markernames)
-
     user_name = current_user.get_current_job().username
     job_name = current_user.get_current_job().job_name
     path = current_user.get_current_job().path
     fcs_files = current_user.get_current_job().fcs_files
     current_step = current_user.get_current_job().current_step
+    analysis_list = (current_user.get_current_job().analysis_list)
+    
 
-    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=markernames)
+    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=markernames, analysis_list=analysis_list)
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()
@@ -603,7 +638,7 @@ def get_spade_downsampling():
 @app.route("/get_clustering_dr")
 def get_clustering():
     analysis_method = request.args.get("analysis_method")
-    path = request.args.get("path")
+    # path = request.args.get("path")
     channels = request.args.get("channels")
 
     fileName = "clustering_dr.r"
@@ -614,20 +649,32 @@ def get_clustering():
     ro.globalenv['fileName'] = fileName_c
     ro.globalenv['url'] = url_c
 
+    user_name = current_user.get_current_job().username
+    job_name = current_user.get_current_job().job_name
+    path = current_user.get_current_job().path
+    fcs_files = current_user.get_current_job().fcs_files
+    current_step = current_user.get_current_job().current_step
+    analysis_list = (current_user.get_current_job().analysis_list).append(analysis_method)
+
+    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, analysis_list=analysis_list)
+    user =  User.objects(id=current_user.id).get()
+    user.jobs[job_name] = jobs
+    user.save()
+
     r = robjects.r
     r.source('R_files\\clustering_dr.r')
     if (analysis_method == "pca"):
-        pca = robjects.globalenv['scree_plot']
-        pca_plot = pca(path, channels = channels)
+        pca = robjects.globalenv['graph_scree']
+        pca_plot = pca(path) #, channels = channels
         return(pca_plot)
     if (analysis_method == "umap"):
-        pca = robjects.globalenv['scree_plot']
-        pca_plot = pca(path, channels = channels)
-        return(pca_plot)
+        # pca = robjects.globalenv['scree_plot']
+        # pca_plot = pca(path, channels = channels)
+        return "umap" #(pca_plot)
     if (analysis_method == "tsne"):
         pca = robjects.globalenv['scree_plot']
         pca_plot = pca(path, channels = channels)
-        return(pca_plot)
+        return "tsne" #(pca_plot)
 
 
 if __name__ == "__main__":

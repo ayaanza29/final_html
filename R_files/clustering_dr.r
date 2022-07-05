@@ -61,33 +61,33 @@ scree_plot <- setRefClass("scree_plot", fields = list(path = "character"), metho
 # scree_instance <- scree_plot(path = "C:/Users/Zuhayr/Documents/GitHub/all_together/static/PeacoQC_results/fcs_files/776 F SP_QC.fcs")
 # scree_instance$graph_scree()
 
-# graph_scree = function(path)
-#                        {
-#                          #    # x <- read.FCS(file, transformation=FALSE)
-#                          #    # summary(x)
-#                             file <- flowCore::read.FCS(path)
-#                             data <- exprs(file)
-#                             print(nrow(data))
-#                             print(ncol(data))
-#                             results <- prcomp(data, scale = FALSE)
-#                          #    print(head(results[1:5, 1:5]))
-#                             #calculate total variance explained by each principal component
-#                             var_explained = results$sdev^2 / sum(results$sdev^2)
+graph_scree <- function(path)
+                       {
+                         #    # x <- read.FCS(file, transformation=FALSE)
+                         #    # summary(x)
+                            file <- flowCore::read.FCS(path)
+                            data <- flowCore::exprs(file)
+                            print(nrow(data))
+                            print(ncol(data))
+                            results <- prcomp(data, scale = FALSE)
+                         #    print(head(results[1:5, 1:5]))
+                            #calculate total variance explained by each principal component
+                            var_explained = results$sdev^2 / sum(results$sdev^2)
 
-#                             #create scree plot
-#                             scree <- qplot(c(1:33), var_explained)+
-#                               geom_line()+
-#                               xlab("Principal Component")+
-#                               ylab("Variance Explained") +
-#                               ggtitle("Scree Plot") +
-#                               ylim(0, 1)
+                            #create scree plot
+                            scree <- qplot(c(1:33), var_explained)+
+                              geom_line()+
+                              xlab("Principal Component")+
+                              ylab("Variance Explained") +
+                              ggtitle("Scree Plot") +
+                              ylim(0, 1)
 
-#                             print(scree)
+                            print(scree)
 
-#                          # res.pca <- princomp(matrix1, cor = FALSE, scores = FALSE)
-#                          # print(fviz_eig(res.pca))
+                         # res.pca <- princomp(matrix1, cor = FALSE, scores = FALSE)
+                         # print(fviz_eig(res.pca))
 
-#                        }
+                       }
 
 #####################################################################################################
 #  Rtsne - tSNE
@@ -294,7 +294,7 @@ auto_cluster <- setRefClass("auto_cluster", fields = list(path = "character"), m
 #####################################################################################################
 library(FlowSOM)
 library(densvis)
-library(reticulate)
+# library(reticulate)
 
 densvis_analysis <- setRefClass("scree_plot", fields = list(path = "character"), methods = list(
                        automatic_flow = function()

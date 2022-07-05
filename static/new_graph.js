@@ -93,7 +93,7 @@ choose_x_axis.forEach((x) => {
 choose_x_axis.forEach((x) => {
   x.onclick = () => {
     x_axis = x.value;
-    console.log("x_chgange")
+    console.log("x_change")
     updateAxis()
   };
 });
@@ -106,7 +106,7 @@ choose_y_axis.forEach((y) => {
 choose_y_axis.forEach((y) => {
   y.onclick = () => {
     y_axis = y.value;
-    console.log("y_chgange")
+    console.log("y_change")
     updateAxis()
   };
 });

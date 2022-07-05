@@ -129,6 +129,16 @@
                       <input type="radio" name="y-axis" value="SSC-W" />
                       <label for="SSC-W">SSC-W</label>
                     </div>
+                    <div class="job_specific-gating-overall_graph-dropdown_x_axis"> 
+                        Choose X Axis: <select name="x_axis" id="x_axis">
+                            <option value="" selected="selected">Select x-axis</option>
+                        </select>
+                    </div>
+                    <div class="job_specific-gating-overall_graph-dropdown_y_axis">
+                        Choose Y Axis: <select name="y_axis" id="y_axis">
+                            <option value="" selected="selected">Select y-axis</option>
+                        </select>
+                    </div>
                     <div class="drawing_options">
                         <span>Shape: </span>
                         <input type="radio" name="chooseShape" value="rectangle" checked />
@@ -190,8 +200,6 @@
                     }
                 </script>
                 <script>
-
-                    var axis_options = ["FSC-A", "FSC-H", "FSC-W"]
                     axis_options = job.channels
                 
                     window.onload = function() {
@@ -210,23 +218,6 @@
                     var modal = document.getElementById("popup");
                     var create_gate = document.getElementById("create_gate");
                     var gate_body = document.getElementById("container")
-                    // var x_selected = document.getElementById("x_selected").value;
-                    // var x_selected1 = document.getElementById("x_selected").selected;
-                    // var x_selected2 = document.getElementById("x_selected").innerHTML;
-                    // var y_selected = document.getElementById("y_selected").innerHTML;
-                    // console.log("this is x selected")
-                    // console.log(x_selected)
-                    // console.log(x_selected1)
-                    // console.log(x_selected2)
-
-                    // // var x_axis = document.getElementById("x_axis");
-                    // console.log(x_axis.options)
-                    // for (var x in x_axis.options) {
-                    //     if (x.selected == true){
-                    //         print(x.selected)
-                    //     }
-                    //     // x_axis.options[x_axis.options.length] = new Option(axis_options[x], x);
-                    // }
 
                     create_gate.onclick = function() {
                         modal.style.display = "none";
@@ -248,7 +239,7 @@
 
                         const button = document.createElement("button");
                         button.classList.add("job_specific-gating-content-gates_created-new_gate") 
-                        button.innerHTML = "x-axis:" + x_text + "  y-axis:" + y_text;
+                        button.innerHTML = "x-axis:  " + x_text + "  y-axis:  " + y_text;
                         gate_body.appendChild(button);
                     }
                 </script>

@@ -78,7 +78,17 @@
                 </div>
 
                 <script>
-                    var analysis_list = []
+
+                    var job = '{{job|safe}}';
+                    job = job.slice(1, -1)
+                    var job = JSON.parse(job);
+                    document.getElementById("job_name").innerHTML = job.job_name;
+
+                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_file_list = job.fcs_files
+
+                    var temp_analysis_list = job.analysis_list
+                    var channels = job.channels
                     var modal = document.getElementById("popup");
                     var btn = document.getElementById("add_option");
                     var span = document.getElementsByClassName("job_specific-dr_clustering-content-popup-content-close")[0];
@@ -86,29 +96,42 @@
                     var analysis_body = document.getElementById("analysis_body")
 
                     var pca_add = document.getElementById("pca")
+
                     pca_add.onclick = function() {
-                        analysis_list.push("pca")
-                        console.log(analysis_list)
+                        temp_analysis_list.push("pca")
+                        console.log(temp_analysis_list)
+                        jQuery.ajax({
+                            url: "/get_clustering_dr",
+                            data: {analysis_method: "pca", channels: channels}
+                        })
                     }
 
                     var umap_add = document.getElementById("umap")
                     umap_add.onclick = function() {
-                        analysis_list.push("umap")
-                        console.log(analysis_list)
+                        temp_analysis_list.push("pca")
+                        console.log(temp_analysis_list)
+                        jQuery.ajax({
+                            url: "/get_clustering_dr",
+                            data: {analysis_method: "umap", channels: channels}
+                        })
                     }
 
                     var tsne_add = document.getElementById("tsne")
                     tsne_add.onclick = function() {
-                        analysis_list.push("tsne")
-                        console.log(analysis_list)
+                        temp_analysis_list.push("pca")
+                        console.log(temp_analysis_list)
+                        jQuery.ajax({
+                            url: "/get_clustering_dr",
+                            data: {analysis_method: "tsne", channels: channels}
+                        })
                     }
-                    console.log(analysis_list)
-                    for (var analysis in analysis_list){
+                    console.log(temp_analysis_list)
+                    for (var analysis in temp_analysis_list){
                         console.log("cool")
                         const button = document.createElement("button");
                         button.classList.add("job_specific-dr_clustering-content-analysis-new_analysis") 
-                        button.innerHTML = "Running " + analysis_list[analysis];
-                        button.id = analysis_list[analysis];
+                        button.innerHTML = "Running " + temp_analysis_list[analysis];
+                        button.id = temp_analysis_list[analysis];
                         // button.onclick = function() {
                         //     // if (id )
                         // }
@@ -143,13 +166,7 @@
                     //     document.getElementById("form").submit();
                     // };
 
-                    var job = '{{job|safe}}';
-                    job = job.slice(1, -1)
-                    var job = JSON.parse(job);
-                    document.getElementById("job_name").innerHTML = job.job_name;
-
-                    var fcs_path = job.path + "/fcs_files/"
-                    var fcs_file_list = job.fcs_files
+                    
 
                     
                     var everything = document.getElementById("everything")
