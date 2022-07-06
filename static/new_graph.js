@@ -85,31 +85,51 @@ function updateAxis() {
   });
 }
 
-const choose_x_axis = document.getElementsByName("x-axis");
-let x_axis = "";
-choose_x_axis.forEach((x) => {
-  if (x.checked) x_axis = x.value;
-});
-choose_x_axis.forEach((x) => {
-  x.onclick = () => {
-    x_axis = x.value;
-    console.log("x_change")
-    updateAxis()
-  };
-});
+// const choose_x_axis = document.getElementsByName("x-axis");
+// let x_axis = "";
+// choose_x_axis.forEach((x) => {
+//   if (x.checked) x_axis = x.value;
+// });
+// choose_x_axis.forEach((x) => {
+//   x.onclick = () => {
+//     x_axis = x.value;
+//     console.log("x_change")
+//     updateAxis()
+//   };
+// });
 
-const choose_y_axis = document.getElementsByName("y-axis");
-let y_axis = "";
-choose_y_axis.forEach((y) => {
-  if (y.checked) y_axis = y.value;
-});
-choose_y_axis.forEach((y) => {
-  y.onclick = () => {
-    y_axis = y.value;
-    console.log("y_change")
-    updateAxis()
-  };
-});
+// const choose_y_axis = document.getElementsByName("y-axis");
+// let y_axis = "";
+// choose_y_axis.forEach((y) => {
+//   if (y.checked) y_axis = y.value;
+// });
+// choose_y_axis.forEach((y) => {
+//   y.onclick = () => {
+//     y_axis = y.value;
+//     console.log("y_change")
+//     updateAxis()
+//   };
+// });
+
+var x_select = document.getElementById('x_axis');
+x_select.onchange = function() {
+  let x_axis = "";
+  var x_text = (x_select.options[x_select.selectedIndex]).text;
+  x_axis = x_text
+  console.log("x change ");
+  console.log(x_text);
+  updateAxis()
+}
+
+var y_select = document.getElementById('y_axis');
+y_select.onchange = function() {
+  let y_axis = "";
+  var y_text = (y_select.options[y_select.selectedIndex]).text;
+  y_axis = y_text
+  console.log("y change ");
+  console.log(y_text);
+  updateAxis()
+}
 
 // const x_btn = document.getElementById("x_button");
 

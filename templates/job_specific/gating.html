@@ -58,7 +58,7 @@
 
                 <div id="container" class="job_specific-gating-content-gates_created">
                     <div class="job_specific-gating-content-gates_created-title"> Gates </div>
-                    <button class="job_specific-gating-content-gates_created-addgate" id="add_gate"> + Add Gate </button>
+                    <!-- <button class="job_specific-gating-content-gates_created-addgate" id="add_gate"> + Add Gate </button> -->
                 </div>
 
 
@@ -74,13 +74,13 @@
 
 
 
-                <div id="popup" class="job_specific-gating-content-gate_popup">
+                <!-- <div id="popup" class="job_specific-gating-content-gate_popup">
                     <div class="job_specific-gating-content-gate_popup-content">
                         <span class="job_specific-gating-content-gate_popup-content-close">&times;</span>
                         <div class="job_specific-gating-content-gate_popup-content-title"> Choose New Gate Parameters </div>
                         <div class="job_specific-gating-content-gate_popup-content-label"> 
                             Choose X Axis: <select name="x_axis" id="x_axis">
-                                <option value="" selected="selected">Select x-axis</option> <!-- selected="selected"-->
+                                <option value="" selected="selected">Select x-axis</option>
                             </select>
                             Choose Y Axis: <select name="y_axis" id="y_axis">
                                 <option value="" selected="selected">Select y-axis</option>
@@ -88,7 +88,7 @@
                         </div>
                         <button id="create_gate" class="job_specific-gating-content-gate_popup-content-button"> Create Gate </button>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="overall_graph">
                     <div>
@@ -99,7 +99,7 @@
                         style="position: relative; left: 150px;" 
                       ></canvas>
                     </div>
-                    <div style="margin-top:5px">
+                    <!-- <div style="margin-top:5px">
                       <span>X Axis: </span>
                       <input type="radio" name="x-axis" value="FSC-A" checked />
                       <label for="FSC-A">FSC-A</label>
@@ -128,27 +128,37 @@
                       <label for="SSC-H">SSC-H</label>
                       <input type="radio" name="y-axis" value="SSC-W" />
                       <label for="SSC-W">SSC-W</label>
-                    </div>
+                    </div> -->
                     <div class="job_specific-gating-overall_graph-dropdown_x_axis"> 
-                        Choose X Axis: <select name="x_axis" id="x_axis">
-                            <option value="" selected="selected">Select x-axis</option>
+                        <select name="x_axis" id="x_axis">
+                            <option value="" selected="selected">FSC-A</option>
+                            <option value="">FSC-H</option>
+                            <option value="">FSC-W</option>
+                            <option value="">SSC-A</option>
+                            <option value="">SSC-H</option>
+                            <option value="">SSC-W</option>
                         </select>
                     </div>
                     <div class="job_specific-gating-overall_graph-dropdown_y_axis">
-                        Choose Y Axis: <select name="y_axis" id="y_axis">
-                            <option value="" selected="selected">Select y-axis</option>
+                        <select name="y_axis" id="y_axis">
+                            <option value="">FSC-A</option>
+                            <option value="" selected="selected">FSC-H</option>
+                            <option value="">FSC-W</option>
+                            <option value="">SSC-A</option>
+                            <option value="">SSC-H</option>
+                            <option value="">SSC-W</option>
                         </select>
                     </div>
                     <div class="drawing_options">
-                        <span>Shape: </span>
+                        <span>Gating Shape: </span>
                         <input type="radio" name="chooseShape" value="rectangle" checked />
                         <label for="rectangle">rectangle</label>
                         <input type="radio" name="chooseShape" value="polygon"/>
                         <label for="polygon">polygon</label>
-                      </div>
-                    <div class="drawing_options">
-                      <button id="clear" >Clear</button>
-                      <button id="next" >Next Graph</button>
+                      <!-- </div>
+                    <div class="drawing_options"> -->
+                      <button class="drawing_options-button" id="clear">Clear</button>
+                      <button class="drawing_options-button" id="next">Move to Next Gate</button>
                     </div>
                     <br />
                     <script>
@@ -178,42 +188,42 @@
                             previous.style.display = "none";
                             future.style.display = "none";
                         }
+                        axis_options = job.channels
+                        console.log(axis_options)
+                    
+                        window.onload = function() {
+                            var x_axis = document.getElementById("x_axis");
+                            var y_axis = document.getElementById("y_axis");
+    
+                            for (var x in axis_options) {
+                                x_axis.options[x_axis.options.length] = new Option(axis_options[x], x);
+                            }
+                            for (var y in axis_options) {
+                                y_axis.options[y_axis.options.length] = new Option(axis_options[y], y);
+                            }
+                        }
                     </script>
                     <script src="..\static\new_graph.js"></script>
                 </div>
 
                 <script>
-                    var modal = document.getElementById("popup");
-                    var btn = document.getElementById("add_gate");
-                    var span = document.getElementsByClassName("job_specific-gating-content-gate_popup-content-close")[0];
+                    // var modal = document.getElementById("popup");
+                    // var btn = document.getElementById("add_gate");
+                    // var span = document.getElementsByClassName("job_specific-gating-content-gate_popup-content-close")[0];
 
-                    btn.onclick = function() {
-                        modal.style.display = "block";
-                    }
-                    span.onclick = function() {
-                        modal.style.display = "none";
-                    }
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            modal.style.display = "none";
-                        }
-                    }
+                    // btn.onclick = function() {
+                    //     modal.style.display = "block";
+                    // }
+                    // span.onclick = function() {
+                    //     modal.style.display = "none";
+                    // }
+                    // window.onclick = function(event) {
+                    //     if (event.target == modal) {
+                    //         modal.style.display = "none";
+                    //     }
+                    // }
                 </script>
-                <script>
-                    axis_options = job.channels
-                
-                    window.onload = function() {
-                        var x_axis = document.getElementById("x_axis");
-                        var y_axis = document.getElementById("y_axis");
-
-                        for (var x in axis_options) {
-                            x_axis.options[x_axis.options.length] = new Option(axis_options[x], x);
-                        }
-                        for (var y in axis_options) {
-                            y_axis.options[y_axis.options.length] = new Option(axis_options[y], y);
-                        }
-                    }
-                </script>
+            
                 <script>
                     var modal = document.getElementById("popup");
                     var create_gate = document.getElementById("create_gate");
