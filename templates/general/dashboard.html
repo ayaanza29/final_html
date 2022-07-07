@@ -35,6 +35,13 @@
             <script>
                 document.getElementById("dashboard").style.borderColor = "var(--color4)"
                 document.getElementById("dashboard").style.color = "var(--color4)"
+
+                var logout = document.getElementById("logout");
+                logout.onclick = function() {
+                    jQuery.ajax({
+                        url: "/logout"
+                    })
+                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->

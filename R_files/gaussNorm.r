@@ -35,6 +35,10 @@ run_norm <- function(path, files_vector){ #channels_vector
 }
 
 
+
+
+
+
 if (1<0){
 
     ff <- flowCore::read.flowSet(files = c("KTX S361.fcs", "KTX S362.fcs", "KTX S363.fcs", "KTX S365.fcs"), path = "C:/Users/Zuhayr/Desktop/GaussNormSamples")

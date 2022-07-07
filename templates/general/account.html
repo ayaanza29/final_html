@@ -39,6 +39,13 @@
             <script>
                 document.getElementById("account").style.borderColor = "var(--color4)"
                 document.getElementById("account").style.color = "var(--color4)"
+
+                var logout = document.getElementById("logout");
+                logout.onclick = function() {
+                    jQuery.ajax({
+                        url: "/logout"
+                    })
+                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->
@@ -47,8 +54,8 @@
                 <div class="general-account-content-position">
                     <div class="general-account-content-position-info"> Name: {{name}}</div>
                     <div class="general-account-content-position-info"> Email: {{email}}</div>
-                    <div class="general-account-content-position-info"> Account Creation Date: </div>
-                    <div class="general-account-content-position-info"> For password recovery or account services please contact us at _____ </div>
+                    <!-- <div class="general-account-content-position-info"> Account Creation Date: </div> -->
+                    <div class="general-account-content-position-info"> For password recovery or account services please contact us at the UPMC Starzl Transplantation Institute </div>
                 </div>
 
             </div>

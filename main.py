@@ -73,8 +73,7 @@ def login():
 @app.route('/logout', methods=['POST'])
 def logout():
     logout_user()
-    return jsonify(**{'result': 200,
-                      'data': {'message': 'logout success'}})
+    return redirect("/hyperspace")#jsonify(**{'result': 200, 'data': {'message': 'logout success'}})
 
 @app.route('/user_info', methods=['POST'])
 def user_info():
@@ -257,11 +256,11 @@ def initial():
 
 @app.route("/about_us")
 def about_us():
-    return render_template("general/about_us.html")
+    return render_template("general/about_us.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list_string()))
 
 @app.route("/account")
 def account():
-    return render_template("general/account.html")
+    return render_template("general/account.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list_string()))
 
 @app.route("/dashboard")
 def dashboard():
@@ -270,7 +269,7 @@ def dashboard():
     
 @app.route("/settings")
 def settings():
-    return render_template("general/settings.html")
+    return render_template("general/settings.html", name = current_user.get_name(), job_list = json.dumps(current_user.get_job_list_string()))
 
 ############################ job_specific ############################ 
 
@@ -466,19 +465,20 @@ def add_job():
     os.makedirs(directory + job_name + "/temporary_images/")
     os.makedirs(directory + job_name + "/normalized_fcs/")
     os.makedirs(directory + job_name + "/clustering_results/")
-    # os.makedirs(directory + job_name + "/available_for_download/")
+    os.makedirs(directory + job_name + "/available_for_download/")
 
     with open(directory + job_name +'/job_description.txt', 'w') as f:
         f.write('')
 
     # os.makedirs(directory + job_name + "/")
-    # os.makedirs(directory + job_name + "/upload_data/")
+    # os.makedirs(directory + job_name + "/upload_fcs/")
     # os.makedirs(directory + job_name + "/automated_qc/")
     # os.makedirs(directory + job_name + "/gating/")
     # os.makedirs(directory + job_name + "/normalization/")
     # os.makedirs(directory + job_name + "/downsampling/")
     # os.makedirs(directory + job_name + "/dr_clustering/")
-    # # os.makedirs(directory + job_name + "/download_results/")
+    
+    # os.makedirs(directory + job_name + "/download_results/")
 
     jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/", current_step=1, analysis_list=[]) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
     user =  User.objects(id=current_user.id).get()
@@ -486,6 +486,36 @@ def add_job():
     user.save()
 
     return job_name + " was created"
+
+def delete_files(directory):
+    for f in os.listdir(directory):
+        os.remove(os.path.join(directory, f))
+    return directory
+
+def edit_anyway(step_to_edit):
+    step_list = ["upload_data", "automated_qc", "gating", "normalization", "downsampling", "dr_clustering", "download_results"]
+    # edit_index = step_list[step_to_edit]
+
+    job_name = request.args.get("job_name")
+    user_name = current_user.get_name()
+    directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name
+
+    for step in range(len(step_list)):
+        if step_to_edit > step + 1:
+            if (step + 1 == 2):
+                delete_files(directory + "/automated_qc/")
+            if (step + 1 == 3):
+                delete_files(directory + "/gating/")
+            if (step + 1 == 4):
+                delete_files(directory + "/normalization/")
+            if (step + 1 == 5):
+                delete_files(directory + "/downsampling/")
+            if (step + 1 == 6):
+                delete_files(directory + "/dr_clustering/")
+            if (step + 1 == 7):
+                delete_files(directory + "/download_results/")
+
+    return step_to_edit
 
 
 # @app.route('/download_file')
@@ -570,7 +600,7 @@ def get_normalize():
     selected_channels = request.args.get("selected_channels")
     print(selected_channels)
     job_path = request.args.get("job_path")
-    fcs_files_path = job_path + "qc_cleaned_fcs/PeacoQC_results/fcs_files"#"gated_fcs_files/"
+    fcs_files_path = job_path + "automated_qc/PeacoQC_results/fcs_files"#"gated_fcs_files/"
 
     fileName = "R_files\\gaussNorm.r"
     url = "C:\\Users\\rkhan\\Documents\\GitHub\\front_end_flow\\R_files\\gaussNorm.r" #"C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\gaussNorm.r" #C:\Users\rkhan\Documents\GitHub\front_end_flow\R_files\gaussNorm.r
