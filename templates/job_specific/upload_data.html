@@ -49,19 +49,17 @@
             <script>
                 document.getElementById("upload_data").style.borderColor = "var(--color4)"
                 document.getElementById("upload_data").style.color = "var(--color4)"
-
-                // var edit = document.getElementById("edit")
-                // edit.onclick = function() {
-                //     jQuery.ajax({
-                //         url: "/get_peaqo",
-                //         data: {"job_path": job_path}
-                //     }).done(function(){
-                //         modal.style.display = "block";
-                //         loading_modal.style.display = "none";
-                //         // var container = document.getElementById("job_specific-automated_qc-content-popup-content");
-                //     });
-                // }
-
+                var edit = document.getElementById("edit")
+                edit.onclick = function() {
+                    jQuery.ajax({
+                        url: "/edit_anyway",
+                        data: {"step_to_edit": 1}
+                    }).done(function(){
+                        modal.style.display = "block";
+                        loading_modal.style.display = "none";
+                        // var container = document.getElementById("job_specific-automated_qc-content-popup-content");
+                    });
+                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->
@@ -69,6 +67,9 @@
             <div id="everything" class="job_specific-upload_data-content">
                 <div class="job_specific-upload_data-content-description"> 
                     Here is where you can upload your FCS files, for more information on file format please visit the documentation.
+                </div>
+                <div class="job_specific-upload_data-content-description"> 
+                    Warning: Uploading files which do not have the same channel names might result in an error.
                 </div>
                 <div id="container" class="job_specific-upload_data-content-fileholder">
                     <div class="job_specific-upload_data-content-fileholder-title"> Files </div>
@@ -86,7 +87,7 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = job.path + "/fcs_files/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
+                    var fcs_path = job.path + "/latest_fcs/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
                     var fcs_file_list = job.fcs_files
 
                     
@@ -123,16 +124,17 @@
                         file_body.appendChild(button);
                     }
 
-                    document.getElementById("file").onchange = function() {
-
-                        for (var file in fcs_file_list){
-                            const button = document.createElement("button");
-                            button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                            button.innerHTML = fcs_file_list[file];
-                            file_body.appendChild(button);
-                        }
-                        document.getElementById("form").submit();
-                    };
+                    if (job.current_step == 1){
+                        document.getElementById("file").onchange = function() {
+                            for (var file in fcs_file_list){
+                                const button = document.createElement("button");
+                                button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
+                                button.innerHTML = fcs_file_list[file];
+                                file_body.appendChild(button);
+                            }
+                            document.getElementById("form").submit();
+                        };
+                    }
 
                 </script>
 

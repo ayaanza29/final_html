@@ -84,7 +84,7 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_path = job.path + "/latest_fcs/"
                     var fcs_file_list = job.fcs_files
 
                     var temp_analysis_list = job.analysis_list
@@ -137,47 +137,31 @@
                         // }
                         analysis_body.appendChild(button);
                     }
-
-
-                    btn.onclick = function() {
-                    modal.style.display = "block";
-                    }
-                    span.onclick = function() {
-                        modal.style.display = "none";
-                    }
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
+                    console.log(job.current_step)
+                    console.log("whi is it not working")
+                    if (job.current_step == 6){
+                        btn.onclick = function() {
+                        modal.style.display = "block";
+                        }
+                        span.onclick = function() {
                             modal.style.display = "none";
                         }
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
                     }
-                </script>
-
-                <script>
-                    // document.getElementById("file").onchange = function() {
-                    //     // files.push("thing")
-                    //     // console.log(files)
-
-                    //     for (var file in fcs_file_list){
-                    //         const button = document.createElement("button");
-                    //         button.classList.add("job_specific-upload_data-content-fileholder-new_file_button") 
-                    //         button.innerHTML = files[file];
-                    //         file_body.appendChild(button);
-                    //     }
-                    //     document.getElementById("form").submit();
-                    // };
-
-                    
-
                     
                     var everything = document.getElementById("everything")
                     var previous = document.getElementById("previous")
                     var future = document.getElementById("future")
-                    if (job.current_step > 6) {
-                        everything.style.pointer_events = "none";
-                        everything.style.opacity = 0.5;
-                        previous.style.display = "flex";
-                        future.style.display = "none";
-                    }
+                    // if (job.current_step > 6) {
+                    //     everything.style.pointer_events = "none";
+                    //     everything.style.opacity = 0.5;
+                    //     previous.style.display = "flex";
+                    //     future.style.display = "none";
+                    // }
                     if (job.current_step < 5) {
                         everything.style.pointer_events = "none";
                         everything.style.opacity = 0.5;
@@ -190,16 +174,6 @@
                         previous.style.display = "none";
                         future.style.display = "none";
                     }
-
-
-                    // function add_file() {
-                        
-                    //     console.log("adddd filllleeee")
-                    //     // jQuery.ajax({
-                    //     //     url: "/dashboard",
-                    //     // })
-                    //     //somehow add file
-                    // }
                 </script>
 
             </div>

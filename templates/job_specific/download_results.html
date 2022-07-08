@@ -40,7 +40,7 @@
                 </form>
             </div>
 
-            <div id="previous" class="job_specific-disable"> Editing a previous step will erase all future steps </div>
+            <!-- <div id="previous" class="job_specific-disable"> Editing a previous step will erase all future steps </div> -->
             <div id="future" class="job_specific-disable"> Please finish previous steps </div>
 
             <script>
@@ -50,13 +50,18 @@
 
             <!--------------------------- Content Section -------------------------------->
 
-            <div id="everything" class="job_specific-upload_data-content">
+            <div id="everything" class="job_specific-download_results-content">
                 <div class="job_specific-upload_data-content-description"> 
                     Here is where you can upload your FCS files, for more information on file format please visit the documentation.
                 </div>
-                <div class="job_specific-upload_data-content-fileholder">
-                    <div class="job_specific-upload_data-content-fileholder-title"> Files </div>
-                    <button class="job_specific-upload_data-content-fileholder-addfile" onclick="add_file()"> + Add File </button>
+                <!-- <div class="job_specific-download_results-content-fileholder">
+                    <div class="job_specific-download_results-content-fileholder-title"> Files </div>
+                    <button class="job_specific-download_results-content-fileholder-addfile" onclick="add_file()"> + Add File </button>
+                </div> -->
+
+                <div class="job_specific-download_results-content-position_upload">
+                    <div class="job_specific-download_results-content-position_upload-title">Upload Data</div>
+                    <div id="upload_download" class="job_specific-download_results-content-position_upload-button">Original FCS files</div>
                 </div>
 
                 <script>
@@ -65,39 +70,21 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
 
-                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_path = job.path + "/latest_fcs/"
                     var fcs_file_list = job.fcs_files
 
                     
                     var everything = document.getElementById("everything")
-                    var previous = document.getElementById("previous")
                     var future = document.getElementById("future")
-                    // if (job.current_step > 7) {
-                    //     everything.style.pointer_events = "none";
-                    //     everything.style.opacity = 0.5;
-                    //     previous.style.display = "block";
-                    //     future.style.display = "none";
-                    // }
-                    // // if (job.current_step < 7) {
-                    // //     everything.style.pointer_events = "none";
-                    // //     everything.style.opacity = 0.5;
-                    // //     previous.style.display = "none";
-                    // //     future.style.display = "block";
-                    // // }
+                    if (job.current_step < 6) {
+                        everything.style.pointer_events = "none";
+                        everything.style.opacity = 0.5;
+                        future.style.display = "block";
+                    }
                     // if (job.current_step == 7) {
                     //     everything.style.pointer_events = "all";
                     //     everything.style.opacity = 1;
-                    //     previous.style.display = "none";
                     //     future.style.display = "none";
-                    // }
-
-                    
-                    // function add_file() {
-                    //     console.log("adddd filllleeee")
-                    //     // jQuery.ajax({
-                    //     //     url: "/dashboard",
-                    //     // })
-                    //     //somehow add file
                     // }
                 </script>
 

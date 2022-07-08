@@ -85,7 +85,7 @@
                     document.getElementById("job_name").innerHTML = job.job_name;
 
                     var job_path = job.path;
-                    var fcs_path = job.path + "/fcs_files/"; //"user_data/" + job.username + "/" + job.job_name + "/fcs_files/"
+                    var fcs_path = job.path + "/latest_fcs/"; //"user_data/" + job.username + "/" + job.job_name + "/latest_fcs/"
                     var fcs_file_list = job.fcs_files
 
                     var everything = document.getElementById("everything")
@@ -116,32 +116,25 @@
                         future.style.display = "none";
                     }
 
-                    document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/"}})//job.path + "qc_cleaned_fcs/PeaqoQC_results/fcs_files"
-                    
-
-                    
-                    
-                    btn.onclick = function() {
-                        // modal.style.display = "block";
-                        loading_modal.style.display = "block";
-                        btn.style.display = "none";
-                        console.log(job.path)
-                        jQuery.ajax({
-                            url: "/get_peaqo",
-                            data: {"job_path": job_path}
-                        }).done(function(){
-                            modal.style.display = "block";
-                            loading_modal.style.display = "none";
-                            // var container = document.getElementById("job_specific-automated_qc-content-popup-content");
-                        });
+                    if (job.current_step == 2){
+                        
+                        btn.onclick = function() {
+                            // modal.style.display = "block";
+                            loading_modal.style.display = "block";
+                            btn.style.display = "none";
+                            jQuery.ajax({
+                                url: "/get_peaqo",
+                                data: {"job_path": job_path}
+                            }).done(function(){
+                                modal.style.display = "block";
+                                loading_modal.style.display = "none";
+                                document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})//job.path + "qc_cleaned_fcs/PeaqoQC_results/fcs_files"
+                                // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/"}})
+                                // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/"}})
+                            });
+                        }
                     }
-                    // function run_qc() {
-                    //     console.log("ruuunnnn qqqqqccccc")
-                    //     // jQuery.ajax({
-                    //     //     url: "/dashboard",
-                    //     // })
-                    //     //somehow add file
-                    // }
+
                 </script>
             </div>
 

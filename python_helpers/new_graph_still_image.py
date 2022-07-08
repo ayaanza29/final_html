@@ -140,7 +140,7 @@ def createBokeh(fcs_filtered, channel1 = 'FSC-A', channel2 = 'FSC-H', points_arr
     new_points.redim(y=hv.Dimension('y', range=(0, 5000000)))
     rast_graph1 = (rasterize(new_points)).opts(**ropts).opts(cnorm="log")
     hv.save(rast_graph1, output_path)
-    im = Image.open("static/temporary_images/mark1.png")
+    im = Image.open(output_path)
     print(im.size)
     width, height = im.size
     print(width)
@@ -149,8 +149,8 @@ def createBokeh(fcs_filtered, channel1 = 'FSC-A', channel2 = 'FSC-H', points_arr
     start_crop = 270 + ((width - 800)/2)
     im_crop = im.crop((start_crop, 0, start_crop + 430, 385))
     print(im_crop.size)
-    im_crop.save("static/temporary_images/mark1.png", quality=95)
-    return "static/temporary_images/mark1.png"
+    im_crop.save(output_path, quality=95)
+    return output_path
 
 
 

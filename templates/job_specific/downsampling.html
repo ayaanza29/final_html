@@ -114,7 +114,7 @@
                     }
 
 
-                    var fcs_path = job.path + "/fcs_files/"
+                    var fcs_path = job.path + "/latest_fcs/"
                     var fcs_file_list = job.fcs_files
                     var job_path = job.path
                     
@@ -126,32 +126,33 @@
 
                     // document.getElementById("srs_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "downsampled.fcs"}})
                     // document.getElementById("spade_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "downsampled.fcs"}})
-
-                    btn1.onclick = function() {
-                        loading_modal.style.display = "block";
-                        btn1.style.display = "none";
-                        btn2.style.display = "none";
-                        console.log(job.path)
-                        jQuery.ajax({
-                            url: "/get_random_downsampling",
-                            data: {"job_path": job_path}
-                        }).done(function(){
-                            modal1.style.display = "block";
-                            loading_modal.style.display = "none";
-                        });
-                    }
-                    btn2.onclick = function() {
-                        loading_modal.style.display = "block";
-                        btn1.style.display = "none";
-                        btn2.style.display = "none";
-                        console.log(job.path)
-                        jQuery.ajax({
-                            url: "/get_spade_downsampling",
-                            data: {"job_path": job_path}
-                        }).done(function(){
-                            modal2.style.display = "block";
-                            loading_modal.style.display = "none";
-                        });
+                    if (job.current_step == 5){
+                        btn1.onclick = function() {
+                            loading_modal.style.display = "block";
+                            btn1.style.display = "none";
+                            btn2.style.display = "none";
+                            console.log(job.path)
+                            jQuery.ajax({
+                                url: "/get_random_downsampling",
+                                data: {"job_path": job_path}
+                            }).done(function(){
+                                modal1.style.display = "block";
+                                loading_modal.style.display = "none";
+                            });
+                        }
+                        btn2.onclick = function() {
+                            loading_modal.style.display = "block";
+                            btn1.style.display = "none";
+                            btn2.style.display = "none";
+                            console.log(job.path)
+                            jQuery.ajax({
+                                url: "/get_spade_downsampling",
+                                data: {"job_path": job_path}
+                            }).done(function(){
+                                modal2.style.display = "block";
+                                loading_modal.style.display = "none";
+                            });
+                        }
                     }
                 </script>
 

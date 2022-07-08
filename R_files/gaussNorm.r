@@ -30,6 +30,8 @@ run_norm <- function(path, files_vector){ #channels_vector
     transform_set <- transform(ff, transform_logicle)
 
     norm <- gaussNorm(transform_set, channel_names_normalize, max.lms = 1)
+    flow_sub <- (norm[["flowset"]])
+    print(flow_sub)
 
     # return "42"
 }

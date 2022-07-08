@@ -22,7 +22,7 @@ from io import BytesIO
 from zipfile import ZipFile
 from python_helpers import new_graph_still_image
 
-ALLOWED_EXTENSIONS = {'fcs', "png", "jpg", "txt"}
+ALLOWED_EXTENSIONS = {'fcs'} #, "png", "jpg", "txt", "csv", "tsv"
 #UPLOAD_FOLDER = "C:/Users/Zuhayr/Desktop/Zuhayr_Web_Data"
 app = Flask(__name__, static_url_path='/static')
 CORS(app)
@@ -72,6 +72,7 @@ def login():
  
 @app.route('/logout', methods=['POST'])
 def logout():
+    print("logging out")
     logout_user()
     return redirect("/hyperspace")#jsonify(**{'result': 200, 'data': {'message': 'logout success'}})
 
@@ -109,7 +110,7 @@ class Job(db.EmbeddedDocument):
         return 42
     def get_fcs_names(self):
         #self.path = "F:/user_data/" + self.username + "/" + self.job_name + "/" #"C:\Users\Zuhayr\Desktop\user_data\tim"
-        self.fcs_files = os.listdir(self.path + "fcs_files/") #"F:\user_data\tom\cool\fcs_files\776_F_SP_QC.fcs"
+        self.fcs_files = os.listdir(self.path + "upload_fcs/") #"F:\user_data\tom\cool\fcs_files\776_F_SP_QC.fcs"
         return self.fcs_files
     def add_gates(self):
         return 42
@@ -280,6 +281,7 @@ def allowed_file(filename):
 @app.route("/upload_data", methods=['GET', 'POST'], defaults={'job_passed_in': ""})
 @app.route("/upload_data/<job_passed_in>", methods=['GET', 'POST'])
 def upload_data(job_passed_in = ""):
+    # print(job.path + "upload_fcs")
     if (job_passed_in != ""):
         job_name = job_passed_in #request.args.get('job_name')
         current_user.set_current_job(job_name)
@@ -289,7 +291,7 @@ def upload_data(job_passed_in = ""):
     #print(type(current_job))
     job = current_user.get_current_job()
     job_name = job.get_name()
-    path = job.path + "fcs_files" #"user_data/" + current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
+    path = job.path + "upload_fcs" #"user_data/" + current_user.get_name() + "/" + job_name + "/" + "fcs_files" #user.job_list["job_name"] 
     if request.method == 'POST':
         # check if the post request has the file part
         # print(request.files)
@@ -306,8 +308,11 @@ def upload_data(job_passed_in = ""):
         # print(file.filename)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            file = file.replace(" ", "_")
             #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename)) 
+            print("why is it not uploading to " + os.path.join(path, filename))
             file.save(os.path.join(path, filename))
+            file.save(os.path.join(job.path + "latest_fcs", filename))
             current_user.get_current_job().get_fcs_names()
             return redirect(url_for('upload_data', name=filename))
 
@@ -423,8 +428,9 @@ def download_results():
         fcs_files = current_user.get_current_job().fcs_files
         channels = current_user.get_current_job().channels
         analysis_list = (current_user.get_current_job().analysis_list)
+        current_step = current_user.get_current_job().current_step
 
-        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=7, channels=channels, analysis_list=analysis_list)
+        jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=channels, analysis_list=analysis_list)
         user =  User.objects(id=current_user.id).get()
         user.jobs[job_name] = jobs
         user.save()
@@ -444,9 +450,9 @@ def new():
     #logging.info("new flask " + point_list)
     #path = "C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs"
     if (x_axis != None and y_axis != None):
-        new_graph_still_image.createBokeh(path, channel1 = x_axis, channel2 = y_axis, points_array = point_list)
+        new_graph_still_image.createBokeh(path, channel1 = x_axis, channel2 = y_axis, points_array = point_list, output_path = (current_user.get_current_job()).path + "/gating/temporary_images/mark1.png")
     else:
-        new_graph_still_image.createBokeh(path, points_array = point_list)
+        new_graph_still_image.createBokeh(path, points_array = point_list, output_path = (current_user.get_current_job()).path + "/gating/temporary_images/mark1.png")
 
     # b = request.args.get("b")
     # return jsonify(result = returned_image)
@@ -459,26 +465,25 @@ def add_job():
     job_name = request.args.get("job_name")
     user_name = current_user.get_name()
     directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" #"C:/Users/Zuhayr/Desktop/user_data/"  F:/user_data/
-    os.makedirs(directory + job_name + "/")
-    os.makedirs(directory + job_name + "/fcs_files/")
-    os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
-    os.makedirs(directory + job_name + "/temporary_images/")
-    os.makedirs(directory + job_name + "/normalized_fcs/")
-    os.makedirs(directory + job_name + "/clustering_results/")
-    os.makedirs(directory + job_name + "/available_for_download/")
-
-    with open(directory + job_name +'/job_description.txt', 'w') as f:
-        f.write('')
-
     # os.makedirs(directory + job_name + "/")
-    # os.makedirs(directory + job_name + "/upload_fcs/")
-    # os.makedirs(directory + job_name + "/automated_qc/")
-    # os.makedirs(directory + job_name + "/gating/")
-    # os.makedirs(directory + job_name + "/normalization/")
-    # os.makedirs(directory + job_name + "/downsampling/")
-    # os.makedirs(directory + job_name + "/dr_clustering/")
-    
-    # os.makedirs(directory + job_name + "/download_results/")
+    # os.makedirs(directory + job_name + "/fcs_files/")
+    # os.makedirs(directory + job_name + "/qc_cleaned_fcs/")
+    # os.makedirs(directory + job_name + "/temporary_images/")
+    # os.makedirs(directory + job_name + "/normalized_fcs/")
+    # os.makedirs(directory + job_name + "/clustering_results/")
+    # os.makedirs(directory + job_name + "/available_for_download/")
+    # with open(directory + job_name +'/job_description.txt', 'w') as f:
+    #     f.write('')
+
+    os.makedirs(directory + job_name + "/")
+    os.makedirs(directory + job_name + "/upload_fcs/")
+    os.makedirs(directory + job_name + "/automated_qc/")
+    os.makedirs(directory + job_name + "/gating/")
+    os.makedirs(directory + job_name + "/gating/temporary_images/")
+    os.makedirs(directory + job_name + "/normalization/")
+    os.makedirs(directory + job_name + "/downsampling/")
+    os.makedirs(directory + job_name + "/dr_clustering/")
+    os.makedirs(directory + job_name + "/latest_fcs/")
 
     jobs = Job(username=user_name, job_name=job_name, path="C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name + "/", current_step=1, analysis_list=[]) # "C:/Users/Zuhayr/Desktop/user_data/" F:/user_data/
     user =  User.objects(id=current_user.id).get()
@@ -489,23 +494,31 @@ def add_job():
 
 def delete_files(directory):
     for f in os.listdir(directory):
-        os.remove(os.path.join(directory, f))
+        if not os.path.isdir(os.path.join(directory, f)):
+            os.remove(os.path.join(directory, f))
+        else:
+            raise ValueError('You tried to delete a non empty directory bozo')
     return directory
 
-def edit_anyway(step_to_edit):
-    step_list = ["upload_data", "automated_qc", "gating", "normalization", "downsampling", "dr_clustering", "download_results"]
+##################################      Neeed lots of changes to get edit button to work with latest files
+
+
+@app.route('/edit_anyway')
+def edit_anyway():
+    step_to_edit = int(request.args.get("step_to_edit"))
+    step_list = ["upload_data", "automated_qc", "gating", "normalization", "downsampling", "dr_clustering"] #, "download_results"   
     # edit_index = step_list[step_to_edit]
 
-    job_name = request.args.get("job_name")
-    user_name = current_user.get_name()
+    user_name = current_user.get_current_job().username
+    job_name = current_user.get_current_job().job_name
     directory = "C:/Users/Zuhayr/Desktop/user_data/" + user_name + "/" + job_name
 
     for step in range(len(step_list)):
-        if step_to_edit > step + 1:
+        if step_to_edit < step + 1:
             if (step + 1 == 2):
                 delete_files(directory + "/automated_qc/")
             if (step + 1 == 3):
-                delete_files(directory + "/gating/")
+                delete_files(directory + "/gating/temporary_images/")
             if (step + 1 == 4):
                 delete_files(directory + "/normalization/")
             if (step + 1 == 5):
@@ -514,6 +527,19 @@ def edit_anyway(step_to_edit):
                 delete_files(directory + "/dr_clustering/")
             if (step + 1 == 7):
                 delete_files(directory + "/download_results/")
+
+    user_name = current_user.get_current_job().username
+    job_name = current_user.get_current_job().job_name
+    path = current_user.get_current_job().path
+    fcs_files = current_user.get_current_job().fcs_files
+    channels = current_user.get_current_job().channels
+    analysis_list = (current_user.get_current_job().analysis_list)
+    # current_step = current_user.get_current_job().current_step
+
+    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=step_to_edit, channels=channels, analysis_list=analysis_list)
+    user =  User.objects(id=current_user.id).get()
+    user.jobs[job_name] = jobs
+    user.save()
 
     return step_to_edit
 
@@ -559,7 +585,7 @@ def download_file():
 def get_peaqo():
     job_path = request.args.get("job_path")
     #print(job_path)
-    fcs_files_path = job_path + "fcs_files/"
+    fcs_files_path = job_path + "latest_fcs/"
 
     fileName = "R_files\\peaqo.r"
     url = "C:\\Users\\rkhan\\Documents\\GitHub\\front_end_flow\\R_files\\peaqo.r" # C:\\Users\\Zuhayr\\Documents\\GitHub\\tutorial\\r_files\\peaqo.r
@@ -574,7 +600,7 @@ def get_peaqo():
 
     run_QC = robjects.globalenv['run_QC']
     for fcs in os.listdir(fcs_files_path):
-        markernames = run_QC(fcs_files_path + fcs, output = job_path + "/qc_cleaned_fcs/")
+        markernames = run_QC(fcs_files_path + fcs, output = job_path + "/automated_qc/")
         print(markernames)
         markernames = list(markernames)
         print(markernames)
@@ -593,7 +619,7 @@ def get_peaqo():
     user.jobs[job_name] = jobs
     user.save()
 
-    return job_path + "/qc_cleaned_fcs/"
+    return job_path + "/automated_qc/"
 
 @app.route("/get_normalize")
 def get_normalize():
@@ -624,7 +650,7 @@ def get_normalize():
 @app.route("/get_random_downsampling")
 def get_random_downsampling():
     output_path = request.args.get("job_path")
-    fcs_path = output_path + "qc_cleaned_fcs\\PeacoQC_results\\fcs_files\\776_F_SP_QC_QC.fcs" #"F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776_F_SP_QC_QC.fcs"
+    fcs_path = output_path + "latest_fcs"#"qc_cleaned_fcs\\PeacoQC_results\\fcs_files\\776_F_SP_QC_QC.fcs" #"F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776_F_SP_QC_QC.fcs"
     # channels = request.args.get("channels")
 
     fileName = "R_files\\downsampling.r"
@@ -646,7 +672,7 @@ def get_random_downsampling():
 @app.route("/get_spade_downsampling")
 def get_spade_downsampling():
     output_path = request.args.get("job_path")
-    fcs_path = output_path + "qc_cleaned_fcs\\PeacoQC_results\\fcs_files\\776_F_SP_QC_QC.fcs" #"F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776_F_SP_QC_QC.fcs"
+    fcs_path = output_path + "latest_fcs" #"qc_cleaned_fcs\\PeacoQC_results\\fcs_files\\776_F_SP_QC_QC.fcs" #"F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776_F_SP_QC_QC.fcs"
     # channels = request.args.get("channels")
 
     fileName = "R_files\\downsampling.r"
@@ -693,15 +719,19 @@ def get_clustering():
 
     r = robjects.r
     r.source('R_files\\clustering_dr.r')
+    print("got to analysis")
     if (analysis_method == "pca"):
+        print("pca")
         pca = robjects.globalenv['graph_scree']
         pca_plot = pca(path) #, channels = channels
         return(pca_plot)
     if (analysis_method == "umap"):
+        print("umap")
         # pca = robjects.globalenv['scree_plot']
         # pca_plot = pca(path, channels = channels)
         return "umap" #(pca_plot)
     if (analysis_method == "tsne"):
+        print("tsne")
         pca = robjects.globalenv['scree_plot']
         pca_plot = pca(path, channels = channels)
         return "tsne" #(pca_plot)

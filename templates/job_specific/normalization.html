@@ -85,7 +85,7 @@
                     var job = JSON.parse(job);
                     document.getElementById("job_name").innerHTML = job.job_name;
                     var job_path = job.path;
-                    var fcs_path = job.path + "/fcs_files/";
+                    var fcs_path = job.path + "/latest_fcs/";
 
                     
                     var everything = document.getElementById("everything")
@@ -133,56 +133,60 @@
                         button.id =  index + "_" + channels[index];
                         button.innerHTML = channels[index];
                         
-
-                        button.addEventListener ("click", function() {
-                            if(selected_channels.includes(button.id)){
-                                console.log("Blur: " + button.id)
-                                selected_channels.splice(selected_channels.indexOf(button.id));
-                                button.classList.remove(...button.classList);
-                                button.classList.add("job_specific-normalization-content-channels-button_unfocus");
-                            } else{
-                                console.log("Focus: " + button.id)
+                        if (job.current_step != 4){
+                            button.addEventListener ("click", function() {
+                                if(selected_channels.includes(button.id)){
+                                    console.log("Blur: " + button.id)
+                                    selected_channels.splice(selected_channels.indexOf(button.id));
+                                    button.classList.remove(...button.classList);
+                                    button.classList.add("job_specific-normalization-content-channels-button_unfocus");
+                                } else{
+                                    console.log("Focus: " + button.id)
+                                    
+                                    selected_channels.push(button.id);
+                                    button.classList.remove(...button.classList);
+                                    button.classList.add("job_specific-normalization-content-channels-button_focus");
+                                }
                                 
-                                selected_channels.push(button.id);
-                                button.classList.remove(...button.classList);
-                                button.classList.add("job_specific-normalization-content-channels-button_focus");
-                            }
-                            
-                        });
+                            });
+                        }
 
                         channel_body.appendChild(button);
                     }
                     const select_all_button = document.getElementById("select_all");
-                    select_all_button.addEventListener ("click", function() {
-                        for (var index in channels){
-                            const button =  document.getElementById( index + "_" + channels[index]);
-                            if(!selected_channels.includes(button.id)){
-                                console.log("Focus: " + button.id)
-                                
-                                selected_channels.push(button.id);
-                                button.classList.remove(...button.classList);
-                                button.classList.add("job_specific-normalization-content-channels-button_focus");
+                    if (job.current_step == 4){
+                        select_all_button.addEventListener ("click", function() {
+                            for (var index in channels){
+                                const button =  document.getElementById( index + "_" + channels[index]);
+                                if(!selected_channels.includes(button.id)){
+                                    console.log("Focus: " + button.id)
+                                    
+                                    selected_channels.push(button.id);
+                                    button.classList.remove(...button.classList);
+                                    button.classList.add("job_specific-normalization-content-channels-button_focus");
+                                }
                             }
-                        }
                         });
+                    }
                 </script>
 
                 <script>
                     
-
-                    btn.onclick = function() {
-                        buttons.style.display = "none";
-                        channel_body.style.display = "none";
-                        loading_modal.style.display = "block";
-                        btn.style.display = "none";
-                        console.log(selected_channels)
-                        jQuery.ajax({
-                            url: "/get_normalize",
-                            data: {"job_path": job_path, "selected_channels": selected_channels}
-                        }).done(function(){
-                            loading_modal.style.display = "none";
-                            modal.style.display = "block";
-                        });
+                    if (job.current_step == 4){
+                        btn.onclick = function() {
+                            buttons.style.display = "none";
+                            channel_body.style.display = "none";
+                            loading_modal.style.display = "block";
+                            btn.style.display = "none";
+                            console.log(selected_channels)
+                            jQuery.ajax({
+                                url: "/get_normalize",
+                                data: {"job_path": job_path, "selected_channels": selected_channels}
+                            }).done(function(){
+                                loading_modal.style.display = "none";
+                                modal.style.display = "block";
+                            });
+                        }
                     }
                 </script>
 
