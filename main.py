@@ -308,10 +308,11 @@ def upload_data(job_passed_in = ""):
         # print(file.filename)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file = file.replace(" ", "_")
-            #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename)) 
+            filename = filename.replace(" ", "_")
+            #file.save(os.path.join("C:/Users/rkhan/Desktop/Zuhayr_Web_Data", filename))
             print("why is it not uploading to " + os.path.join(path, filename))
             file.save(os.path.join(path, filename))
+            file.seek(0)
             file.save(os.path.join(job.path + "latest_fcs", filename))
             current_user.get_current_job().get_fcs_names()
             return redirect(url_for('upload_data', name=filename))
@@ -496,8 +497,8 @@ def delete_files(directory):
     for f in os.listdir(directory):
         if not os.path.isdir(os.path.join(directory, f)):
             os.remove(os.path.join(directory, f))
-        else:
-            raise ValueError('You tried to delete a non empty directory bozo')
+        #else:
+           # raise ValueError('You tried to delete a non empty directory bozo')
     return directory
 
 ##################################      Neeed lots of changes to get edit button to work with latest files
@@ -541,7 +542,7 @@ def edit_anyway():
     user.jobs[job_name] = jobs
     user.save()
 
-    return step_to_edit
+    return "cool" #step_to_edit
 
 
 # @app.route('/download_file')
@@ -600,11 +601,15 @@ def get_peaqo():
 
     run_QC = robjects.globalenv['run_QC']
     for fcs in os.listdir(fcs_files_path):
+        print(fcs_files_path + fcs)
         markernames = run_QC(fcs_files_path + fcs, output = job_path + "/automated_qc/")
         print(markernames)
         markernames = list(markernames)
         print(markernames)
         print(type(markernames))
+
+    if os.listdir(fcs_files_path) == []:
+        markernames = ""
 
     user_name = current_user.get_current_job().username
     job_name = current_user.get_current_job().job_name
@@ -723,7 +728,10 @@ def get_clustering():
     if (analysis_method == "pca"):
         print("pca")
         pca = robjects.globalenv['graph_scree']
-        pca_plot = pca(path) #, channels = channels
+        path = path + "upload_fcs"
+        for file in os.listdir(path):
+            print(path + "/" + file)
+            pca_plot = pca(path + "/" + file, current_user.get_current_job().path + "dr_clustering/") #, channels = channels
         return(pca_plot)
     if (analysis_method == "umap"):
         print("umap")
@@ -732,7 +740,7 @@ def get_clustering():
         return "umap" #(pca_plot)
     if (analysis_method == "tsne"):
         print("tsne")
-        pca = robjects.globalenv['scree_plot']
+        pca = robjects.globalenv['graph_scree']
         pca_plot = pca(path, channels = channels)
         return "tsne" #(pca_plot)
 

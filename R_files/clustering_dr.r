@@ -58,10 +58,12 @@ scree_plot <- setRefClass("scree_plot", fields = list(path = "character"), metho
                        }
                      ))
 
+
+
 # scree_instance <- scree_plot(path = "C:/Users/Zuhayr/Documents/GitHub/all_together/static/PeacoQC_results/fcs_files/776 F SP_QC.fcs")
 # scree_instance$graph_scree()
 
-graph_scree <- function(path)
+graph_scree <- function(path, output_path)
                        {
                          #    # x <- read.FCS(file, transformation=FALSE)
                          #    # summary(x)
@@ -82,7 +84,8 @@ graph_scree <- function(path)
                               ggtitle("Scree Plot") +
                               ylim(0, 1)
 
-                            print(scree)
+                            print(output_path)
+                            ggplot2::ggsave(output_path + "scree_plot.png")
 
                          # res.pca <- princomp(matrix1, cor = FALSE, scores = FALSE)
                          # print(fviz_eig(res.pca))
@@ -116,13 +119,16 @@ Rtsne_analysis <- setRefClass("Rtsne_analysis", fields = list(path = "character"
                         #  thing <- typeof(data.frame(matrix(unlist(l), nrow=length(l), byrow=TRUE)))
                          
                          
-                         analyzed_data <- Rtsne(data, check_duplicates = FALSE)
+                         analyzed_data <- Rtsne(data, initial_dims = 50, check_duplicates = FALSE)
                          # print(analyzed_data)
                          graph <- ggplot(analyzed_data, aes(color = "red")) + 
                             geom_point(aes(x=x, y=y)) #, color=col
                         print(graph)
                         end_time <- Sys.time()
                         print(end_time - start_time)
+
+                        ################# tring to append tsne coordinate cols to fcs file
+                        # new_frame <- fr_append_cols(data, analyzed_data)
                        }
                      ))
 
@@ -200,7 +206,7 @@ uwot_analysis <- setRefClass("scree_plot", fields = list(path = "character"), me
                          
                          # print(data)
                          # finished_tumap <- uwot::tumap(data, n_neighbors = 15, verbose = TRUE, init = "spca") # , init = spca
-                         finished_tumap <- uwot::umap(data, n_neighbors = 15, min_dist = 0.001, verbose = TRUE, n_threads = 8, target_weight = 0.5, ret_model = TRUE, ret_nn = TRUE)
+                         finished_tumap <- uwot::umap(data, n_neighbors = 15, min_dist = 0.001, verbose = TRUE, n_threads = 8, target_weight = 0.5, ret_model = TRUE, ret_nn = TRUE, pca = 50)
                          # print(typeof(finished_tumap))
                         #  other <- getElement(finished_tumap, "embedding")
                         #  other <- as.data.frame(other)
