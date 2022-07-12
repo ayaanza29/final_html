@@ -49,16 +49,6 @@
             <script>
                 document.getElementById("normalization").style.borderColor = "var(--color4)"
                 document.getElementById("normalization").style.color = "var(--color4)"
-                var edit = document.getElementById("edit")
-                edit.onclick = function() {
-                    jQuery.ajax({
-                        url: "/edit_anyway",
-                        data: {"step_to_edit": 1}
-                    }).done(function(){
-                        modal.style.display = "block";
-                        loading_modal.style.display = "none";
-                    });
-                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->
@@ -110,6 +100,18 @@
                     var channel_body = document.getElementById("channel_body")
                     var loading_modal = document.getElementById("loading_popup")
                     var modal = document.getElementById("popup");
+
+                    var edit = document.getElementById("edit")
+                    edit.onclick = function() {
+                        jQuery.ajax({
+                            url: "/edit_anyway",
+                            data: {"step_to_edit": 1}
+                        }).done(function(){
+                            modal.style.display = "block";
+                            loading_modal.style.display = "none";
+                            everything.style.opacity = 1;
+                        });
+                    }
 
                     if (job.current_step > 4) {
                         // buttons.style.display = "none";

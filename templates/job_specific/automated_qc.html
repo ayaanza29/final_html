@@ -49,16 +49,6 @@
             <script>
                 document.getElementById("automated_qc").style.borderColor = "var(--color4)"
                 document.getElementById("automated_qc").style.color = "var(--color4)"
-                var edit = document.getElementById("edit")
-                edit.onclick = function() {
-                    jQuery.ajax({
-                        url: "/edit_anyway",
-                        data: {"step_to_edit": 1}
-                    }).done(function(){
-                        modal.style.display = "block";
-                        loading_modal.style.display = "none";
-                    });
-                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->
@@ -107,8 +97,20 @@
                     var modal = document.getElementById("popup");
                     var loading_modal = document.getElementById("loading_popup");
                     var btn = document.getElementById("qc");
+
+                    var edit = document.getElementById("edit")
+                    edit.onclick = function() {
+                        jQuery.ajax({
+                            url: "/edit_anyway",
+                            data: {"step_to_edit": 1}
+                        }).done(function(){
+                            modal.style.display = "block";
+                            loading_modal.style.display = "none";
+                            everything.style.opacity = 1;
+                            previous.display = none;
+                        });
+                    }
                     if (job.current_step > 2) {
-                        console.log("what is happening")
                         everything.style.pointer_events = "none";
                         everything.style.opacity = 0.5;
                         previous.style.display = "flex";
@@ -131,7 +133,7 @@
                     console.log(job.current_step)
                     btn.onclick = function() {
                             console.log("Button clicked!!")
-                            if (job.current_step == 2){
+                            //if (job.current_step == 2 || job.current_step == 1){
                                 loading_modal.style.display = "block";
                                 btn.style.display = "none";
                                 jQuery.ajax({
@@ -140,12 +142,12 @@
                                 }).done(function(){
                                     modal.style.display = "block";
                                     loading_modal.style.display = "none";
-                                    document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})//job.path + "qc_cleaned_fcs/PeaqoQC_results/fcs_files"
-                                    // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/"}})
-                                    // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "qc_cleaned_fcs/PeacoQC_results/fcs_files/"}})
+                                    document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})//job.path + "automated_qc/PeaqoQC_results/fcs_files"
+                                    // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})
+                                    // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})
                                 });
                        
-                             }
+                             //}
                             // modal.style.display = "block";
                             
                         }

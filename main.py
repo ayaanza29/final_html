@@ -558,12 +558,14 @@ def download_file():
     path = request.args.get("path")
     files = os.listdir(path)
     #files = [] ############### remove this line when trying to actually run
+    print(path)
+    print(files)
     if files != []:
         stream = BytesIO()
         with ZipFile(stream, 'w') as zf:
             for file in files:#glob(os.path.join(target, '*.sql'))
                 print(path + file)
-                zf.write(file, os.path.basename(path + file))
+                zf.write(file, path + file) #os.path.basename os.path.join
 
                 # data = zipfile.ZipInfo(individualFile['fileName'])
                 # data.date_time = time.localtime(time.time())[:6]
@@ -579,6 +581,21 @@ def download_file():
 #     print(name)
 #     current_user.set_current_job(name)
 #     return name + " was acessed"
+
+
+# def change_job_attributes(user_name = current_user.get_current_job().username, job_name = current_user.get_current_job().job_name, path = current_user.get_current_job().path, fcs_files = current_user.get_current_job().fcs_files, current_step = current_user.get_current_job().current_step, analysis_list = (current_user.get_current_job().analysis_list), channels=current_user.get_current_job().channels):
+#     # user_name = current_user.get_current_job().username
+#     # job_name = current_user.get_current_job().job_name
+#     # path = current_user.get_current_job().path
+#     # fcs_files = current_user.get_current_job().fcs_files
+#     # current_step = current_user.get_current_job().current_step
+#     # analysis_list = (current_user.get_current_job().analysis_list)
+#     #steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
+    
+#     jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=channels, analysis_list=analysis_list)
+#     user =  User.objects(id=current_user.id).get()
+#     user.jobs[job_name] = jobs
+#     user.save()
 
 ############################ r files ############################
 
@@ -608,8 +625,13 @@ def get_peaqo():
         print(markernames)
         print(type(markernames))
 
+    print(os.listdir(fcs_files_path))
+
     if os.listdir(fcs_files_path) == []:
-        markernames = ""
+        markernames = []
+
+    print(markernames)
+    print(type(markernames))
 
     user_name = current_user.get_current_job().username
     job_name = current_user.get_current_job().job_name
@@ -617,12 +639,14 @@ def get_peaqo():
     fcs_files = current_user.get_current_job().fcs_files
     current_step = current_user.get_current_job().current_step
     analysis_list = (current_user.get_current_job().analysis_list)
+    #steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
     
-
     jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=markernames, analysis_list=analysis_list)
     user =  User.objects(id=current_user.id).get()
     user.jobs[job_name] = jobs
     user.save()
+
+    # change_job_attributes(channels=markernames)
 
     return job_path + "/automated_qc/"
 

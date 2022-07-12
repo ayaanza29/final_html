@@ -107,6 +107,19 @@
                     var everything = document.getElementById("everything")
                     var previous = document.getElementById("previous")
                     var future = document.getElementById("future")
+
+                    var edit = document.getElementById("edit")
+                    edit.onclick = function() {
+                        jQuery.ajax({
+                            url: "/edit_anyway",
+                            data: {"step_to_edit": 1}
+                        }).done(function(){
+                            modal.style.display = "block";
+                            loading_modal.style.display = "none";
+                            everything.style.opacity = 1;
+                        });
+                    }
+
                     if (job.current_step > 5) {
                         everything.style.pointer_events = "none";
                         everything.style.opacity = 0.5;

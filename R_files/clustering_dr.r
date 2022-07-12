@@ -85,7 +85,7 @@ graph_scree <- function(path, output_path)
                               ylim(0, 1)
 
                             print(output_path)
-                            ggplot2::ggsave(output_path + "scree_plot.png")
+                            ggplot2::ggsave(path = output_path, filename = "scree_plot.png")
 
                          # res.pca <- princomp(matrix1, cor = FALSE, scores = FALSE)
                          # print(fviz_eig(res.pca))

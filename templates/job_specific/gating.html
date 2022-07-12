@@ -49,16 +49,6 @@
             <script>
                 document.getElementById("gating").style.borderColor = "var(--color4)"
                 document.getElementById("gating").style.color = "var(--color4)"
-                var edit = document.getElementById("edit")
-                edit.onclick = function() {
-                    jQuery.ajax({
-                        url: "/edit_anyway",
-                        data: {"step_to_edit": 1}
-                    }).done(function(){
-                        modal.style.display = "block";
-                        loading_modal.style.display = "none";
-                    });
-                }
             </script>
 
             <!--------------------------- Content Section -------------------------------->
@@ -71,7 +61,7 @@
 
                 <div id="container" class="job_specific-gating-content-gates_created">
                     <div class="job_specific-gating-content-gates_created-title"> Gates </div>
-                    <!-- <button class="job_specific-gating-content-gates_created-addgate" id="add_gate"> + Add Gate </button> -->
+                    <button class="job_specific-gating-content-gates_created-addgate" id="create_gate"> + Add Gate </button>
                 </div>
 
 
@@ -183,6 +173,18 @@
                         var everything = document.getElementById("everything")
                         var previous = document.getElementById("previous")
                         var future = document.getElementById("future")
+
+                        var edit = document.getElementById("edit")
+                        edit.onclick = function() {
+                            jQuery.ajax({
+                                url: "/edit_anyway",
+                                data: {"step_to_edit": 1}
+                            }).done(function(){
+                                modal.style.display = "block";
+                                loading_modal.style.display = "none";
+                                everything.style.opacity = 1;
+                            });
+                        }
                         if (job.current_step > 3) {
                             everything.style.pointer_events = "none";
                             everything.style.opacity = 0.5;
