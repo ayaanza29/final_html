@@ -175,6 +175,7 @@
                         var future = document.getElementById("future")
 
                         var edit = document.getElementById("edit")
+                        var modal = document.getElementById("popup");
                         edit.onclick = function() {
                             jQuery.ajax({
                                 url: "/edit_anyway",
@@ -237,9 +238,6 @@
                     //         modal.style.display = "none";
                     //     }
                     // }
-                </script>
-            
-                <script>
                     var modal = document.getElementById("popup");
                     var create_gate = document.getElementById("create_gate");
                     var gate_body = document.getElementById("container")

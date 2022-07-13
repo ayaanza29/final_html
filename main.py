@@ -672,8 +672,8 @@ def get_normalize():
     path = fcs_files_path
     files_vector = os.listdir(path)
     channels_vector = selected_channels
-    normalize_peaks_graph = gaussNorm(path, files_vector) #channels_vector #'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs'
-    return(normalize_peaks_graph)
+    gaussNorm(path, files_vector) #normalize_peaks_graph =  #channels_vector #'C:\\Users\\Zuhayr\\Documents\\GitHub\\front_end_monochrome\\user_data\\Bob\\Job1\\fcs_files\\776 F SP_QC.fcs'
+    return "42" #(normalize_peaks_graph)
 
 
 @app.route("/get_random_downsampling")

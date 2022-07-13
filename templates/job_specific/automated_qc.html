@@ -143,8 +143,8 @@
                                     modal.style.display = "block";
                                     loading_modal.style.display = "none";
                                     document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})//job.path + "automated_qc/PeaqoQC_results/fcs_files"
-                                    // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})
-                                    // document.getElementById("cleaned_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})
+                                    document.getElementById("plot_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})
+                                    document.getElementById("result_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "automated_qc/PeacoQC_results/fcs_files/"}})
                                 });
                        
                              //}

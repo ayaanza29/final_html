@@ -23,17 +23,24 @@ run_norm <- function(path, files_vector){ #channels_vector
     print(files_vector)
     ff <- flowCore::read.flowSet(files = files_vector, path = path)
     channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
-    #channel_names_normalize <- channels_vector #"Alexa Fluor 700-A"
-    # print(markernames(file))
+    print(ff)
+    channel_names_normalize <- flowCore::markernames(ff)
+    print(channel_names_normalize)
+    channel_names_normalize <- names(channel_names_normalize)
+    print(channel_names_normalize)
     # ggcyto(file, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
-    transform_logicle <- estimateMedianLogicle(ff, channels = channel_names_normalize)
-    transform_set <- transform(ff, transform_logicle)
 
-    norm <- gaussNorm(transform_set, channel_names_normalize, max.lms = 1)
-    flow_sub <- (norm[["flowset"]])
-    print(flow_sub)
+    print("failing at transform step")
+    transform_logicle <- flowCore::estimateMedianLogicle(ff, channels = channel_names_normalize)
+    print("step 1")
+    transform_set <- flowCore::transform(ff, transform_logicle)
+    print("step 2")
+    # norm <- gaussNorm(transform_set, channel_names_normalize, max.lms = 1)
+    # flow_sub <- (norm[["flowset"]])
+    # print(flow_sub)
 
-    # return "42"
+    #return "42"
+    # flowCore::write.FCS(norm, outdir = )
 }
 
 

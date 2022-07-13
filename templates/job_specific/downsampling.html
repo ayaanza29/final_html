@@ -70,8 +70,8 @@
                 </div>
 
                 <div class="job_specific-downsampling-content-choice">
-                    <button class="job_specific-downsampling-content-choice-button" id="srs" onclick="random_downsampling()"> Random Downsampling </button>
-                    <button class="job_specific-downsampling-content-choice-button" id="spade" onclick="density_dependent_downsampling()"> Density Dependent Downsampling </button>
+                    <button class="job_specific-downsampling-content-choice-button" id="srs"> Random Downsampling </button> <!--onclick="random_downsampling()-->
+                    <button class="job_specific-downsampling-content-choice-button" id="spade"> Density Dependent Downsampling </button> <!--onclick="density_dependent_downsampling()"-->
                 </div>
 
                 <div id="popup1" class="job_specific-downsampling-content-popup">
@@ -152,7 +152,7 @@
 
                     // document.getElementById("srs_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "downsampled.fcs"}})
                     // document.getElementById("spade_fcs").action = jQuery.ajax({url: "/download_file", data: {"path": job.path + "downsampled.fcs"}})
-                    if (job.current_step == 5){
+                    //if (job.current_step == 5){
                         btn1.onclick = function() {
                             loading_modal.style.display = "block";
                             btn1.style.display = "none";
@@ -179,7 +179,7 @@
                                 loading_modal.style.display = "none";
                             });
                         }
-                    }
+                    // }
                 </script>
 
             </div>
