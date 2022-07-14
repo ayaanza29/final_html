@@ -35,22 +35,26 @@ scree_plot <- setRefClass("scree_plot", fields = list(path = "character"), metho
                          #    # summary(x)
                             file <- flowCore::read.FCS(path)
                             data <- exprs(file)
-                            print(nrow(data))
-                            print(ncol(data))
+                            # print(nrow(data))
+                            # print(ncol(data))
                             results <- prcomp(data, scale = FALSE)
                          #    print(head(results[1:5, 1:5]))
                             #calculate total variance explained by each principal component
                             var_explained = results$sdev^2 / sum(results$sdev^2)
 
                             #create scree plot
-                            scree <- qplot(c(1:33), var_explained) + 
+                            print("wowowoowowowoowow")
+                            print(ncol(data))
+                            print((ncol(data))[1])
+                            print(ncol(data)[2])
+                            scree <- qplot(c(seq_lin(ncol(data))[2]) + var_explained) + #c(1:33) + var_explained
                               geom_line() + 
                               xlab("Principal Component") + 
                               ylab("Variance Explained") +
                               ggtitle("Scree Plot") +
                               ylim(0, 1)
 
-                            print(scree)
+                            # print(scree)
 
                          # res.pca <- princomp(matrix1, cor = FALSE, scores = FALSE)
                          # print(fviz_eig(res.pca))
@@ -63,7 +67,7 @@ scree_plot <- setRefClass("scree_plot", fields = list(path = "character"), metho
 # scree_instance <- scree_plot(path = "C:/Users/Zuhayr/Documents/GitHub/all_together/static/PeacoQC_results/fcs_files/776 F SP_QC.fcs")
 # scree_instance$graph_scree()
 
-graph_scree <- function(path, output_path)
+graph_scree <- function(path, output_path, fcs_name)
                        {
                          #    # x <- read.FCS(file, transformation=FALSE)
                          #    # summary(x)
@@ -77,7 +81,8 @@ graph_scree <- function(path, output_path)
                             var_explained = results$sdev^2 / sum(results$sdev^2)
 
                             #create scree plot
-                            scree <- qplot(c(1:33), var_explained)+
+                            print((ncol(data))[1])
+                            scree <- qplot(c(1:(ncol(data))[1]), var_explained)+
                               geom_line()+
                               xlab("Principal Component")+
                               ylab("Variance Explained") +
@@ -85,7 +90,7 @@ graph_scree <- function(path, output_path)
                               ylim(0, 1)
 
                             print(output_path)
-                            ggplot2::ggsave(path = output_path, filename = "scree_plot.png")
+                            ggplot2::ggsave(path = output_path, filename = "scree_plot" + fcs_name + ".png")
 
                          # res.pca <- princomp(matrix1, cor = FALSE, scores = FALSE)
                          # print(fviz_eig(res.pca))
@@ -131,6 +136,31 @@ Rtsne_analysis <- setRefClass("Rtsne_analysis", fields = list(path = "character"
                         # new_frame <- fr_append_cols(data, analyzed_data)
                        }
                      ))
+
+tsne <- function(path) {
+  start_time <- Sys.time()
+  file <- flowCore::read.FCS(path)
+  #  data <- data.frame(matrix(exprs(file)))
+  data <- data.frame(matrix(exprs(file)))
+  #data <- file[exprs]
+  print(data)
+  data <- data[1:10]
+  print(typeof((data)))
+  #  l <- data.frame(data)
+  #  thing <- typeof(data.frame(matrix(unlist(l), nrow=length(l), byrow=TRUE)))
+    
+    
+  analyzed_data <- Rtsne::Rtsne(data, initial_dims = 10, check_duplicates = FALSE) #initial_dims = 50
+  # print(analyzed_data)
+  graph <- ggplot(analyzed_data, aes(color = "red")) + 
+  geom_point(aes(x=x, y=y)) #, color=col
+  print(graph)
+  end_time <- Sys.time()
+  print(end_time - start_time)
+
+  ################# tring to append tsne coordinate cols to fcs file
+  # new_frame <- fr_append_cols(data, analyzed_data)
+}
 
 # Rtsne_instance <- Rtsne_analysis(path = "C:/Users/Zuhayr/Documents/GitHub/all_together/static/PeacoQC_results/fcs_files/776 F SP_QC.fcs")
 # Rtsne_instance$Rtsne_func()
@@ -253,6 +283,56 @@ uwot_analysis <- setRefClass("scree_plot", fields = list(path = "character"), me
                         print(end_time - start_time)
                        }
                      ))
+
+umap <- function(path, output_path) {
+  start_time <- Sys.time()
+  file <- flowCore::read.FCS(path)
+  data <- (Biobase::exprs(file))#[1:10000, ]
+  print("start umap")
+  finished_tumap <- uwot::umap(data, n_neighbors = 15, min_dist = 0.001, verbose = TRUE, n_threads = 8, target_weight = 0.5, ret_model = TRUE, ret_nn = TRUE, pca = 10) #pca = 50
+  print("finish umap")
+  finished_tumap <- finished_tumap$embedding
+  #print(finished_tumap)
+  finished_tumap <- as.data.frame(finished_tumap)
+  #print(data)
+  # print(other)
+  # print(finished_tumap)
+  UMAP1 <- unlist(finished_tumap[1])
+  UMAP2 <- unlist(finished_tumap[2])
+
+  # col_vector <- c("red", "blue", "green", "purple", "brown")
+  graph <- ggplot(finished_tumap, aes(x = UMAP1, y = UMAP2)) + #, color = "red"
+      geom_point(size = 0.5, aes(colour= factor(kmeans(scale(cbind(UMAP1, UMAP2)), centers=8)$cluster))) +
+      scale_colour_brewer('My groups', palette = "Set3") #'Set2'
+      # scale_color_identity() +
+      # new_scale_color() +
+      # shape = NA --> invisible layers +
+      # geom_point(aes(color = SSC-W), shape = NA) +
+      # scale_color_gradient(low = "black", high = "red") +
+      # new_scale_color() +
+      # geom_point(aes(color = SSC-H), shape = NA) +
+      # scale_color_gradient(low = "black", high = "green") +
+      # new_scale_color() +
+      # geom_point(aes(color = FSC-W), shape = NA) +
+      # scale_color_gradient(low = "black", high = "blue")
+  print(graph)
+  ggplot2::ggsave(output_path, graph) #"static/temporary_images/umap_temporary.png"
+  cool <- names(flowCore::markernames(file))
+  print(cool)
+  color_col <- data[, cool[1]] #"BUV395-A"
+#  print(color_col)
+  finished_tumap <- cbind(finished_tumap, color_col)
+  print(finished_tumap[1:10, ])
+  graph2 <- ggplot(finished_tumap, aes(x = UMAP1, y = UMAP2)) + #, color = "red"
+      geom_point(size = 0.5, aes(colour = color_col)) +
+      scale_color_gradient2(low = "blue", mid = "red", high = "white", space = "Lab")
+      # scale_colour_brewer('My groups', palette = "Set3") #'Set2'
+  print(graph2)
+  ggplot2::ggsave(output_path, graph2) #"static/temporary_images/umap_temporary_shaded.png"
+  #print(embed_img(data, finished_tumap, pc_axes = TRUE, equal_axes = TRUE, alpha_scale = 0.5, title = "iris UMAP", cex = 1))
+  end_time <- Sys.time()
+  print(end_time - start_time)
+}
 
 # uwot_instance <- uwot_analysis(path = "C:/Users/Zuhayr/Documents/GitHub/all_together/static/PeacoQC_results/fcs_files/776 F SP_QC.fcs")
 # uwot_instance$tumap()

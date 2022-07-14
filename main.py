@@ -582,20 +582,21 @@ def download_file():
 #     current_user.set_current_job(name)
 #     return name + " was acessed"
 
-
-# def change_job_attributes(user_name = current_user.get_current_job().username, job_name = current_user.get_current_job().job_name, path = current_user.get_current_job().path, fcs_files = current_user.get_current_job().fcs_files, current_step = current_user.get_current_job().current_step, analysis_list = (current_user.get_current_job().analysis_list), channels=current_user.get_current_job().channels):
-#     # user_name = current_user.get_current_job().username
-#     # job_name = current_user.get_current_job().job_name
-#     # path = current_user.get_current_job().path
-#     # fcs_files = current_user.get_current_job().fcs_files
-#     # current_step = current_user.get_current_job().current_step
-#     # analysis_list = (current_user.get_current_job().analysis_list)
-#     #steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
+#def change_job_attributes(user_name = current_user.get_current_job().username, job_name = current_user.get_current_job().job_name, path = current_user.get_current_job().path, fcs_files = current_user.get_current_job().fcs_files, current_step = current_user.get_current_job().current_step, analysis_list = (current_user.get_current_job().analysis_list), channels=current_user.get_current_job().channels):
+def change_job_attributes():
+    user_name = current_user.get_current_job().username
+    job_name = current_user.get_current_job().job_name
+    path = current_user.get_current_job().path
+    fcs_files = current_user.get_current_job().fcs_files
+    current_step = current_user.get_current_job().current_step
+    analysis_list = (current_user.get_current_job().analysis_list)
+    channels = current_user.get_current_job().channels
+    steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
     
-#     jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=channels, analysis_list=analysis_list)
-#     user =  User.objects(id=current_user.id).get()
-#     user.jobs[job_name] = jobs
-#     user.save()
+    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=channels, analysis_list=analysis_list)
+    user =  User.objects(id=current_user.id).get()
+    user.jobs[job_name] = jobs
+    user.save()
 
 ############################ r files ############################
 
@@ -633,20 +634,20 @@ def get_peaqo():
     print(markernames)
     print(type(markernames))
 
-    user_name = current_user.get_current_job().username
-    job_name = current_user.get_current_job().job_name
-    path = current_user.get_current_job().path
-    fcs_files = current_user.get_current_job().fcs_files
-    current_step = current_user.get_current_job().current_step
-    analysis_list = (current_user.get_current_job().analysis_list)
-    #steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
+    # user_name = current_user.get_current_job().username
+    # job_name = current_user.get_current_job().job_name
+    # path = current_user.get_current_job().path
+    # fcs_files = current_user.get_current_job().fcs_files
+    # current_step = current_user.get_current_job().current_step
+    # analysis_list = (current_user.get_current_job().analysis_list)
+    # #steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
     
-    jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=markernames, analysis_list=analysis_list)
-    user =  User.objects(id=current_user.id).get()
-    user.jobs[job_name] = jobs
-    user.save()
+    # jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=markernames, analysis_list=analysis_list)
+    # user =  User.objects(id=current_user.id).get()
+    # user.jobs[job_name] = jobs
+    # user.save()
 
-    # change_job_attributes(channels=markernames)
+    change_job_attributes(channels=markernames)
 
     return job_path + "/automated_qc/"
 
@@ -755,18 +756,25 @@ def get_clustering():
         path = path + "upload_fcs"
         for file in os.listdir(path):
             print(path + "/" + file)
-            pca_plot = pca(path + "/" + file, current_user.get_current_job().path + "dr_clustering/") #, channels = channels
+            pca_plot = pca(path + "/" + file, current_user.get_current_job().path + "dr_clustering/", file) #, channels = channels
         return(pca_plot)
     if (analysis_method == "umap"):
         print("umap")
-        # pca = robjects.globalenv['scree_plot']
-        # pca_plot = pca(path, channels = channels)
+        umap = robjects.globalenv['umap']
+        path = path + "upload_fcs"
+        for file in (os.listdir(path))[0]:
+            print(path + "/" + file)
+            umap_plot = umap(path + "/" + file, current_user.get_current_job().path + "dr_clustering/") #, channels = channels , current_user.get_current_job().path + "dr_clustering/", file
         return "umap" #(pca_plot)
     if (analysis_method == "tsne"):
         print("tsne")
-        pca = robjects.globalenv['graph_scree']
-        pca_plot = pca(path, channels = channels)
+        tsne = robjects.globalenv['tsne']
+        path = path + "upload_fcs"
+        for file in os.listdir(path):
+            print(path + "/" + file)
+            tsne_plot = tsne(path + "/" + file, current_user.get_current_job().path + "dr_clustering/") #, channels = channels  , current_user.get_current_job().path + "dr_clustering/", file
         return "tsne" #(pca_plot)
+    r.q(save="no")
 
 
 if __name__ == "__main__":
