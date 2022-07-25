@@ -47,7 +47,7 @@ spade_build_tree <- function(data_file_path, output_dir)
 simple_random_sampling <- function(data_file_path, output_dir, sampling_ceiling = 2)
 {
      # output_dir <- tempdir()
-
+     print(data_file_path)
      ff <<- flowCore::read.FCS(data_file_path)
      dsFilt <- sampleFilter(size = sampling_ceiling, filterId="dsFilter")
      result <- filter(ff, dsFilt)

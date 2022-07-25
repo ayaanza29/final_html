@@ -24,6 +24,8 @@ run_norm <- function(path, files_vector){ #channels_vector
     ff <- flowCore::read.flowSet(files = files_vector, path = path)
     #channel_names_normalize <- c("PE-A", "PerCP-Cy5.5-A", "Alexa Fluor 700-A", "BV750-A", "PE-Cy5.5-A")
     print(ff)
+    print("channel names 0")
+    print(colnames(ff))
     channel_names_normalize <- flowCore::markernames(ff)
     print(channel_names_normalize)
     channel_names_normalize <- names(channel_names_normalize)

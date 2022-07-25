@@ -583,14 +583,14 @@ def download_file():
 #     return name + " was acessed"
 
 #def change_job_attributes(user_name = current_user.get_current_job().username, job_name = current_user.get_current_job().job_name, path = current_user.get_current_job().path, fcs_files = current_user.get_current_job().fcs_files, current_step = current_user.get_current_job().current_step, analysis_list = (current_user.get_current_job().analysis_list), channels=current_user.get_current_job().channels):
-def change_job_attributes():
+def change_job_attributes(channels):
     user_name = current_user.get_current_job().username
     job_name = current_user.get_current_job().job_name
     path = current_user.get_current_job().path
     fcs_files = current_user.get_current_job().fcs_files
     current_step = current_user.get_current_job().current_step
     analysis_list = (current_user.get_current_job().analysis_list)
-    channels = current_user.get_current_job().channels
+    channels = channels #current_user.get_current_job().channels
     steps_ran = {"qc": False, "gating": {},"normalization": False, "downsampling": "", "dr_clustering": []}
     
     jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, channels=channels, analysis_list=analysis_list)
