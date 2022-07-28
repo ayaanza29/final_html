@@ -137,7 +137,7 @@ Rtsne_analysis <- setRefClass("Rtsne_analysis", fields = list(path = "character"
                        }
                      ))
 
-tsne <- function(path) {
+tsne <- function(path, num_pcs = 10) {
   start_time <- Sys.time()
   file <- flowCore::read.FCS(path)
   #  data <- data.frame(matrix(exprs(file)))
@@ -150,7 +150,7 @@ tsne <- function(path) {
   #  thing <- typeof(data.frame(matrix(unlist(l), nrow=length(l), byrow=TRUE)))
     
     
-  analyzed_data <- Rtsne::Rtsne(data, initial_dims = 10, check_duplicates = FALSE) #initial_dims = 50
+  analyzed_data <- Rtsne::Rtsne(data, initial_dims = num_pcs, check_duplicates = FALSE) #initial_dims = 50
   # print(analyzed_data)
   graph <- ggplot(analyzed_data, aes(color = "red")) + 
   geom_point(aes(x=x, y=y)) #, color=col
@@ -284,12 +284,12 @@ uwot_analysis <- setRefClass("scree_plot", fields = list(path = "character"), me
                        }
                      ))
 
-umap <- function(path, output_path) {
+umap <- function(path, output_path, num_pcs = 10) {
   start_time <- Sys.time()
   file <- flowCore::read.FCS(path)
   data <- (Biobase::exprs(file))#[1:10000, ]
   print("start umap")
-  finished_tumap <- uwot::umap(data, n_neighbors = 15, min_dist = 0.001, verbose = TRUE, n_threads = 8, target_weight = 0.5, ret_model = TRUE, ret_nn = TRUE, pca = 10) #pca = 50
+  finished_tumap <- uwot::umap(data, n_neighbors = 15, min_dist = 0.001, verbose = TRUE, n_threads = 8, target_weight = 0.5, ret_model = TRUE, ret_nn = TRUE, pca = num_pcs) #pca = 50
   print("finish umap")
   finished_tumap <- finished_tumap$embedding
   #print(finished_tumap)

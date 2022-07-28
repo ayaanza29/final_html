@@ -96,6 +96,9 @@ def remove_points(x1, y1, selected_x1, selected_y1):
 
 ### have to define filter gate in r
 
+# def filter_points(x1, y1, selected_x1, selected_y1):
+#     return "42"
+
 def createBokeh(fcs_filtered, channel1 = 'FSC-A', channel2 = 'FSC-H', points_array = "[(-1000000, -1000000), (1000000, -1000000), (-1000000, 1000000), (1000000, 1000000)]", output_path = "static/temporary_images/mark1.png"):
     print("channels ")
     print(channel1)

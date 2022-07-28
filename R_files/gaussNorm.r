@@ -31,6 +31,7 @@ run_norm <- function(path, files_vector){ #channels_vector
     channel_names_normalize <- names(channel_names_normalize)
     print(channel_names_normalize)
     # ggcyto(file, aes_string(x = "PE-A")) + geom_joy(aes(y = name)) + facet_null()
+    channel_names_normalize <- colnames(ff)
 
     print("failing at transform step")
     transform_logicle <- flowCore::estimateMedianLogicle(ff, channels = channel_names_normalize)

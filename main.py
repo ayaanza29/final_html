@@ -695,7 +695,8 @@ def get_random_downsampling():
     r.source('R_files\\downsampling.r')
 
     random_downsample = robjects.globalenv['simple_random_sampling']
-    random_downsample(fcs_path, output_path)
+    for path in os.listdir(fcs_path):
+        random_downsample(path, output_path)
     return "42"#(spade_graph)
 
 
@@ -717,7 +718,8 @@ def get_spade_downsampling():
     r.source('R_files\\downsampling.r')
 
     spade_downsample = robjects.globalenv['spade_downsample']
-    spade_downsample(fcs_path, output_path)
+    for path in os.listdir(fcs_path):
+        spade_downsample(path, output_path)
     return "42"#(spade_graph)
 
 
@@ -726,6 +728,7 @@ def get_clustering():
     analysis_method = request.args.get("analysis_method")
     # path = request.args.get("path")
     channels = request.args.get("channels")
+    #num_pcs = request.args.get("num_pcs")
 
     fileName = "clustering_dr.r"
     url = "C:\\Users\\Zuhayr\\Documents\\GitHub\\all_together\\R_files\\clustering_dr.r"
