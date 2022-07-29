@@ -460,6 +460,13 @@ def new():
     print("did it update")
     return render_template("job_specific/gating.html")
 
+@app.route('/get_gating_image')
+def get_gating_image():
+    # if request.args.get('type') == '1':
+    #    filename = 'ok.gif'
+    # else:
+    #    filename = 'error.gif'
+    return send_file(path_or_file = (current_user.get_current_job()).path + "/gating/temporary_images/mark1.png", mimetype='image/gif')
 
 @app.route("/create_job")
 def add_job():
@@ -696,7 +703,7 @@ def get_random_downsampling():
 
     random_downsample = robjects.globalenv['simple_random_sampling']
     for path in os.listdir(fcs_path):
-        random_downsample(path, output_path)
+        random_downsample(fcs_path + "/" + path, output_path)
     return "42"#(spade_graph)
 
 
@@ -719,7 +726,7 @@ def get_spade_downsampling():
 
     spade_downsample = robjects.globalenv['spade_downsample']
     for path in os.listdir(fcs_path):
-        spade_downsample(path, output_path)
+        spade_downsample(fcs_path + "/" + path, output_path)
     return "42"#(spade_graph)
 
 
@@ -738,12 +745,16 @@ def get_clustering():
     ro.globalenv['fileName'] = fileName_c
     ro.globalenv['url'] = url_c
 
+    print(analysis_method)
+
     user_name = current_user.get_current_job().username
     job_name = current_user.get_current_job().job_name
     path = current_user.get_current_job().path
     fcs_files = current_user.get_current_job().fcs_files
     current_step = current_user.get_current_job().current_step
     analysis_list = (current_user.get_current_job().analysis_list).append(analysis_method)
+
+    print(analysis_method)
 
     jobs = Job(username=user_name, job_name=job_name, path=path, fcs_files=fcs_files, current_step=current_step, analysis_list=analysis_list)
     user =  User.objects(id=current_user.id).get()

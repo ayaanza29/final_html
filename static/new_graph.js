@@ -34,8 +34,12 @@ drawOnImage();
 // }); 
 
 var path_cleaned_fcs_files = job.path + "/automated_qc/PeacoQC_results/fcs_files/SPL_D0_QC.fcs"//776_F_SP_QC_QC.fcs" //"C:/Users/Zuhayr/Documents/GitHub/r_background_app/PeacoQC_results/fcs_files/776 F SP_QC.fcs" "F:\user_data\tom\wow\qc_cleaned_fcs\PeacoQC_results\fcs_files\776 F SP_QC_QC.fcs"
-var path_images = job.path + "gating/temporary_images/mark1.png"
+
+var image_source = jQuery.ajax({type: "POST", url:"/get_gating_image"})
+
+//var path_images = job.path + "gating/temporary_images/mark1.png"
 console.log("path for graphing " + path_cleaned_fcs_files)
+//console.log(image_source)
 
 jQuery.ajax({type: "GET", 
       url:"/new",
@@ -56,7 +60,7 @@ jQuery.ajax({type: "GET",
       //   url:"/rerender",
       // })
       const image = document.createElement("img");
-      image.src = path_images; //"static/temporary_images/mark1.png";
+      image.src = image_source; //"static/temporary_images/mark1.png";
 
       image.addEventListener("load", () => {
         drawOnImage(image);
@@ -74,7 +78,7 @@ function updateAxis() {
     // image.src = "static/temporary_images/mark1.png";
 
     const image = document.createElement("img");
-    image.src = path_images + "?rnd="+Math.random(); //"static/temporary_images/mark1.png?rnd="+Math.random();
+    image.src = image_source + "?rnd="+Math.random(); //"static/temporary_images/mark1.png?rnd="+Math.random();
     // document.getElementById("img").src = "static/temporary_images/mark1.png";
 
     image.addEventListener("load", () => {
@@ -334,7 +338,7 @@ function drawOnImage(image = null) {
       // console.log(data);
       alert("done");
       const image = document.createElement("img");
-      image.src = path_images + "?rnd="+Math.random(); //static/temporary_images/mark1.png
+      image.src = image_source + "?rnd="+Math.random(); //static/temporary_images/mark1.png
       image.addEventListener("load", () => {
         drawOnImage(image);
       });

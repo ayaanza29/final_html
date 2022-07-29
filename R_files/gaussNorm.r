@@ -34,7 +34,16 @@ run_norm <- function(path, files_vector){ #channels_vector
     channel_names_normalize <- colnames(ff)
 
     print("failing at transform step")
-    transform_logicle <- flowCore::estimateMedianLogicle(ff, channels = channel_names_normalize)
+    # try catch not working possibly add loop increasing m
+    tryCatch(
+        {
+            transform_logicle <- flowCore::estimateMedianLogicle(ff, channels = channel_names_normalize, m = 7)
+        },
+        error = function(cond){
+            print("error")
+            transform_logicle <- flowCore::estimateMedianLogicle(ff, channels = channel_names_normalize, m = 7)
+        }
+    )
     print("step 1")
     transform_set <- flowCore::transform(ff, transform_logicle)
     print("step 2")
